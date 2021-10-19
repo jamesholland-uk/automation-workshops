@@ -1,1 +1,1 @@
-# l100-workshops
+# Workshops
