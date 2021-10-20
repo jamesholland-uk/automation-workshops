@@ -1,5 +1,5 @@
 ---
-name: CI/CD
+name: CICD
 on:
   push:
     branches:
@@ -40,10 +40,9 @@ jobs:
           BRANCH: gh-pages # The branch the action should deploy to.
           FOLDER: docs/_build/html # The folder the action should deploy.
           CLEAN: true # Automatically remove deleted files from the deploy branch
-          
+
   automerge:
     name: Auto-merge
-    needs: [validate]
     runs-on: ubuntu-latest
     steps:
       - name: Auto-merge pull requests from dependabot (patches only)

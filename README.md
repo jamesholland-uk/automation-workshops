@@ -1,5 +1,5 @@
 # Workshops
 
-![CI/CD](https://github.com/PaloAltoNetworks/terraform-iac-lab/workflows/CI/CD/badge.svg)
+![CICD](https://github.com/jamesholland-uk/automation-workshops/actions/workflows/cicd.yml/badge.svg)
 
 Workshop guides are [here](https://jamesholland.me.uk/automation-workshops/)
