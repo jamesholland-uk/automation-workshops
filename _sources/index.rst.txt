@@ -3,18 +3,63 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to the Automation Workshops
-===================================
+Automation Workshops
+====================
+
+Welcome
+-------
+
+Welcome to the Automation Workshops!
+
+We will be...
+...
+...
+...
+...
+
+
+Objective
+---------
+The objective of these workshops is to...
+...
+...
+...
+...
+
+
+Learning Outcomes
+-----------------
+
+The learning outcomes for these workshops are...
+...
+...
+...
+...
+
+
+
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :hidden:
+   :caption: Overview
 
+   overview/introduction
 
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: PAN-OS API
 
-Workshops
-=========
+   xmlapi/l100
+   xmlapi/l200
+   xmlapi/l300
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: PAN-OS Ansible
+
+   ansible/l100
+   ansible/l200
+   ansible/l300
