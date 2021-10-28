@@ -1,8 +1,4 @@
-================
-Lab Introduction
-================
-
-XML API L100
+XML API L300
 ----------------------
 
 This training lab provides....
