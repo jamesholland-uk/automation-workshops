@@ -2,7 +2,4 @@
 Lab Introduction
 ================
 
-XML API L100
-----------------------
-
-This training lab provides....
+These workshops will provide....
