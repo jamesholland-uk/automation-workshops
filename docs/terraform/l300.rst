@@ -1,4 +1,4 @@
 Terraform L300
 ----------------------
 
-This training lab provides....
+This content is still being developed.
