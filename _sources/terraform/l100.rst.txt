@@ -1,0 +1,4 @@
+Terraform L100
+----------------------
+
+This training lab provides....
