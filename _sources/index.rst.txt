@@ -63,3 +63,12 @@ The learning outcomes for these workshops are...
    ansible/l100
    ansible/l200
    ansible/l300
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: PAN-OS Terraform
+
+   terraform/l100
+   terraform/l200
+   terraform/l300
