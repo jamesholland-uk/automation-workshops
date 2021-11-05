@@ -7,6 +7,8 @@
   <title>Automation Workshops &mdash; Automation Workshops  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -15,10 +17,12 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Lab Introduction" href="overview/introduction.html" /> 
+    <link rel="next" title="1. XML API L100" href="xmlapi/l100.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -36,27 +40,23 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
+              <p class="caption" role="heading"><span class="caption-text">PAN-OS API</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="overview/introduction.html">Lab Introduction</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">PAN-OS API</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="xmlapi/l100.html">XML API L100</a></li>
-<li class="toctree-l1"><a class="reference internal" href="xmlapi/l200.html">XML API L200</a></li>
-<li class="toctree-l1"><a class="reference internal" href="xmlapi/l300.html">XML API L300</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xmlapi/l100.html">1. XML API L100</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xmlapi/l200.html">2. XML API L200</a></li>
+<li class="toctree-l1"><a class="reference internal" href="xmlapi/l300.html">3. XML API L300</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">PAN-OS Ansible</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ansible/l100.html">Ansible L100</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ansible/l200.html">Ansible L200</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ansible/l300.html">Ansible L300</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ansible/l100.html">1. Ansible L100</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ansible/l200.html">2. Ansible L200</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ansible/l300.html">3. Ansible L300</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">PAN-OS Terraform</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="terraform/l100.html">Terraform L100</a></li>
-<li class="toctree-l1"><a class="reference internal" href="terraform/l200.html">Terraform L200</a></li>
-<li class="toctree-l1"><a class="reference internal" href="terraform/l300.html">Terraform L300</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terraform/l100.html">1. Terraform L100</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terraform/l200.html">2. Terraform L200</a></li>
+<li class="toctree-l1"><a class="reference internal" href="terraform/l300.html">3. Terraform L300</a></li>
 </ul>
 
         </div>
@@ -85,32 +85,17 @@
              
   <section id="automation-workshops">
 <h1>Automation Workshops<a class="headerlink" href="#automation-workshops" title="Permalink to this headline"></a></h1>
-<section id="welcome">
-<h2>Welcome<a class="headerlink" href="#welcome" title="Permalink to this headline"></a></h2>
-<p>Welcome to the Automation Workshops!</p>
-<p>We will be…
-…
-…
-…
-…</p>
-</section>
-<section id="objective">
-<h2>Objective<a class="headerlink" href="#objective" title="Permalink to this headline"></a></h2>
-<p>The objective of these workshops is to…
-…
-…
-…
-…</p>
-</section>
-<section id="learning-outcomes">
-<h2>Learning Outcomes<a class="headerlink" href="#learning-outcomes" title="Permalink to this headline"></a></h2>
-<p>The learning outcomes for these workshops are…
-…
-…
-…
-…</p>
-<div class="toctree-wrapper compound">
-</div>
+<p>Here you will find workshops covering various automation topics, structured into levels per topic.</p>
+<section id="aim">
+<h2>Aim<a class="headerlink" href="#aim" title="Permalink to this headline"></a></h2>
+<p>The aim of these workshops is to cover the most common security automation topics encountered.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>L100 is designed to give awareness of the subject matter, with simple hands-on exercises, to enable the learner to feel confident having introductory conversions regarding the topic.</p></li>
+<li><p>L200 is designed to give more use cases for the topic, and to introduce commonly used industry tools, to enable the learner to see how the tools would be used outside of an academic or lab environment, in order to have more in-depth conversations regarding the topic.</p></li>
+<li><p>L300 is designed to give further use cases of higher complexity, and also show how the relevant tools are operationalised, enabling the learner to be able to converse about their production deployments</p></li>
+</ul>
+</div></blockquote>
 <div class="toctree-wrapper compound">
 </div>
 <div class="toctree-wrapper compound">
@@ -124,7 +109,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="overview/introduction.html" class="btn btn-neutral float-right" title="Lab Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="xmlapi/l100.html" class="btn btn-neutral float-right" title="1. XML API L100" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

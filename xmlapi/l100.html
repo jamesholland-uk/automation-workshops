@@ -4,9 +4,11 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>XML API L100 &mdash; Automation Workshops  documentation</title>
+  <title>1. XML API L100 &mdash; Automation Workshops  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -15,11 +17,13 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/clipboard.min.js"></script>
+        <script src="../_static/copybutton.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="XML API L200" href="l200.html" />
-    <link rel="prev" title="Lab Introduction" href="../overview/introduction.html" /> 
+    <link rel="next" title="2. XML API L200" href="l200.html" />
+    <link rel="prev" title="Automation Workshops" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,27 +41,36 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Overview</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../overview/introduction.html">Lab Introduction</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">PAN-OS API</span></p>
+              <p class="caption" role="heading"><span class="caption-text">PAN-OS API</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">XML API L100</a></li>
-<li class="toctree-l1"><a class="reference internal" href="l200.html">XML API L200</a></li>
-<li class="toctree-l1"><a class="reference internal" href="l300.html">XML API L300</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. XML API L100</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#generate-your-api-key">1.1. Generate your API key</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#make-your-first-real-api-call">1.2. Make your first real API call</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#get-firewall-system-info">1.3. Get firewall system info</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#show-the-routing-table">1.4. Show the routing table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#show-the-rulebase-configuration">1.5. Show the rulebase configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#show-the-rulebase-hit-counts">1.6. Show the rulebase hit counts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#backup-export-configuration">1.7. Backup/export configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gathering-reports">1.8. Gathering Reports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#user-id">1.9. User-ID</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#find-an-api-command-cli-debug">1.10. Find An API Command - CLI Debug</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#find-an-api-command-api-browser">1.11. Find An API Command - API Browser</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="l200.html">2. XML API L200</a></li>
+<li class="toctree-l1"><a class="reference internal" href="l300.html">3. XML API L300</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">PAN-OS Ansible</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../ansible/l100.html">Ansible L100</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ansible/l200.html">Ansible L200</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../ansible/l300.html">Ansible L300</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ansible/l100.html">1. Ansible L100</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ansible/l200.html">2. Ansible L200</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ansible/l300.html">3. Ansible L300</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">PAN-OS Terraform</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../terraform/l100.html">Terraform L100</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../terraform/l200.html">Terraform L200</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../terraform/l300.html">Terraform L300</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../terraform/l100.html">1. Terraform L100</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../terraform/l200.html">2. Terraform L200</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../terraform/l300.html">3. Terraform L300</a></li>
 </ul>
 
         </div>
@@ -74,7 +87,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>XML API L100</li>
+      <li><span class="section-number">1. </span>XML API L100</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/xmlapi/l100.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -85,16 +98,132 @@
            <div itemprop="articleBody">
              
   <section id="xml-api-l100">
-<h1>XML API L100<a class="headerlink" href="#xml-api-l100" title="Permalink to this headline"></a></h1>
-<p>This training lab provides….</p>
+<h1><span class="section-number">1. </span>XML API L100<a class="headerlink" href="#xml-api-l100" title="Permalink to this headline"></a></h1>
+<p>Hands-on tasks for this workshop will be performing XML API calls against a PAN-OS firewall, from your command-line environment, using the <code class="docutils literal notranslate"><span class="pre">curl</span></code> command. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{variables in braces}} with your own values.</p>
+<section id="generate-your-api-key">
+<h2><span class="section-number">1.1. </span>Generate your API key<a class="headerlink" href="#generate-your-api-key" title="Permalink to this headline"></a></h2>
+<p>Before you can make any API calls, you need to generate an API key. Your API key will allow you to authenticate and authorise yourself for future API calls.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -k https://{{your-firewall-IP}}/api/?type=keygen&amp;user={{your-admin-username}}&amp;password={{your-admin-password}}
+</pre></div>
+</div>
+</section>
+<section id="make-your-first-real-api-call">
+<h2><span class="section-number">1.2. </span>Make your first real API call<a class="headerlink" href="#make-your-first-real-api-call" title="Permalink to this headline"></a></h2>
+<p>Your first API call will tell you if the firewall is in a ready and operational state. This operational command is useful to know if the firewall has been recently rebooted, or in the case of software firewalls like VM-Series or CN-Series, recently created.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -k https://{{your-firewall-IP}}/api/?type=op&amp;cmd=&lt;show&gt;&lt;chassis-ready&gt;&lt;/chassis-ready&gt;&lt;/show&gt;&amp;key={{your-API-key}}
+</pre></div>
+</div>
+</section>
+<section id="get-firewall-system-info">
+<h2><span class="section-number">1.3. </span>Get firewall system info<a class="headerlink" href="#get-firewall-system-info" title="Permalink to this headline"></a></h2>
+<p>Next, retrieve information about the firewall system. This too is an operational command, as shown by <code class="docutils literal notranslate"><span class="pre">type=op</span></code> within the API call. The <code class="docutils literal notranslate"><span class="pre">cmd=</span></code> portion contains the operational command we want to execute.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -k https://{{your-firewall-IP}}/api/?type=op&amp;cmd=&lt;show&gt;&lt;system&gt;&lt;info&gt;&lt;/info&gt;&lt;/system&gt;&lt;/show&gt;&amp;key={{your-API-key}}
+</pre></div>
+</div>
+</section>
+<section id="show-the-routing-table">
+<h2><span class="section-number">1.4. </span>Show the routing table<a class="headerlink" href="#show-the-routing-table" title="Permalink to this headline"></a></h2>
+<p>Another useful operational command is to display the routing table.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -k https://{{your-firewall-IP}}/api/?type=op&amp;cmd=&lt;show&gt;&lt;routing&gt;&lt;route&gt;&lt;/route&gt;&lt;/routing&gt;&lt;/show&gt;&amp;key={{your-API-key}}
+</pre></div>
+</div>
+</section>
+<section id="show-the-rulebase-configuration">
+<h2><span class="section-number">1.5. </span>Show the rulebase configuration<a class="headerlink" href="#show-the-rulebase-configuration" title="Permalink to this headline"></a></h2>
+<p>Now we look at the firewall configuration. Notice the type of API call this time is <code class="docutils literal notranslate"><span class="pre">type=config</span></code>, and the action is <code class="docutils literal notranslate"><span class="pre">get</span></code>, which as expected tells the API we want to do a read operation on the configuration. The <code class="docutils literal notranslate"><span class="pre">xpath</span></code> is then used to navigate down through the XML configuration file structure to specifically find the rules within the security policy.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -k https://{{your-firewall-IP}}/api/?type=config&amp;action=get&amp;xpath=/config/devices/entry[@name=&#39;localhost.localdomain&#39;]/vsys/entry[@name=&#39;vsys1&#39;]/rulebase/security/rules&amp;key={{your-API-key}}
+</pre></div>
+</div>
+</section>
+<section id="show-the-rulebase-hit-counts">
+<h2><span class="section-number">1.6. </span>Show the rulebase hit counts<a class="headerlink" href="#show-the-rulebase-hit-counts" title="Permalink to this headline"></a></h2>
+<p>We’ve seen the rulebase from the configuration, but if we wanted to programmatically retrieve the hit counts for each rule, that would be an operational command.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -k https://{{your-firewall-IP}}/api/?type=op&amp;cmd=&lt;show&gt;&lt;rule-hit-count&gt;&lt;vsys&gt;&lt;vsys-name&gt;&lt;entry name=&#39;vsys1&#39;&gt;&lt;rule-base&gt;&lt;entry name=&#39;security&#39;&gt;&lt;rules&gt;&lt;all/&gt;&lt;/rules&gt;&lt;/entry&gt;&lt;/rule-base&gt;&lt;/entry&gt;&lt;/vsys-name&gt;&lt;/vsys&gt;&lt;/rule-hit-count&gt;&lt;/show&gt;&amp;key={{your-API-key}}
+</pre></div>
+</div>
+</section>
+<section id="backup-export-configuration">
+<h2><span class="section-number">1.7. </span>Backup/export configuration<a class="headerlink" href="#backup-export-configuration" title="Permalink to this headline"></a></h2>
+<p>This is a common API call, given how many people have requirements to automate backing up configurations. This uses <code class="docutils literal notranslate"><span class="pre">type=export</span></code> to signify we are exporting something, and <code class="docutils literal notranslate"><span class="pre">category=configuration</span></code> describes the exact item we want to export.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -k https://{{your-firewall-IP}}/api/?type=export&amp;category=configuration&amp;key={{your-API-key}}
+</pre></div>
+</div>
+</section>
+<section id="gathering-reports">
+<h2><span class="section-number">1.8. </span>Gathering Reports<a class="headerlink" href="#gathering-reports" title="Permalink to this headline"></a></h2>
+<p>Another type of API call available is <code class="docutils literal notranslate"><span class="pre">type=report</span></code>, to automate the gathering of reporting data. THe data is returned in XML format, such that it can be parsed by another system.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -k https://{{your-firewall-IP}}/api/?type=report&amp;reporttype=predefined&amp;reportname=top-applications&amp;key={{your-API-key}}
+</pre></div>
+</div>
+</section>
+<section id="user-id">
+<h2><span class="section-number">1.9. </span>User-ID<a class="headerlink" href="#user-id" title="Permalink to this headline"></a></h2>
+<p>A frequent use case is to register user-to-IP mappings. The first task here, another operational command, shows the current user-to-IP mapping table</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -k https://{{your-firewall-IP}}/api/?type=op&amp;cmd=&lt;show&gt;&lt;user&gt;&lt;ip-user-mapping&gt;&lt;all/&gt;&lt;/ip-user-mapping&gt;&lt;/user&gt;&lt;/show&gt;&amp;key={{your-API-key}}
+</pre></div>
+</div>
+<p>The next API call registers a username to an IP address. This uses <code class="docutils literal notranslate"><span class="pre">type=user-id</span></code>. Note we pass in the username, the IP address they are currently using, and a timeout value (in seconds).
+.. code-block:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -k https://{{your-firewall-IP}}/api/?type=user-id&amp;cmd=&lt;uid-message&gt;&lt;version&gt;2.0&lt;/version&gt;&lt;type&gt;update&lt;/type&gt;&lt;payload&gt;&lt;login&gt;&lt;entry name=&quot;NewUser&quot; ip=&quot;10.50.100.9&quot; timeout=&quot;120&quot;/&gt;&lt;/login&gt;&lt;/payload&gt;&lt;/uid-message&gt;&amp;key={{your-API-key}}
+</pre></div>
+</div>
+<p>Replaying the API call to show the mapping table should now display the new user</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>curl -k https://{{your-firewall-IP}}/api/?type=op&amp;cmd=&lt;show&gt;&lt;user&gt;&lt;ip-user-mapping&gt;&lt;all/&gt;&lt;/ip-user-mapping&gt;&lt;/user&gt;&lt;/show&gt;&amp;key={{your-API-key}}
+</pre></div>
+</div>
+</section>
+<section id="find-an-api-command-cli-debug">
+<h2><span class="section-number">1.10. </span>Find An API Command - CLI Debug<a class="headerlink" href="#find-an-api-command-cli-debug" title="Permalink to this headline"></a></h2>
+<p>One way to find an API call for specific operation is to observe or “debug” the CLI, which itself uses the XML API. Once debugging is enabled, an XML API call will be displayed when a CLI command is executed.</p>
+<p>Using the example of our first API call in this workshop, the CLI command equivalent is “show chassis-ready”. When debugged, this gives the following output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="hll">admin@firewall&gt; debug cli on
+</span><span class="hll">admin@firewall&gt; show chassis-ready
+</span>(container-tag: chassis-ready pop-tag:)
+((eol-matched: . #t) (context-inserted-at-end-p: . #f))
+
+<span class="hll">&lt;request cmd=&quot;op&quot; cookie=&quot;5461146855105504&quot; uid=&quot;1000&quot;&gt;&lt;operations&gt;&lt;show&gt;&lt;chassis-ready/&gt;&lt;/show&gt;&lt;/operations&gt;&lt;/request&gt;
+</span>
+2021-11-05 12:56:57
+&lt;response status=&quot;success&quot;&gt;&lt;result&gt;&lt;![CDATA[yes]]&gt;&lt;/result&gt;&lt;/response&gt;
+
+yes
+</pre></div>
+</div>
+<p>Note the highlighted lines, first CLI command turning on the debug, then executing the command of interest, then observing the XML API equivalent for the CLI command.</p>
+<p>The XML required to make a call ourselves is between (but not including) the <code class="docutils literal notranslate"><span class="pre">&lt;operations&gt;&lt;/operations&gt;</span></code> tags. This gives us <code class="docutils literal notranslate"><span class="pre">&lt;show&gt;&lt;chassis-ready/&gt;&lt;/show&gt;</span></code>, which becomes the <code class="docutils literal notranslate"><span class="pre">cmd=</span></code> portion of the final API command:
+<code class="docutils literal notranslate"><span class="pre">https://{{your-firewall-IP}}/api/?type=op&amp;cmd=&lt;show&gt;&lt;chassis-ready&gt;&lt;/chassis-ready&gt;&lt;/show&gt;&amp;key={{your-API-key}}</span></code></p>
+<p>Choose one (or more) of the following operational commands, debug the CLI, then create and execute XML API command equivalents:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>show system masterkey-properties</p></li>
+<li><p>show arp all</p></li>
+<li><p>show interface management</p></li>
+<li><p>clear user-cache all</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="find-an-api-command-api-browser">
+<h2><span class="section-number">1.11. </span>Find An API Command - API Browser<a class="headerlink" href="#find-an-api-command-api-browser" title="Permalink to this headline"></a></h2>
+<p>Another way to find an API call for specific operation is to use the API browser, which can be found at <code class="docutils literal notranslate"><span class="pre">https://{{your-firewall-IP}}/api</span></code>. Once logged in to the web GUI, browse to <code class="docutils literal notranslate"><span class="pre">https://{{your-firewall-IP}}/api</span></code> and page listing the types of available XML API request types is displayed. Hyperlinks can be used to browse through the XML API request types until the required reqeust format is found.</p>
+<p>Again using the example of our first API call in this workshop, <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code>, click the <code class="docutils literal notranslate"><span class="pre">Operational</span> <span class="pre">Commands</span></code> link, then the <code class="docutils literal notranslate"><span class="pre">show</span></code> link, then the <code class="docutils literal notranslate"><span class="pre">chassis-ready</span></code> link. You will be shown the XML API format we observed in the CLI (<code class="docutils literal notranslate"><span class="pre">&lt;show&gt;&lt;chassis-ready/&gt;&lt;/show&gt;</span></code>), as well as the XML API URL structure (<code class="docutils literal notranslate"><span class="pre">/api/?type=op&amp;cmd=&lt;show&gt;&lt;chassis-ready&gt;&lt;/chassis-ready&gt;&lt;/show&gt;</span></code>). Clicking the hyperlinked XML API URL performs the API command and displays a result.</p>
+<p>Choose one (or more) of the following operational commands, find the command in the API browser, then create and execute XML API command equivalents:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>show clock</p></li>
+<li><p>show admins all</p></li>
+<li><p>clear counter all</p></li>
+<li><p>show system disk-space</p></li>
+</ul>
+</div></blockquote>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../overview/introduction.html" class="btn btn-neutral float-left" title="Lab Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="l200.html" class="btn btn-neutral float-right" title="XML API L200" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="Automation Workshops" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="l200.html" class="btn btn-neutral float-right" title="2. XML API L200" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
