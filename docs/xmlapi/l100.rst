@@ -1,4 +1,138 @@
 XML API L100
 ----------------------
 
-This training lab provides....
+Hands-on tasks for this workshop will be performing XML API calls against a PAN-OS firewall, from your command-line environment, using the ``curl`` command. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{variables in braces}} with your own values.
+
+Generate your API key
+========================
+Before you can make any API calls, you need to generate an API key. Your API key will allow you to authenticate and authorise yourself for future API calls.
+
+.. code-block::
+   
+        curl -k https://{{your-firewall-IP}}/api/?type=keygen&user={{your-admin-username}}&password={{your-admin-password}}
+
+Make your first real API call
+====================================
+Your first API call will tell you if the firewall is in a ready and operational state. This operational command is useful to know if the firewall has been recently rebooted, or in the case of software firewalls like VM-Series or CN-Series, recently created.
+
+.. code-block::
+   
+        curl -k https://{{your-firewall-IP}}/api/?type=op&cmd=<show><chassis-ready></chassis-ready></show>&key={{your-API-key}}
+
+Get firewall system info
+====================================
+Next, retrieve information about the firewall system. This too is an operational command, as shown by ``type=op`` within the API call. The ``cmd=`` portion contains the operational command we want to execute.
+
+.. code-block::
+   
+        curl -k https://{{your-firewall-IP}}/api/?type=op&cmd=<show><system><info></info></system></show>&key={{your-API-key}}
+
+Show the routing table
+====================================
+Another useful operational command is to display the routing table.
+
+.. code-block::
+   
+        curl -k https://{{your-firewall-IP}}/api/?type=op&cmd=<show><routing><route></route></routing></show>&key={{your-API-key}}
+
+Show the rulebase configuration
+====================================
+Now we look at the firewall configuration. Notice the type of API call this time is ``type=config``, and the action is ``get``, which as expected tells the API we want to do a read operation on the configuration. The ``xpath`` is then used to navigate down through the XML configuration file structure to specifically find the rules within the security policy.
+
+.. code-block::
+   
+        curl -k https://{{your-firewall-IP}}/api/?type=config&action=get&xpath=/config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules&key={{your-API-key}}
+
+Show the rulebase hit counts
+====================================
+We've seen the rulebase from the configuration, but if we wanted to programmatically retrieve the hit counts for each rule, that would be an operational command.
+
+.. code-block::
+   
+        curl -k https://{{your-firewall-IP}}/api/?type=op&cmd=<show><rule-hit-count><vsys><vsys-name><entry name='vsys1'><rule-base><entry name='security'><rules><all/></rules></entry></rule-base></entry></vsys-name></vsys></rule-hit-count></show>&key={{your-API-key}}
+
+Backup/export configuration
+====================================
+This is a common API call, given how many people have requirements to automate backing up configurations. This uses ``type=export`` to signify we are exporting something, and ``category=configuration`` describes the exact item we want to export.
+
+.. code-block::
+   
+        curl -k https://{{your-firewall-IP}}/api/?type=export&category=configuration&key={{your-API-key}}
+
+Gathering Reports
+====================================
+Another type of API call available is ``type=report``, to automate the gathering of reporting data. THe data is returned in XML format, such that it can be parsed by another system.
+
+.. code-block::
+   
+        curl -k https://{{your-firewall-IP}}/api/?type=report&reporttype=predefined&reportname=top-applications&key={{your-API-key}}
+
+
+User-ID
+================
+A frequent use case is to register user-to-IP mappings. The first task here, another operational command, shows the current user-to-IP mapping table
+
+.. code-block::
+   
+        curl -k https://{{your-firewall-IP}}/api/?type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key={{your-API-key}}
+
+The next API call registers a username to an IP address. This uses ``type=user-id``. Note we pass in the username, the IP address they are currently using, and a timeout value (in seconds).
+.. code-block::
+   
+        curl -k https://{{your-firewall-IP}}/api/?type=user-id&cmd=<uid-message><version>2.0</version><type>update</type><payload><login><entry name="NewUser" ip="10.50.100.9" timeout="120"/></login></payload></uid-message>&key={{your-API-key}}
+
+Replaying the API call to show the mapping table should now display the new user
+
+.. code-block::
+   
+        curl -k https://{{your-firewall-IP}}/api/?type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key={{your-API-key}}
+
+
+Find An API Command - CLI Debug
+================================
+
+One way to find an API call for specific operation is to observe or "debug" the CLI, which itself uses the XML API. Once debugging is enabled, an XML API call will be displayed when a CLI command is executed.
+
+Using the example of our first API call in this workshop, the CLI command equivalent is "show chassis-ready". When debugged, this gives the following output:
+
+.. code-block::
+        :emphasize-lines: 1,2,6
+   
+        admin@firewall> debug cli on
+        admin@firewall> show chassis-ready
+        (container-tag: chassis-ready pop-tag:)
+        ((eol-matched: . #t) (context-inserted-at-end-p: . #f))
+
+        <request cmd="op" cookie="5461146855105504" uid="1000"><operations><show><chassis-ready/></show></operations></request>
+
+        2021-11-05 12:56:57
+        <response status="success"><result><![CDATA[yes]]></result></response>
+
+        yes
+
+Note the highlighted lines, first CLI command turning on the debug, then executing the command of interest, then observing the XML API equivalent for the CLI command.
+
+The XML required to make a call ourselves is between (but not including) the ``<operations></operations>`` tags. This gives us ``<show><chassis-ready/></show>``, which becomes the ``cmd=`` portion of the final API command:
+``https://{{your-firewall-IP}}/api/?type=op&cmd=<show><chassis-ready></chassis-ready></show>&key={{your-API-key}}``
+
+Choose one (or more) of the following operational commands, debug the CLI, then create and execute XML API command equivalents:
+
+    * show system masterkey-properties
+    * show arp all
+    * show interface management
+    * clear user-cache all 
+
+Find An API Command - API Browser
+==================================
+
+Another way to find an API call for specific operation is to use the API browser, which can be found at ``https://{{your-firewall-IP}}/api``. Once logged in to the web GUI, browse to ``https://{{your-firewall-IP}}/api`` and page listing the types of available XML API request types is displayed. Hyperlinks can be used to browse through the XML API request types until the required reqeust format is found.
+
+Again using the example of our first API call in this workshop, ``show chassis-ready``, click the ``Operational Commands`` link, then the ``show`` link, then the ``chassis-ready`` link. You will be shown the XML API format we observed in the CLI (``<show><chassis-ready/></show>``), as well as the XML API URL structure (``/api/?type=op&cmd=<show><chassis-ready></chassis-ready></show>``). Clicking the hyperlinked XML API URL performs the API command and displays a result.
+
+Choose one (or more) of the following operational commands, find the command in the API browser, then create and execute XML API command equivalents:
+
+    * show clock
+    * show admins all
+    * clear counter all
+    * show system disk-space
+
