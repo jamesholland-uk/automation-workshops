@@ -37,6 +37,13 @@ The learning outcomes for these workshops are...
 ...
 
 
+.. code-block:: javascript
+  :linenos:
+
+   {
+      "key": "value"
+   }
+
 
 
 .. toctree::
