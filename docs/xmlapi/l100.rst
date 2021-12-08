@@ -3,10 +3,10 @@ XML API L100
 
 Hands-on tasks for this workshop will be performing XML API calls against a PAN-OS firewall, from your command-line environment, using the ``curl`` command. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{variables in braces}} with your own values.
 
-Note: Where text is enclosed in {{ double braces}}, replace the text with the relevant value for your environment.
+Note: Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.
 
-Generate your API key
-========================
+Store our firewall's IP as a variable
+================================================
 First, to make our lives easier, we will assign the management IP address of the firewall to a variable, so we can easily refer to it in our API calls.
 
 Today, in this enviornment, we will assign the API key value to a variable called ``host``, to be used in future API calls.
@@ -15,6 +15,9 @@ Today, in this enviornment, we will assign the API key value to a variable calle
    
         export host={{your-firewall-IP}}
 
+
+Generate your API key
+========================
 Before you can make any API calls, you need to generate an API key. Your API key will allow you to authenticate and authorise yourself for future API calls.
 
 .. code-block::
