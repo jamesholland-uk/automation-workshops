@@ -30,6 +30,8 @@ author = 'James Holland'
 extensions = [
     'sphinx_copybutton'
 ]
+copybutton_prompt_text = "$ "
+copybutton_here_doc_delimiter = "EOL"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
