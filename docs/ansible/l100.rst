@@ -9,7 +9,9 @@ Assumptions: A host with the following installed: curl, git, `Python 3
 <https://github.com/PaloAltoNetworks/pan-os-python>`_, `PAN-OS Ansible Collection
 <https://github.com/PaloAltoNetworks/pan-os-ansible>`_, and all prerequisite requirements. Also, access to a PAN-OS next-generation firewall from your host.
 
-Note: Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.
+Note:
+    * Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.
+    * Commands you could/should execute are denoted with ``$`` at the start, other text boxes show expected outputs.
 
 
 Ansible pre-flight checks
@@ -26,7 +28,7 @@ The output should look something like this:
 
 .. code-block::
    
-        $ ansible-playbook [core 2.11.5] 
+        ansible-playbook [core 2.11.5] 
             config file = None
             configured module search path = ['/Users/jholland/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
             ansible python module location = /usr/local/lib/python3.9/site-packages/ansible
@@ -124,8 +126,66 @@ Change the IP address in this file to match your firewalls's management IP addre
         ip_address: '{{ your firewall management IP }}'
         EOL
 
+.. code-block::
+
+        $ cat host_vars/lab-fw.yml
 
 
+.. code-block::
+
+        ---
+        ip_address: '{{ your firewall management IP }}'
+
+
+Prepare the firewall credentials
+================================================
+
+Before you can execute any Ansible playbooks, you need to be able to login to the firewall. We will store the admin username and admin password as variables.
+
+.. code-block::
+   
+        $ export panos_username={{ your-admin-username }}
+
+.. code-block::
+
+        $ export panos_password={{ your-admin-password }}
+
+
+In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will use these credentials stored in variables for executing Ansible playbooks.
+
+
+Run our first Ansible playbook
+================================================
+
+Our first playbook executes the ``show chassis-ready`` command. This is useful to ensure the firewall is ready to accept further operations such as configuration changes, software downloads and updgrades, and more. The `playbook
+<https://github.com/PaloAltoNetworks/ansible-playbooks/blob/master/check_ready.yml>`_ runs the ``show chassis-ready`` command on a loop until it gets the positive ``yes`` result that the firewall is ready.
+
+Notice in the command below that we execute the ``ansible-playbook`` command, pass in the inventory using ``-i inventory``, then specify the name of the playbook we want to run, ``check_ready.yml``, and finally pass in the firewall credentials with ``--extra-vars "username=$panos_username password=$panos_password"``.
+
+.. code-block::
+    
+        $ ansible-playbook -i inventory check_ready.yml --extra-vars "username=$panos_username password=$panos_password"
+
+
+The output should look something like this:
+
+.. code-block::
+
+        PLAY [firewall] **************************************************************************************************
+
+        TASK [Gathering Facts] *******************************************************************************************
+        ok: [firewall]
+
+        TASK [Check to see if device is ready] ***************************************************************************
+        ok: [firewall]
+
+        PLAY RECAP *******************************************************************************************************
+        firewall                   : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+
+
+Next?!?!
+================================================
 
 TODO
 ================================================
