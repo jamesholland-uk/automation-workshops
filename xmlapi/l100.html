@@ -102,7 +102,13 @@
 <h1><span class="section-number">1. </span>XML API L100<a class="headerlink" href="#xml-api-l100" title="Permalink to this headline"></a></h1>
 <p>Hands-on tasks for this workshop will be performing XML API calls against a PAN-OS firewall, from your command-line environment, using the <code class="docutils literal notranslate"><span class="pre">curl</span></code> command. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.</p>
 <p>Assumptions: A host with <code class="docutils literal notranslate"><span class="pre">curl</span></code> installed, access to a PAN-OS next-generation firewall from your host.</p>
-<p>Note: Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.</p>
+<dl class="simple">
+<dt>Note:</dt><dd><ul class="simple">
+<li><p>Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.</p></li>
+<li><p>Commands you could/should execute are denoted with <code class="docutils literal notranslate"><span class="pre">$</span></code> at the start, other text boxes show expected outputs.</p></li>
+</ul>
+</dd>
+</dl>
 <section id="store-our-firewall-s-ip-as-a-variable">
 <h2><span class="section-number">1.1. </span>Store our firewall’s IP as a variable<a class="headerlink" href="#store-our-firewall-s-ip-as-a-variable" title="Permalink to this headline"></a></h2>
 <p>First, to make our lives easier, we will assign the management IP address of the firewall to a variable, so we can easily refer to it in our API calls.</p>

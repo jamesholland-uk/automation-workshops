@@ -5,7 +5,10 @@ Hands-on tasks for this workshop will be performing XML API calls against a PAN-
 
 Assumptions: A host with ``curl`` installed, access to a PAN-OS next-generation firewall from your host.
 
-Note: Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.
+Note:
+    * Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.
+    * Commands you could/should execute are denoted with ``$`` at the start, other text boxes show expected outputs.
+
 
 Store our firewall's IP as a variable
 ================================================

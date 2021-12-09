@@ -53,7 +53,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#ansible-pre-flight-checks">1.1. Ansible pre-flight checks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#download-ansible-playbooks">1.2. Download Ansible playbooks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#setup-the-inventory">1.3. Setup the inventory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#todo">1.4. TODO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prepare-the-firewall-credentials">1.4. Prepare the firewall credentials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-our-first-ansible-playbook">1.5. Run our first Ansible playbook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#next">1.6. Next?!?!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#todo">1.7. TODO</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="l200.html">2. Ansible L200</a></li>
@@ -94,7 +97,13 @@
 <h1><span class="section-number">1. </span>Ansible L100<a class="headerlink" href="#ansible-l100" title="Permalink to this headline"></a></h1>
 <p>Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.</p>
 <p>Assumptions: A host with the following installed: curl, git, <a class="reference external" href="https://www.python.org/downloads">Python 3</a>, <a class="reference external" href="https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pip">Ansible</a>, <a class="reference external" href="https://github.com/PaloAltoNetworks/pan-os-python">PAN-OS-Python</a>, <a class="reference external" href="https://github.com/PaloAltoNetworks/pan-os-ansible">PAN-OS Ansible Collection</a>, and all prerequisite requirements. Also, access to a PAN-OS next-generation firewall from your host.</p>
-<p>Note: Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.</p>
+<dl class="simple">
+<dt>Note:</dt><dd><ul class="simple">
+<li><p>Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.</p></li>
+<li><p>Commands you could/should execute are denoted with <code class="docutils literal notranslate"><span class="pre">$</span></code> at the start, other text boxes show expected outputs.</p></li>
+</ul>
+</dd>
+</dl>
 <section id="ansible-pre-flight-checks">
 <h2><span class="section-number">1.1. </span>Ansible pre-flight checks<a class="headerlink" href="#ansible-pre-flight-checks" title="Permalink to this headline"></a></h2>
 <p>First let’s check that Ansible is installed on our host.</p>
@@ -102,15 +111,15 @@
 </pre></div>
 </div>
 <p>The output should look something like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook [core 2.11.5]
-    config file = None
-    configured module search path = [&#39;/Users/jholland/.ansible/plugins/modules&#39;, &#39;/usr/share/ansible/plugins/modules&#39;]
-    ansible python module location = /usr/local/lib/python3.9/site-packages/ansible
-    ansible collection location = /Users/jholland/.ansible/collections:/usr/share/ansible/collections
-    executable location = /usr/local/bin/ansible-playbook
-    python version = 3.9.7 (default, Oct 13 2021, 06:45:31) [Clang 13.0.0 (clang-1300.0.29.3)]
-    jinja version = 2.11.3
-    libyaml = True
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ansible</span><span class="o">-</span><span class="n">playbook</span> <span class="p">[</span><span class="n">core</span> <span class="mf">2.11.5</span><span class="p">]</span>
+    <span class="n">config</span> <span class="n">file</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">configured</span> <span class="n">module</span> <span class="n">search</span> <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;/Users/jholland/.ansible/plugins/modules&#39;</span><span class="p">,</span> <span class="s1">&#39;/usr/share/ansible/plugins/modules&#39;</span><span class="p">]</span>
+    <span class="n">ansible</span> <span class="n">python</span> <span class="n">module</span> <span class="n">location</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.9</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">ansible</span>
+    <span class="n">ansible</span> <span class="n">collection</span> <span class="n">location</span> <span class="o">=</span> <span class="o">/</span><span class="n">Users</span><span class="o">/</span><span class="n">jholland</span><span class="o">/.</span><span class="n">ansible</span><span class="o">/</span><span class="n">collections</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">ansible</span><span class="o">/</span><span class="n">collections</span>
+    <span class="n">executable</span> <span class="n">location</span> <span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="nb">bin</span><span class="o">/</span><span class="n">ansible</span><span class="o">-</span><span class="n">playbook</span>
+    <span class="n">python</span> <span class="n">version</span> <span class="o">=</span> <span class="mf">3.9.7</span> <span class="p">(</span><span class="n">default</span><span class="p">,</span> <span class="n">Oct</span> <span class="mi">13</span> <span class="mi">2021</span><span class="p">,</span> <span class="mi">06</span><span class="p">:</span><span class="mi">45</span><span class="p">:</span><span class="mi">31</span><span class="p">)</span> <span class="p">[</span><span class="n">Clang</span> <span class="mf">13.0.0</span> <span class="p">(</span><span class="n">clang</span><span class="o">-</span><span class="mf">1300.0.29.3</span><span class="p">)]</span>
+    <span class="n">jinja</span> <span class="n">version</span> <span class="o">=</span> <span class="mf">2.11.3</span>
+    <span class="n">libyaml</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 </div>
 <p>Then let’s check we have the PAN-OS Collection installed</p>
@@ -174,9 +183,51 @@ ip_address: &#39;{{ your firewall management IP }}&#39;
 EOL
 </pre></div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat host_vars/lab-fw.yml
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---</span>
+<span class="n">ip_address</span><span class="p">:</span> <span class="s1">&#39;{{ your firewall management IP }}&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="prepare-the-firewall-credentials">
+<h2><span class="section-number">1.4. </span>Prepare the firewall credentials<a class="headerlink" href="#prepare-the-firewall-credentials" title="Permalink to this headline"></a></h2>
+<p>Before you can execute any Ansible playbooks, you need to be able to login to the firewall. We will store the admin username and admin password as variables.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_username={{ your-admin-username }}
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_password={{ your-admin-password }}
+</pre></div>
+</div>
+<p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will use these credentials stored in variables for executing Ansible playbooks.</p>
+</section>
+<section id="run-our-first-ansible-playbook">
+<h2><span class="section-number">1.5. </span>Run our first Ansible playbook<a class="headerlink" href="#run-our-first-ansible-playbook" title="Permalink to this headline"></a></h2>
+<p>Our first playbook executes the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code> command. This is useful to ensure the firewall is ready to accept further operations such as configuration changes, software downloads and updgrades, and more. The <a class="reference external" href="https://github.com/PaloAltoNetworks/ansible-playbooks/blob/master/check_ready.yml">playbook</a> runs the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code> command on a loop until it gets the positive <code class="docutils literal notranslate"><span class="pre">yes</span></code> result that the firewall is ready.</p>
+<p>Notice in the command below that we execute the <code class="docutils literal notranslate"><span class="pre">ansible-playbook</span></code> command, pass in the inventory using <code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">inventory</span></code>, then specify the name of the playbook we want to run, <code class="docutils literal notranslate"><span class="pre">check_ready.yml</span></code>, and finally pass in the firewall credentials with <code class="docutils literal notranslate"><span class="pre">--extra-vars</span> <span class="pre">&quot;username=$panos_username</span> <span class="pre">password=$panos_password&quot;</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory check_ready.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
+</pre></div>
+</div>
+<p>The output should look something like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PLAY</span> <span class="p">[</span><span class="n">firewall</span><span class="p">]</span> <span class="o">**************************************************************************************************</span>
+
+<span class="n">TASK</span> <span class="p">[</span><span class="n">Gathering</span> <span class="n">Facts</span><span class="p">]</span> <span class="o">*******************************************************************************************</span>
+<span class="n">ok</span><span class="p">:</span> <span class="p">[</span><span class="n">firewall</span><span class="p">]</span>
+
+<span class="n">TASK</span> <span class="p">[</span><span class="n">Check</span> <span class="n">to</span> <span class="n">see</span> <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="n">ready</span><span class="p">]</span> <span class="o">***************************************************************************</span>
+<span class="n">ok</span><span class="p">:</span> <span class="p">[</span><span class="n">firewall</span><span class="p">]</span>
+
+<span class="n">PLAY</span> <span class="n">RECAP</span> <span class="o">*******************************************************************************************************</span>
+<span class="n">firewall</span>                   <span class="p">:</span> <span class="n">ok</span><span class="o">=</span><span class="mi">2</span>    <span class="n">changed</span><span class="o">=</span><span class="mi">0</span>    <span class="n">unreachable</span><span class="o">=</span><span class="mi">0</span>    <span class="n">failed</span><span class="o">=</span><span class="mi">0</span>    <span class="n">skipped</span><span class="o">=</span><span class="mi">0</span>    <span class="n">rescued</span><span class="o">=</span><span class="mi">0</span>    <span class="n">ignored</span><span class="o">=</span><span class="mi">0</span>
+</pre></div>
+</div>
+</section>
+<section id="next">
+<h2><span class="section-number">1.6. </span>Next?!?!<a class="headerlink" href="#next" title="Permalink to this headline"></a></h2>
 </section>
 <section id="todo">
-<h2><span class="section-number">1.4. </span>TODO<a class="headerlink" href="#todo" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.7. </span>TODO<a class="headerlink" href="#todo" title="Permalink to this headline"></a></h2>
 <p>Get API key
 Show system info
 Show ready
