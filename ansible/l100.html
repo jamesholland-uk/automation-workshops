@@ -49,7 +49,13 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">PAN-OS Ansible</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Ansible L100</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Ansible L100</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#ansible-pre-flight-checks">1.1. Ansible pre-flight checks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download-ansible-playbooks">1.2. Download Ansible playbooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup-the-inventory">1.3. Setup the inventory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#todo">1.4. TODO</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="l200.html">2. Ansible L200</a></li>
 <li class="toctree-l1"><a class="reference internal" href="l300.html">3. Ansible L300</a></li>
 </ul>
@@ -86,7 +92,107 @@
              
   <section id="ansible-l100">
 <h1><span class="section-number">1. </span>Ansible L100<a class="headerlink" href="#ansible-l100" title="Permalink to this headline"></a></h1>
-<p>This training lab provides….</p>
+<p>Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.</p>
+<p>Assumptions: A host with the following installed: curl, git, <a class="reference external" href="https://www.python.org/downloads">Python 3</a>, <a class="reference external" href="https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pip">Ansible</a>, <a class="reference external" href="https://github.com/PaloAltoNetworks/pan-os-python">PAN-OS-Python</a>, <a class="reference external" href="https://github.com/PaloAltoNetworks/pan-os-ansible">PAN-OS Ansible Collection</a>, and all prerequisite requirements. Also, access to a PAN-OS next-generation firewall from your host.</p>
+<p>Note: Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.</p>
+<section id="ansible-pre-flight-checks">
+<h2><span class="section-number">1.1. </span>Ansible pre-flight checks<a class="headerlink" href="#ansible-pre-flight-checks" title="Permalink to this headline"></a></h2>
+<p>First let’s check that Ansible is installed on our host.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook --version
+</pre></div>
+</div>
+<p>The output should look something like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook [core 2.11.5]
+    config file = None
+    configured module search path = [&#39;/Users/jholland/.ansible/plugins/modules&#39;, &#39;/usr/share/ansible/plugins/modules&#39;]
+    ansible python module location = /usr/local/lib/python3.9/site-packages/ansible
+    ansible collection location = /Users/jholland/.ansible/collections:/usr/share/ansible/collections
+    executable location = /usr/local/bin/ansible-playbook
+    python version = 3.9.7 (default, Oct 13 2021, 06:45:31) [Clang 13.0.0 (clang-1300.0.29.3)]
+    jinja version = 2.11.3
+    libyaml = True
+</pre></div>
+</div>
+<p>Then let’s check we have the PAN-OS Collection installed</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-doc --list | grep paloaltonetworks.panos
+</pre></div>
+</div>
+<p>The output should list al the modules in the PAN-OS Collection, and the end of the list should look something like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_virtual_router</span>                           <span class="n">Confi</span><span class="o">...</span>
+<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_virtual_router_facts</span>                     <span class="n">Retri</span><span class="o">...</span>
+<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_virtual_wire</span>                             <span class="n">Confi</span><span class="o">...</span>
+<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_vlan</span>                                     <span class="n">Confi</span><span class="o">...</span>
+<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_vlan_interface</span>                           <span class="n">confi</span><span class="o">...</span>
+<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_vm_auth_key</span>                              <span class="n">Creat</span><span class="o">...</span>
+<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_zone</span>                                     <span class="n">confi</span><span class="o">...</span>
+<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_zone_facts</span>                               <span class="n">Retri</span><span class="o">...</span>
+</pre></div>
+</div>
+</section>
+<section id="download-ansible-playbooks">
+<h2><span class="section-number">1.2. </span>Download Ansible playbooks<a class="headerlink" href="#download-ansible-playbooks" title="Permalink to this headline"></a></h2>
+<p>In this workshop, we’re going to be using playbooks from the <a class="reference external" href="https://github.com/PaloAltoNetworks/ansible-playbooks">repository of examples</a>, created by <a class="reference external" href="https://github.com/mrichardson03">Michael Richardson</a>. We’ll use git to download the playbooks…</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/PaloAltoNetworks/ansible-playbooks
+</pre></div>
+</div>
+<p>…then move into the playbooks directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd ansible-playbooks
+</pre></div>
+</div>
+</section>
+<section id="setup-the-inventory">
+<h2><span class="section-number">1.3. </span>Setup the inventory<a class="headerlink" href="#setup-the-inventory" title="Permalink to this headline"></a></h2>
+<p>Ansible needs to know the details for the hosts against which it should execute playbooks. This <code class="docutils literal notranslate"><span class="pre">inventory</span></code> can take many formats and locations, and for this workshop we will use the inventory format from the example playbooks repository.</p>
+<p>In the ansible-playbooks directory, the <code class="docutils literal notranslate"><span class="pre">inventory</span></code> file contains a list of available hosts for us to run playbooks against:
+.. code-block:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat inventory
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">firewall</span>
+<span class="n">ha_pair</span>
+
+<span class="n">panorama</span>
+<span class="n">panorama_ha_pair</span>
+</pre></div>
+</div>
+<p>All our example playbooks begin with a reference to a default target host from our <code class="docutils literal notranslate"><span class="pre">inventory</span></code> file, which is <code class="docutils literal notranslate"><span class="pre">firewall</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">hosts</span><span class="p">:</span> <span class="s1">&#39;{{ target | default(&quot;firewall&quot;) }}&#39;</span>
+</pre></div>
+</div>
+<p>We provide the <code class="docutils literal notranslate"><span class="pre">firewall</span></code>’s IP address in the <code class="docutils literal notranslate"><span class="pre">host_vars/lab-fw.yml</span></code> file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat host_vars/lab-fw.yml
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---</span>
+<span class="n">ip_address</span><span class="p">:</span> <span class="s1">&#39;192.168.55.10&#39;</span>
+</pre></div>
+</div>
+<p>Change the IP address in this file to match your firewalls’s management IP address:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat &gt; host_vars/lab-fw.yml &lt;&lt;EOL
+---
+ip_address: &#39;{{ your firewall management IP }}&#39;
+EOL
+</pre></div>
+</div>
+</section>
+<section id="todo">
+<h2><span class="section-number">1.4. </span>TODO<a class="headerlink" href="#todo" title="Permalink to this headline"></a></h2>
+<p>Get API key
+Show system info
+Show ready
+Show route table
+Show rules
+Show rule hit count
+Show applications
+Show vulnerability signature list
+Register a user-to-IP
+Export config
+Get tech-support file</p>
+<p>Upgrade OS</p>
+<p>&lt;&lt; simple bash script to do some changes, the commit and watch until finished &gt;&gt;
+&lt;&lt; anothe bash script to get some info, pass to another call with a variable &gt;&gt;</p>
+<p>Scripts - explain ideas of pre-caned config snippets, idea behind skillets etc, golden eval configs, etc</p>
+</section>
 </section>
 
 

@@ -2,3 +2,23 @@ XML API L200
 ----------------------
 
 This content is still being developed.
+
+
+
+
+Get API key
+Show system info
+Show ready
+Show route table
+Show rules
+Show rule hit count
+Show applications
+Show vulnerability signature list
+Register a user-to-IP
+Export config
+Get tech-support file
+<< simple bash script to do some changes, the commit and watch until finished >>
+<< anothe bash script to get some info, pass to another call with a variable >>
+
+
+Scripts - explain ideas of pre-caned config snippets, idea behind skillets etc, golden eval configs, etc
