@@ -1,9 +1,9 @@
 XML API L100
 ----------------------
 
-Hands-on tasks for this workshop will be performing XML API calls against a PAN-OS firewall, from your command-line environment, using the ``curl`` command. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{variables in braces}} with your own values.
+Hands-on tasks for this workshop will be performing XML API calls against a PAN-OS firewall, from your command-line environment, using the ``curl`` command. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.
 
-Assumptions: A host with ``curl`` installed, access to a PAN-OS next-generation firewall from your host
+Assumptions: A host with ``curl`` installed, access to a PAN-OS next-generation firewall from your host.
 
 Note: Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.
 
@@ -15,7 +15,7 @@ Today, in this enviornment, we will assign the API key value to a variable calle
 
 .. code-block::
    
-        export host={{your-firewall-IP}}
+        $ export host={{your-firewall-IP}}
 
 
 Generate your API key
@@ -24,13 +24,13 @@ Before you can make any API calls, you need to generate an API key. Your API key
 
 .. code-block::
    
-        curl -k https://$host/api/?type=keygen&user={{your-admin-username}}&password={{your-admin-password}}
+        $ curl -k https://$host/api/?type=keygen&user={{your-admin-username}}&password={{your-admin-password}}
 
 In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will assign the API key value to a variable to be used in future API calls.
 
 .. code-block::
    
-        export key={{your-API-key}}
+        $ export key={{your-API-key}}
 
 Make your first real API call
 ====================================
@@ -38,7 +38,7 @@ Your first API call will tell you if the firewall is in a ready and operational 
 
 .. code-block::
    
-        curl -k https://$host/api/?type=op&cmd=<show><chassis-ready></chassis-ready></show>&key=$key
+        $ curl -k https://$host/api/?type=op&cmd=<show><chassis-ready></chassis-ready></show>&key=$key
 
 Get firewall system info
 ====================================
@@ -46,7 +46,7 @@ Next, retrieve information about the firewall system. This too is an operational
 
 .. code-block::
    
-        curl -k https://$host/api/?type=op&cmd=<show><system><info></info></system></show>&key=$key
+        $ curl -k https://$host/api/?type=op&cmd=<show><system><info></info></system></show>&key=$key
 
 Show the routing table
 ====================================
@@ -54,7 +54,7 @@ Another useful operational command is to display the routing table.
 
 .. code-block::
    
-        curl -k https://$host/api/?type=op&cmd=<show><routing><route></route></routing></show>&key=$key
+        $ curl -k https://$host/api/?type=op&cmd=<show><routing><route></route></routing></show>&key=$key
 
 Show the rulebase configuration
 ====================================
@@ -62,7 +62,7 @@ Now we look at the firewall configuration. Notice the type of API call this time
 
 .. code-block::
    
-        curl -k https://$host/api/?type=config&action=get&xpath=/config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules&key=$key
+        $ curl -k https://$host/api/?type=config&action=get&xpath=/config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules&key=$key
 
 Show the rulebase hit counts
 ====================================
@@ -70,7 +70,7 @@ We've seen the rulebase from the configuration, but if we wanted to programmatic
 
 .. code-block::
    
-        curl -k https://$host/api/?type=op&cmd=<show><rule-hit-count><vsys><vsys-name><entry name='vsys1'><rule-base><entry name='security'><rules><all/></rules></entry></rule-base></entry></vsys-name></vsys></rule-hit-count></show>&key=$key
+        $ curl -k https://$host/api/?type=op&cmd=<show><rule-hit-count><vsys><vsys-name><entry name='vsys1'><rule-base><entry name='security'><rules><all/></rules></entry></rule-base></entry></vsys-name></vsys></rule-hit-count></show>&key=$key
 
 Backup/export configuration
 ====================================
@@ -78,7 +78,7 @@ This is a common API call, given how many people have requirements to automate b
 
 .. code-block::
    
-        curl -k https://$host/api/?type=export&category=configuration&key=$key
+        $ curl -k https://$host/api/?type=export&category=configuration&key=$key
 
 Gathering Reports
 ====================================
@@ -86,7 +86,7 @@ Another type of API call available is ``type=report``, to automate the gathering
 
 .. code-block::
    
-        curl -k https://$host/api/?type=report&reporttype=predefined&reportname=top-applications&key=$key
+        $ curl -k https://$host/api/?type=report&reporttype=predefined&reportname=top-applications&key=$key
 
 
 User-ID
@@ -95,18 +95,18 @@ A frequent use case is to register user-to-IP mappings. The first task here, ano
 
 .. code-block::
    
-        curl -k https://$host/api/?type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key=$key
+        $ curl -k https://$host/api/?type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key=$key
 
 The next API call registers a username to an IP address. This uses ``type=user-id``. Note we pass in the username, the IP address they are currently using, and a timeout value (in seconds).
 .. code-block::
    
-        curl -k https://$host/api/?type=user-id&cmd=<uid-message><version>2.0</version><type>update</type><payload><login><entry name="NewUser" ip="10.50.100.9" timeout="120"/></login></payload></uid-message>&key=$key
+        $ curl -k https://$host/api/?type=user-id&cmd=<uid-message><version>2.0</version><type>update</type><payload><login><entry name="NewUser" ip="10.50.100.9" timeout="120"/></login></payload></uid-message>&key=$key
 
 Replaying the API call to show the mapping table should now display the new user
 
 .. code-block::
    
-        curl -k https://$host/api/?type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key=$key
+        $ curl -k https://$host/api/?type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key=$key
 
 
 Find An API Command - CLI Debug

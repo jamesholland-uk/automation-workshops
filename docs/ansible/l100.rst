@@ -1,4 +1,150 @@
 Ansible L100
 ----------------------
 
-This training lab provides....
+Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.
+
+Assumptions: A host with the following installed: curl, git, `Python 3
+<https://www.python.org/downloads>`_, `Ansible
+<https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pip>`_, `PAN-OS-Python
+<https://github.com/PaloAltoNetworks/pan-os-python>`_, `PAN-OS Ansible Collection
+<https://github.com/PaloAltoNetworks/pan-os-ansible>`_, and all prerequisite requirements. Also, access to a PAN-OS next-generation firewall from your host.
+
+Note: Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.
+
+
+Ansible pre-flight checks
+================================================
+
+First let's check that Ansible is installed on our host.
+
+.. code-block::
+   
+        $ ansible-playbook --version 
+
+
+The output should look something like this:
+
+.. code-block::
+   
+        $ ansible-playbook [core 2.11.5] 
+            config file = None
+            configured module search path = ['/Users/jholland/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+            ansible python module location = /usr/local/lib/python3.9/site-packages/ansible
+            ansible collection location = /Users/jholland/.ansible/collections:/usr/share/ansible/collections
+            executable location = /usr/local/bin/ansible-playbook
+            python version = 3.9.7 (default, Oct 13 2021, 06:45:31) [Clang 13.0.0 (clang-1300.0.29.3)]
+            jinja version = 2.11.3
+            libyaml = True
+
+
+Then let's check we have the PAN-OS Collection installed
+
+.. code-block::
+   
+        $ ansible-doc --list | grep paloaltonetworks.panos
+
+The output should list al the modules in the PAN-OS Collection, and the end of the list should look something like this:
+
+.. code-block::
+   
+        paloaltonetworks.panos.panos_virtual_router                           Confi...
+        paloaltonetworks.panos.panos_virtual_router_facts                     Retri...
+        paloaltonetworks.panos.panos_virtual_wire                             Confi...
+        paloaltonetworks.panos.panos_vlan                                     Confi...
+        paloaltonetworks.panos.panos_vlan_interface                           confi...
+        paloaltonetworks.panos.panos_vm_auth_key                              Creat...
+        paloaltonetworks.panos.panos_zone                                     confi...
+        paloaltonetworks.panos.panos_zone_facts                               Retri...
+
+
+Download Ansible playbooks
+================================================
+
+In this workshop, we're going to be using playbooks from the `repository of examples
+<https://github.com/PaloAltoNetworks/ansible-playbooks>`_, created by `Michael Richardson
+<https://github.com/mrichardson03>`_. We'll use git to download the playbooks...
+
+.. code-block::
+   
+        $ git clone https://github.com/PaloAltoNetworks/ansible-playbooks
+
+
+...then move into the playbooks directory
+
+.. code-block::
+   
+        $ cd ansible-playbooks
+
+
+Setup the inventory
+================================================
+
+Ansible needs to know the details for the hosts against which it should execute playbooks. This ``inventory`` can take many formats and locations, and for this workshop we will use the inventory format from the example playbooks repository.
+
+In the ansible-playbooks directory, the ``inventory`` file contains a list of available hosts for us to run playbooks against:
+.. code-block::
+   
+        $ cat inventory
+
+.. code-block::
+
+        firewall
+        ha_pair
+
+        panorama
+        panorama_ha_pair
+
+
+All our example playbooks begin with a reference to a default target host from our ``inventory`` file, which is ``firewall``:
+
+.. code-block::
+   
+        - hosts: '{{ target | default("firewall") }}'
+
+
+We provide the ``firewall``'s IP address in the ``host_vars/lab-fw.yml`` file:
+
+.. code-block::
+
+        $ cat host_vars/lab-fw.yml
+
+
+.. code-block::
+
+        ---
+        ip_address: '192.168.55.10'
+
+
+Change the IP address in this file to match your firewalls's management IP address:
+
+.. code-block::
+
+        $ cat > host_vars/lab-fw.yml <<EOL
+        ---
+        ip_address: '{{ your firewall management IP }}'
+        EOL
+
+
+
+
+TODO
+================================================
+Get API key
+Show system info
+Show ready
+Show route table
+Show rules
+Show rule hit count
+Show applications
+Show vulnerability signature list
+Register a user-to-IP
+Export config
+Get tech-support file
+
+Upgrade OS
+
+<< simple bash script to do some changes, the commit and watch until finished >>
+<< anothe bash script to get some info, pass to another call with a variable >>
+
+
+Scripts - explain ideas of pre-caned config snippets, idea behind skillets etc, golden eval configs, etc
