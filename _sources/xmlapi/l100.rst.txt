@@ -3,6 +3,8 @@ XML API L100
 
 Hands-on tasks for this workshop will be performing XML API calls against a PAN-OS firewall, from your command-line environment, using the ``curl`` command. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{variables in braces}} with your own values.
 
+Assumptions: A host with ``curl`` installed, access to a PAN-OS next-generation firewall from your host
+
 Note: Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.
 
 Store our firewall's IP as a variable
@@ -129,7 +131,7 @@ Using the example of our first API call in this workshop, the CLI command equiva
 
         yes
 
-Note the highlighted lines, first CLI command turning on the debug, then executing the command of interest, then observing the XML API equivalent for the CLI command.
+Note the highlighted lines, first the command for turning on CLI debugging, then the execution the command of interest (``show chassis ready``), then the observation of the XML API equivalent for the CLI command.
 
 The XML required to make a call ourselves is between (but not including) the ``<operations></operations>`` tags. This gives us ``<show><chassis-ready/></show>``, which becomes the ``cmd=`` portion of the final API command:
 ``https://$host/api/?type=op&cmd=<show><chassis-ready></chassis-ready></show>&key=$key``
@@ -144,7 +146,7 @@ Choose one (or more) of the following operational commands, debug the CLI, then 
 Find An API Command - API Browser
 ==================================
 
-Another way to find an API call for specific operation is to use the API browser, which can be found at ``https://$host/api``. Once logged in to the web GUI, browse to ``https://$host/api`` and page listing the types of available XML API request types is displayed. Hyperlinks can be used to browse through the XML API request types until the required reqeust format is found.
+Another way to find an API call for specific operation is to use the API browser, which can be found at ``https://$host/api``. Once logged in to the web GUI, browse to ``https://$host/api`` and a listing of the types of available XML API request types is displayed. Hyperlinks can be used to browse through the XML API request types until the required reqeust format is found.
 
 Again using the example of our first API call in this workshop, ``show chassis-ready``, click the ``Operational Commands`` link, then the ``show`` link, then the ``chassis-ready`` link. You will be shown the XML API format we observed in the CLI (``<show><chassis-ready/></show>``), as well as the XML API URL structure (``/api/?type=op&cmd=<show><chassis-ready></chassis-ready></show>``). Clicking the hyperlinked XML API URL performs the API command and displays a result.
 
