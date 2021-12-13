@@ -159,10 +159,96 @@ In production environments, credentials should be stored, accessed and used secu
 Run our first Ansible playbook
 ================================================
 
-Our first playbook executes the ``show chassis-ready`` command. This is useful to ensure the firewall is ready to accept further operations such as configuration changes, software downloads and updgrades, and more. The `playbook
-<https://github.com/PaloAltoNetworks/ansible-playbooks/blob/master/check_ready.yml>`_ runs the ``show chassis-ready`` command on a loop until it gets the positive ``yes`` result that the firewall is ready.
+Our first Ansible playbook will gather system information from the firewall. Data gathering or read-only tasks are good candidiates for anyone starting out in automation. Execute the `system-info playbook
+<system_info.yml>`_ using the commands below.
 
-Notice in the command below that we execute the ``ansible-playbook`` command, pass in the inventory using ``-i inventory``, then specify the name of the playbook we want to run, ``check_ready.yml``, and finally pass in the firewall credentials with ``--extra-vars "username=$panos_username password=$panos_password"``.
+.. code-block::
+    
+        $ ansible-playbook -i inventory system_info.yml --extra-vars "username=$panos_username password=$panos_password"
+
+Notice that we execute the ``ansible-playbook`` command, pass in the previously mentioned inventory using ``-i inventory``, then specify the name of the playbook we want to run, ``system_info.yml``, and finally pass in the firewall credentials with ``--extra-vars "username=$panos_username password=$panos_password"``.
+
+Breaking down the component parts of the playbook:
+
+First we see default host is `firewall`, from the previously mentioned inventory. Our connection type is `local` (we don't use Ansible in a traditional method because executing code on PAN-OS would work and would not be secure; instead we execute commands locally which call the PAN-OS XML API).
+
+.. code-block::
+
+        - hosts: '{{ target | default("firewall") }}'
+        connection: local
+
+Second we see a section of variables. We get the `ip_address` of the firewall from the previously mentioned inventory, and we get the username and password from the command we typed into the CLI. We don't use the api_key in this instance.
+
+.. code-block::
+
+        vars:
+          device:
+            ip_address: '{{ ip_address }}'
+            username: '{{ username | default(omit) }}'
+            password: '{{ password | default(omit) }}'
+            api_key: '{{ api_key | default(omit) }}'
+
+
+Now we get to our `tasks`, the jobs we want Ansible to do for us. We are just data gathering, so our first task is to gather `facts`, which in Ansible unsurprisingly are information about the target system. The second task using the built-in `debug` task to display a series of useful system information.
+
+.. code-block::
+
+        tasks:
+        - name: Gather facts for device
+        paloaltonetworks.panos.panos_facts:
+                provider: "{{ device }}"
+
+        - name: Display model, PAN-OS version
+        debug:
+                msg:
+                - "Hostname: {{ ansible_facts['net_hostname'] }}"
+                - "Serial: {{ ansible_facts['net_serial'] }}"
+                .
+                .
+                .
+
+The output should look something like this, specifically the highlighted lines showing the information from our firewall:
+
+.. code-block::
+        :emphasize-lines: 12-21
+
+        PLAY [firewall] ***************************************************************************************************************************
+
+        TASK [Gathering Facts] ********************************************************************************************************************
+        ok: [firewall]
+
+        TASK [Gather facts for device] ************************************************************************************************************
+        ok: [firewall]
+
+        TASK [Display model, PAN-OS version] ******************************************************************************************************
+        ok: [firewall] => {
+        "msg": [
+                "Hostname: james-vm-series-a",
+                "Serial: 007951000225171",
+                "Model: PA-VM",
+                "Version: 10.1.3",
+                "Uptime: 46 days, 3:03:16",
+                "HA Enabled: True",
+                "HA Type: Active-Passive",
+                "HA Status: active",
+                "Multi-VSYS: off",
+                "1546 out of 256000 sessions in use"
+        ]
+        }
+
+        PLAY RECAP ********************************************************************************************************************************
+        firewall                   : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+
+
+
+
+Ansible Playbook 2 - Are you ready?
+================================================
+
+Our second playbook executes the ``show chassis-ready`` command. This is useful to ensure the firewall is ready to accept further operations such as configuration changes, software downloads and updgrades, and more. The `playbook
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/check_ready.yml>`_ runs the ``show chassis-ready`` command on a loop until it gets the positive ``yes`` result that the firewall is ready. Run the playbook using the following:
+
 
 .. code-block::
     
@@ -200,23 +286,11 @@ If the firewall is booting up, or not reachable, you would receieve failure mess
         FAILED - RETRYING: Check to see if device is ready (50 retries left).
         FAILED - RETRYING: Check to see if device is ready (49 retries left).
 
-This is a single-task playbook. Breaking down the component parts, we see:
 
-.. code-block::
-        - hosts: '{{ target | default("firewall") }}'
-        connection: local
 
 
 .. code-block::
-        vars:
-        device:
-        ip_address: '{{ ip_address }}'
-        username: '{{ username | default(omit) }}'
-        password: '{{ password | default(omit) }}'
-        api_key: '{{ api_key | default(omit) }}'
 
-
-.. code-block::
         tasks:
         - name: Check to see if device is ready
         paloaltonetworks.panos.panos_op:
@@ -229,8 +303,9 @@ This is a single-task playbook. Breaking down the component parts, we see:
         delay: 30
 
 
-Ansible Playbook 2 - System Info
-================================================
+
+
+
 
 
 
