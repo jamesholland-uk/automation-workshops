@@ -68,14 +68,14 @@ In this workshop, we're going to be using playbooks from the `repository of exam
 
 .. code-block::
    
-        $ git clone https://github.com/PaloAltoNetworks/ansible-playbooks
+        $ git clone https://github.com/jamesholland-uk/automation-workshops.git
 
 
-...then move into the playbooks directory
+...then move into the Ansible directory
 
 .. code-block::
    
-        $ cd ansible-playbooks
+        $ cd ansible
 
 
 Setup the inventory
@@ -104,11 +104,11 @@ All our example playbooks begin with a reference to a default target host from o
         - hosts: '{{ target | default("firewall") }}'
 
 
-We provide the ``firewall``'s IP address in the ``host_vars/lab-fw.yml`` file:
+We provide the ``firewall``'s IP address in the ``host_vars/firewall.yml`` file:
 
 .. code-block::
 
-        $ cat host_vars/lab-fw.yml
+        $ cat host_vars/firewall.yml
 
 
 .. code-block::
@@ -121,15 +121,17 @@ Change the IP address in this file to match your firewalls's management IP addre
 
 .. code-block::
 
-        $ cat > host_vars/lab-fw.yml <<EOL
+        $ cat > host_vars/firewall.yml <<EOL
         ---
         ip_address: '{{ your firewall management IP }}'
         EOL
 
 .. code-block::
 
-        $ cat host_vars/lab-fw.yml
+        $ cat host_vars/firewall.yml
 
+
+Re-check the ``host_vars/firewall.yml`` file and ensure it noe contains your firewall's IP address:
 
 .. code-block::
 
@@ -167,9 +169,10 @@ Notice in the command below that we execute the ``ansible-playbook`` command, pa
         $ ansible-playbook -i inventory check_ready.yml --extra-vars "username=$panos_username password=$panos_password"
 
 
-The output should look something like this:
+The output should look something like this, specifically the highlighted line showing the "ok" response to checking if the firewall is ready:
 
 .. code-block::
+        :emphasize-lines: 7
 
         PLAY [firewall] **************************************************************************************************
 
@@ -183,13 +186,57 @@ The output should look something like this:
         firewall                   : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 
 
+If the firewall is booting up, or not reachable, you would receieve failure messages, and the loop of checking would kick in, like this:
 
-Next?!?!
+.. code-block::
+        :emphasize-lines: 7,8
+
+        PLAY [firewall] **************************************************************************************************
+
+        TASK [Gathering Facts] *******************************************************************************************
+        ok: [firewall]
+
+        TASK [Check to see if device is ready] ***************************************************************************
+        FAILED - RETRYING: Check to see if device is ready (50 retries left).
+        FAILED - RETRYING: Check to see if device is ready (49 retries left).
+
+This is a single-task playbook. Breaking down the component parts, we see:
+
+.. code-block::
+        - hosts: '{{ target | default("firewall") }}'
+        connection: local
+
+
+.. code-block::
+        vars:
+        device:
+        ip_address: '{{ ip_address }}'
+        username: '{{ username | default(omit) }}'
+        password: '{{ password | default(omit) }}'
+        api_key: '{{ api_key | default(omit) }}'
+
+
+.. code-block::
+        tasks:
+        - name: Check to see if device is ready
+        paloaltonetworks.panos.panos_op:
+                provider: '{{ device }}'
+                cmd: 'show chassis-ready'
+        changed_when: false
+        register: result
+        until: result is not failed and (result.stdout | from_json).response.result == 'yes'
+        retries: 50
+        delay: 30
+
+
+Ansible Playbook 2 - System Info
 ================================================
+
+
 
 TODO
 ================================================
-Get API key
+
 Show system info
 Show ready
 Show route table

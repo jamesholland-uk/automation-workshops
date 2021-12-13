@@ -55,7 +55,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#setup-the-inventory">1.3. Setup the inventory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#prepare-the-firewall-credentials">1.4. Prepare the firewall credentials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#run-our-first-ansible-playbook">1.5. Run our first Ansible playbook</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#next">1.6. Next?!?!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-2-system-info">1.6. Ansible Playbook 2 - System Info</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#todo">1.7. TODO</a></li>
 </ul>
 </li>
@@ -141,11 +141,11 @@
 <section id="download-ansible-playbooks">
 <h2><span class="section-number">1.2. </span>Download Ansible playbooks<a class="headerlink" href="#download-ansible-playbooks" title="Permalink to this headline"></a></h2>
 <p>In this workshop, we’re going to be using playbooks from the <a class="reference external" href="https://github.com/PaloAltoNetworks/ansible-playbooks">repository of examples</a>, created by <a class="reference external" href="https://github.com/mrichardson03">Michael Richardson</a>. We’ll use git to download the playbooks…</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/PaloAltoNetworks/ansible-playbooks
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/jamesholland-uk/automation-workshops.git
 </pre></div>
 </div>
-<p>…then move into the playbooks directory</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd ansible-playbooks
+<p>…then move into the Ansible directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd ansible
 </pre></div>
 </div>
 </section>
@@ -168,8 +168,8 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">hosts</span><span class="p">:</span> <span class="s1">&#39;{{ target | default(&quot;firewall&quot;) }}&#39;</span>
 </pre></div>
 </div>
-<p>We provide the <code class="docutils literal notranslate"><span class="pre">firewall</span></code>’s IP address in the <code class="docutils literal notranslate"><span class="pre">host_vars/lab-fw.yml</span></code> file:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat host_vars/lab-fw.yml
+<p>We provide the <code class="docutils literal notranslate"><span class="pre">firewall</span></code>’s IP address in the <code class="docutils literal notranslate"><span class="pre">host_vars/firewall.yml</span></code> file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat host_vars/firewall.yml
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---</span>
@@ -177,15 +177,16 @@
 </pre></div>
 </div>
 <p>Change the IP address in this file to match your firewalls’s management IP address:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat &gt; host_vars/lab-fw.yml &lt;&lt;EOL
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat &gt; host_vars/firewall.yml &lt;&lt;EOL
 ---
 ip_address: &#39;{{ your firewall management IP }}&#39;
 EOL
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat host_vars/lab-fw.yml
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat host_vars/firewall.yml
 </pre></div>
 </div>
+<p>Re-check the <code class="docutils literal notranslate"><span class="pre">host_vars/firewall.yml</span></code> file and ensure it noe contains your firewall’s IP address:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---</span>
 <span class="n">ip_address</span><span class="p">:</span> <span class="s1">&#39;{{ your firewall management IP }}&#39;</span>
 </pre></div>
@@ -209,27 +210,38 @@ EOL
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory check_ready.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
 </pre></div>
 </div>
-<p>The output should look something like this:</p>
+<p>The output should look something like this, specifically the highlighted line showing the “ok” response to checking if the firewall is ready:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PLAY</span> <span class="p">[</span><span class="n">firewall</span><span class="p">]</span> <span class="o">**************************************************************************************************</span>
 
 <span class="n">TASK</span> <span class="p">[</span><span class="n">Gathering</span> <span class="n">Facts</span><span class="p">]</span> <span class="o">*******************************************************************************************</span>
 <span class="n">ok</span><span class="p">:</span> <span class="p">[</span><span class="n">firewall</span><span class="p">]</span>
 
 <span class="n">TASK</span> <span class="p">[</span><span class="n">Check</span> <span class="n">to</span> <span class="n">see</span> <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="n">ready</span><span class="p">]</span> <span class="o">***************************************************************************</span>
-<span class="n">ok</span><span class="p">:</span> <span class="p">[</span><span class="n">firewall</span><span class="p">]</span>
-
+<span class="hll"><span class="n">ok</span><span class="p">:</span> <span class="p">[</span><span class="n">firewall</span><span class="p">]</span>
+</span>
 <span class="n">PLAY</span> <span class="n">RECAP</span> <span class="o">*******************************************************************************************************</span>
 <span class="n">firewall</span>                   <span class="p">:</span> <span class="n">ok</span><span class="o">=</span><span class="mi">2</span>    <span class="n">changed</span><span class="o">=</span><span class="mi">0</span>    <span class="n">unreachable</span><span class="o">=</span><span class="mi">0</span>    <span class="n">failed</span><span class="o">=</span><span class="mi">0</span>    <span class="n">skipped</span><span class="o">=</span><span class="mi">0</span>    <span class="n">rescued</span><span class="o">=</span><span class="mi">0</span>    <span class="n">ignored</span><span class="o">=</span><span class="mi">0</span>
 </pre></div>
 </div>
+<p>If the firewall is booting up, or not reachable, you would receieve failure messages, and the loop of checking would kick in, like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PLAY</span> <span class="p">[</span><span class="n">firewall</span><span class="p">]</span> <span class="o">**************************************************************************************************</span>
+
+<span class="n">TASK</span> <span class="p">[</span><span class="n">Gathering</span> <span class="n">Facts</span><span class="p">]</span> <span class="o">*******************************************************************************************</span>
+<span class="n">ok</span><span class="p">:</span> <span class="p">[</span><span class="n">firewall</span><span class="p">]</span>
+
+<span class="n">TASK</span> <span class="p">[</span><span class="n">Check</span> <span class="n">to</span> <span class="n">see</span> <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="n">ready</span><span class="p">]</span> <span class="o">***************************************************************************</span>
+<span class="hll"><span class="n">FAILED</span> <span class="o">-</span> <span class="n">RETRYING</span><span class="p">:</span> <span class="n">Check</span> <span class="n">to</span> <span class="n">see</span> <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="n">ready</span> <span class="p">(</span><span class="mi">50</span> <span class="n">retries</span> <span class="n">left</span><span class="p">)</span><span class="o">.</span>
+</span><span class="hll"><span class="n">FAILED</span> <span class="o">-</span> <span class="n">RETRYING</span><span class="p">:</span> <span class="n">Check</span> <span class="n">to</span> <span class="n">see</span> <span class="k">if</span> <span class="n">device</span> <span class="ow">is</span> <span class="n">ready</span> <span class="p">(</span><span class="mi">49</span> <span class="n">retries</span> <span class="n">left</span><span class="p">)</span><span class="o">.</span>
+</span></pre></div>
+</div>
+<p>This is a single-task playbook. Breaking down the component parts, we see:</p>
 </section>
-<section id="next">
-<h2><span class="section-number">1.6. </span>Next?!?!<a class="headerlink" href="#next" title="Permalink to this headline"></a></h2>
+<section id="ansible-playbook-2-system-info">
+<h2><span class="section-number">1.6. </span>Ansible Playbook 2 - System Info<a class="headerlink" href="#ansible-playbook-2-system-info" title="Permalink to this headline"></a></h2>
 </section>
 <section id="todo">
 <h2><span class="section-number">1.7. </span>TODO<a class="headerlink" href="#todo" title="Permalink to this headline"></a></h2>
-<p>Get API key
-Show system info
+<p>Show system info
 Show ready
 Show route table
 Show rules
