@@ -200,6 +200,33 @@ If the firewall is booting up, or not reachable, you would receieve failure mess
         FAILED - RETRYING: Check to see if device is ready (50 retries left).
         FAILED - RETRYING: Check to see if device is ready (49 retries left).
 
+This is a single-task playbook. Breaking down the component parts, we see:
+
+.. code-block::
+        - hosts: '{{ target | default("firewall") }}'
+        connection: local
+
+
+.. code-block::
+        vars:
+        device:
+        ip_address: '{{ ip_address }}'
+        username: '{{ username | default(omit) }}'
+        password: '{{ password | default(omit) }}'
+        api_key: '{{ api_key | default(omit) }}'
+
+
+.. code-block::
+        tasks:
+        - name: Check to see if device is ready
+        paloaltonetworks.panos.panos_op:
+                provider: '{{ device }}'
+                cmd: 'show chassis-ready'
+        changed_when: false
+        register: result
+        until: result is not failed and (result.stdout | from_json).response.result == 'yes'
+        retries: 50
+        delay: 30
 
 
 Ansible Playbook 2 - System Info
