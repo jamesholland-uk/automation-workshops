@@ -205,7 +205,7 @@ EOL
 </section>
 <section id="run-our-first-ansible-playbook">
 <h2><span class="section-number">1.5. </span>Run our first Ansible playbook<a class="headerlink" href="#run-our-first-ansible-playbook" title="Permalink to this headline"></a></h2>
-<p>Our first Ansible playbook will gather system information from the firewall. Data gathering or read-only tasks are good candidiates for anyone starting out in automation. Execute the <a class="reference external" href="system_info.yml">system-info playbook</a> using the commands below.</p>
+<p>Our first Ansible playbook will gather system information from the firewall. Data gathering or read-only tasks are good candidiates for anyone starting out in automation. Execute the <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/system_info.yml">system-info playbook</a> using the commands below.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory system_info.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
 </pre></div>
 </div>
@@ -254,7 +254,7 @@ EOL
 <span class="n">ok</span><span class="p">:</span> <span class="p">[</span><span class="n">firewall</span><span class="p">]</span> <span class="o">=&gt;</span> <span class="p">{</span>
 <span class="s2">&quot;msg&quot;</span><span class="p">:</span> <span class="p">[</span>
 <span class="hll">        <span class="s2">&quot;Hostname: james-vm-series-a&quot;</span><span class="p">,</span>
-</span><span class="hll">        <span class="s2">&quot;Serial: 007951000225171&quot;</span><span class="p">,</span>
+</span><span class="hll">        <span class="s2">&quot;Serial: 01234567890&quot;</span><span class="p">,</span>
 </span><span class="hll">        <span class="s2">&quot;Model: PA-VM&quot;</span><span class="p">,</span>
 </span><span class="hll">        <span class="s2">&quot;Version: 10.1.3&quot;</span><span class="p">,</span>
 </span><span class="hll">        <span class="s2">&quot;Uptime: 46 days, 3:03:16&quot;</span><span class="p">,</span>
