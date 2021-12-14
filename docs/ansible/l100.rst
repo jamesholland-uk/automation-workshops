@@ -315,29 +315,42 @@ If the firewall is booting up, or not reachable, you would receieve failure mess
         FAILED - RETRYING: Check to see if device is ready (49 retries left).
 
 
-Ansible Playbook 3 - More information
+Ansible Playbook 3 - More firewall information
 ================================================
 
+The third `playbook
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/some_more_info.yml>`_ again gathers ``facts`` in order to display information about the running configiration and state of the firewall. This could be useful information on its own, but could also be used to feed into other tasks later on. Run the playbook using the following:
+
+.. code-block::
+        :class: copy-button
+
+        $ ansible-playbook -i inventory some_more_info.yml --extra-vars "username=$panos_username password=$panos_password"
+
+
+The playbook should provide information about the security policy rules, the network interfaces, and the route table.
+
+
+Ansible Playbook 4 - Config backup/export 
+================================================
+
+The next `playbook
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/backup_config.yml>`_ uses the `panos_export module<https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_export.html>`_ to export the running config to a local file. Run the playbook using the following:
+
+.. code-block::
+        :class: copy-button
+
+        $ ansible-playbook -i inventory backup_config.yml --extra-vars "username=$panos_username password=$panos_password"
+
+
+Once executed, you should be able to see the exported config file on yours host:
+
+.. code-block::
+        :class: copy-button
+
+        $ cat running-config.xml
 
 
 
 TODO
 ================================================
-
-
-Show route table
-Show rules
-Show rule hit count
-Show applications
-Show vulnerability signature list
 Register a user-to-IP
-Export config
-Get tech-support file
-
-Upgrade OS
-
-<< simple bash script to do some changes, the commit and watch until finished >>
-<< anothe bash script to get some info, pass to another call with a variable >>
-
-
-Scripts - explain ideas of pre-caned config snippets, idea behind skillets etc, golden eval configs, etc
