@@ -58,7 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-2-are-you-ready">1.6. Ansible Playbook 2 - Are you ready?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-3-more-firewall-information">1.7. Ansible Playbook 3 - More firewall information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-4-config-backup-export">1.8. Ansible Playbook 4 - Config backup/export</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#todo">1.9. TODO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modify-a-playbook">1.9. Modify a playbook</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="l200.html">2. Ansible L200</a></li>
@@ -318,7 +318,7 @@ EOL
 </section>
 <section id="ansible-playbook-3-more-firewall-information">
 <h2><span class="section-number">1.7. </span>Ansible Playbook 3 - More firewall information<a class="headerlink" href="#ansible-playbook-3-more-firewall-information" title="Permalink to this headline"></a></h2>
-<p>The third <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/some_more_info.yml">playbook</a> again gathers <code class="docutils literal notranslate"><span class="pre">facts</span></code> in order to display information about the running configiration and state of the firewall. This could be useful information on its own, but could also be used to feed into other tasks later on. Run the playbook using the following:</p>
+<p>The third <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/some_more_info.yml">example playbook</a> again gathers <code class="docutils literal notranslate"><span class="pre">facts</span></code> in order to display information about the running configiration and state of the firewall. This could be useful information on its own, but could also be used to feed into other tasks later on. Run the playbook using the following:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory some_more_info.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
 </pre></div>
 </div>
@@ -326,7 +326,7 @@ EOL
 </section>
 <section id="ansible-playbook-4-config-backup-export">
 <h2><span class="section-number">1.8. </span>Ansible Playbook 4 - Config backup/export<a class="headerlink" href="#ansible-playbook-4-config-backup-export" title="Permalink to this headline"></a></h2>
-<p>The next <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/backup_config.yml">playbook</a> uses the <a href="#id3"><span class="problematic" id="id4">`panos_export module&lt;https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_export.html&gt;`_</span></a> to export the running config to a local file. Run the playbook using the following:</p>
+<p>The next <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/backup_config.yml">Ansible playbook</a> uses the <a class="reference external" href="https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_export.html">panos_export module</a> to export the running config to a local file. Run the playbook using the following:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory backup_config.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
 </pre></div>
 </div>
@@ -335,9 +335,30 @@ EOL
 </pre></div>
 </div>
 </section>
-<section id="todo">
-<h2><span class="section-number">1.9. </span>TODO<a class="headerlink" href="#todo" title="Permalink to this headline"></a></h2>
-<p>Register a user-to-IP</p>
+<section id="modify-a-playbook">
+<h2><span class="section-number">1.9. </span>Modify a playbook<a class="headerlink" href="#modify-a-playbook" title="Permalink to this headline"></a></h2>
+<p>The <a class="reference external" href="https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_op.html">panos_op module</a> is very useful within playbooks for gathering information and executing operational commands like software upgrades, content downloads, and more. It was used in the second playbook, check_ready.yml, to run the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code> command.</p>
+<p>Choose one (or more) of the following operational commands to run with Ansible.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>show clock</p></li>
+<li><p>show admins all</p></li>
+<li><p>clear counter all</p></li>
+<li><p>show system disk-space</p></li>
+</ul>
+</div></blockquote>
+<p>Copy a playbook used previously in this session, and execute your chosen command(s). Output from the commands could also be displayed. An example format would be:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Perform</span> <span class="n">an</span> <span class="n">op</span> <span class="n">command</span>
+<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_op</span><span class="p">:</span>
+        <span class="n">provider</span><span class="p">:</span> <span class="s1">&#39;{{ device }}&#39;</span>
+        <span class="n">cmd</span><span class="p">:</span> <span class="s1">&#39;command goes here&#39;</span>
+<span class="n">register</span><span class="p">:</span> <span class="n">op_command_output</span>
+<span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Show</span> <span class="n">oputput</span>
+<span class="n">debug</span><span class="p">:</span>
+        <span class="n">msg</span><span class="p">:</span>
+        <span class="o">-</span> <span class="s2">&quot;{{ op_command_output }}&quot;</span>
+</pre></div>
+</div>
 </section>
 </section>
 

@@ -318,7 +318,7 @@ If the firewall is booting up, or not reachable, you would receieve failure mess
 Ansible Playbook 3 - More firewall information
 ================================================
 
-The third `playbook
+The third `example playbook
 <https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/some_more_info.yml>`_ again gathers ``facts`` in order to display information about the running configiration and state of the firewall. This could be useful information on its own, but could also be used to feed into other tasks later on. Run the playbook using the following:
 
 .. code-block::
@@ -333,8 +333,9 @@ The playbook should provide information about the security policy rules, the net
 Ansible Playbook 4 - Config backup/export 
 ================================================
 
-The next `playbook
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/backup_config.yml>`_ uses the `panos_export module<https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_export.html>`_ to export the running config to a local file. Run the playbook using the following:
+The next `Ansible playbook
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/backup_config.yml>`_ uses the `panos_export module
+<https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_export.html>`_ to export the running config to a local file. Run the playbook using the following:
 
 .. code-block::
         :class: copy-button
@@ -350,7 +351,30 @@ Once executed, you should be able to see the exported config file on yours host:
         $ cat running-config.xml
 
 
+Modify a playbook
+==================================
 
-TODO
-================================================
-Register a user-to-IP
+The `panos_op module
+<https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_op.html>`_ is very useful within playbooks for gathering information and executing operational commands like software upgrades, content downloads, and more. It was used in the second playbook, check_ready.yml, to run the ``show chassis-ready`` command.
+
+Choose one (or more) of the following operational commands to run with Ansible.
+
+    * show clock
+    * show admins all
+    * clear counter all
+    * show system disk-space
+
+Copy a playbook used previously in this session, and execute your chosen command(s). Output from the commands could also be displayed. An example format would be:
+
+.. code-block::
+        :class: copy-button
+        
+        - name: Perform an op command
+        paloaltonetworks.panos.panos_op:
+                provider: '{{ device }}'
+                cmd: 'command goes here'
+        register: op_command_output
+        - name: Show oputput
+        debug:
+                msg:
+                - "{{ op_command_output }}"
