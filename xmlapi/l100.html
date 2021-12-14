@@ -113,83 +113,82 @@
 <h2><span class="section-number">1.1. </span>Store our firewall’s IP as a variable<a class="headerlink" href="#store-our-firewall-s-ip-as-a-variable" title="Permalink to this headline"></a></h2>
 <p>First, to make our lives easier, we will assign the management IP address of the firewall to a variable, so we can easily refer to it in our API calls.</p>
 <p>Today, in this enviornment, we will assign the API key value to a variable called <code class="docutils literal notranslate"><span class="pre">host</span></code>, to be used in future API calls.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export host={{your-firewall-IP}}
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export host={{your-firewall-IP}}
 </pre></div>
 </div>
 </section>
 <section id="generate-your-api-key">
 <h2><span class="section-number">1.2. </span>Generate your API key<a class="headerlink" href="#generate-your-api-key" title="Permalink to this headline"></a></h2>
 <p>Before you can make any API calls, you need to generate an API key. Your API key will allow you to authenticate and authorise yourself for future API calls.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=keygen&amp;user={{your-admin-username}}&amp;password={{your-admin-password}}
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=keygen&amp;user={{your-admin-username}}&amp;password={{your-admin-password}}
 </pre></div>
 </div>
 <p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will assign the API key value to a variable to be used in future API calls.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export key={{your-API-key}}
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export key={{your-API-key}}
 </pre></div>
 </div>
 </section>
 <section id="make-your-first-real-api-call">
 <h2><span class="section-number">1.3. </span>Make your first real API call<a class="headerlink" href="#make-your-first-real-api-call" title="Permalink to this headline"></a></h2>
 <p>Your first API call will tell you if the firewall is in a ready and operational state. This operational command is useful to know if the firewall has been recently rebooted, or in the case of software firewalls like VM-Series or CN-Series, recently created.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;chassis-ready&gt;&lt;/chassis-ready&gt;&lt;/show&gt;&amp;key=$key
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;chassis-ready&gt;&lt;/chassis-ready&gt;&lt;/show&gt;&amp;key=$key
 </pre></div>
 </div>
 </section>
 <section id="get-firewall-system-info">
 <h2><span class="section-number">1.4. </span>Get firewall system info<a class="headerlink" href="#get-firewall-system-info" title="Permalink to this headline"></a></h2>
 <p>Next, retrieve information about the firewall system. This too is an operational command, as shown by <code class="docutils literal notranslate"><span class="pre">type=op</span></code> within the API call. The <code class="docutils literal notranslate"><span class="pre">cmd=</span></code> portion contains the operational command we want to execute.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;system&gt;&lt;info&gt;&lt;/info&gt;&lt;/system&gt;&lt;/show&gt;&amp;key=$key
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;system&gt;&lt;info&gt;&lt;/info&gt;&lt;/system&gt;&lt;/show&gt;&amp;key=$key
 </pre></div>
 </div>
 </section>
 <section id="show-the-routing-table">
 <h2><span class="section-number">1.5. </span>Show the routing table<a class="headerlink" href="#show-the-routing-table" title="Permalink to this headline"></a></h2>
 <p>Another useful operational command is to display the routing table.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;routing&gt;&lt;route&gt;&lt;/route&gt;&lt;/routing&gt;&lt;/show&gt;&amp;key=$key
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;routing&gt;&lt;route&gt;&lt;/route&gt;&lt;/routing&gt;&lt;/show&gt;&amp;key=$key
 </pre></div>
 </div>
 </section>
 <section id="show-the-rulebase-configuration">
 <h2><span class="section-number">1.6. </span>Show the rulebase configuration<a class="headerlink" href="#show-the-rulebase-configuration" title="Permalink to this headline"></a></h2>
 <p>Now we look at the firewall configuration. Notice the type of API call this time is <code class="docutils literal notranslate"><span class="pre">type=config</span></code>, and the action is <code class="docutils literal notranslate"><span class="pre">get</span></code>, which as expected tells the API we want to do a read operation on the configuration. The <code class="docutils literal notranslate"><span class="pre">xpath</span></code> is then used to navigate down through the XML configuration file structure to specifically find the rules within the security policy.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=config&amp;action=get&amp;xpath=/config/devices/entry[@name=&#39;localhost.localdomain&#39;]/vsys/entry[@name=&#39;vsys1&#39;]/rulebase/security/rules&amp;key=$key
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=config&amp;action=get&amp;xpath=/config/devices/entry[@name=&#39;localhost.localdomain&#39;]/vsys/entry[@name=&#39;vsys1&#39;]/rulebase/security/rules&amp;key=$key
 </pre></div>
 </div>
 </section>
 <section id="show-the-rulebase-hit-counts">
 <h2><span class="section-number">1.7. </span>Show the rulebase hit counts<a class="headerlink" href="#show-the-rulebase-hit-counts" title="Permalink to this headline"></a></h2>
 <p>We’ve seen the rulebase from the configuration, but if we wanted to programmatically retrieve the hit counts for each rule, that would be an operational command.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;rule-hit-count&gt;&lt;vsys&gt;&lt;vsys-name&gt;&lt;entry name=&#39;vsys1&#39;&gt;&lt;rule-base&gt;&lt;entry name=&#39;security&#39;&gt;&lt;rules&gt;&lt;all/&gt;&lt;/rules&gt;&lt;/entry&gt;&lt;/rule-base&gt;&lt;/entry&gt;&lt;/vsys-name&gt;&lt;/vsys&gt;&lt;/rule-hit-count&gt;&lt;/show&gt;&amp;key=$key
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;rule-hit-count&gt;&lt;vsys&gt;&lt;vsys-name&gt;&lt;entry name=&#39;vsys1&#39;&gt;&lt;rule-base&gt;&lt;entry name=&#39;security&#39;&gt;&lt;rules&gt;&lt;all/&gt;&lt;/rules&gt;&lt;/entry&gt;&lt;/rule-base&gt;&lt;/entry&gt;&lt;/vsys-name&gt;&lt;/vsys&gt;&lt;/rule-hit-count&gt;&lt;/show&gt;&amp;key=$key
 </pre></div>
 </div>
 </section>
 <section id="backup-export-configuration">
 <h2><span class="section-number">1.8. </span>Backup/export configuration<a class="headerlink" href="#backup-export-configuration" title="Permalink to this headline"></a></h2>
 <p>This is a common API call, given how many people have requirements to automate backing up configurations. This uses <code class="docutils literal notranslate"><span class="pre">type=export</span></code> to signify we are exporting something, and <code class="docutils literal notranslate"><span class="pre">category=configuration</span></code> describes the exact item we want to export.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=export&amp;category=configuration&amp;key=$key
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=export&amp;category=configuration&amp;key=$key
 </pre></div>
 </div>
 </section>
 <section id="gathering-reports">
 <h2><span class="section-number">1.9. </span>Gathering Reports<a class="headerlink" href="#gathering-reports" title="Permalink to this headline"></a></h2>
 <p>Another type of API call available is <code class="docutils literal notranslate"><span class="pre">type=report</span></code>, to automate the gathering of reporting data. THe data is returned in XML format, such that it can be parsed by another system.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=report&amp;reporttype=predefined&amp;reportname=top-applications&amp;key=$key
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=report&amp;reporttype=predefined&amp;reportname=top-applications&amp;key=$key
 </pre></div>
 </div>
 </section>
 <section id="user-id">
 <h2><span class="section-number">1.10. </span>User-ID<a class="headerlink" href="#user-id" title="Permalink to this headline"></a></h2>
 <p>A frequent use case is to register user-to-IP mappings. The first task here, another operational command, shows the current user-to-IP mapping table</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;user&gt;&lt;ip-user-mapping&gt;&lt;all/&gt;&lt;/ip-user-mapping&gt;&lt;/user&gt;&lt;/show&gt;&amp;key=$key
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;user&gt;&lt;ip-user-mapping&gt;&lt;all/&gt;&lt;/ip-user-mapping&gt;&lt;/user&gt;&lt;/show&gt;&amp;key=$key
 </pre></div>
 </div>
-<p>The next API call registers a username to an IP address. This uses <code class="docutils literal notranslate"><span class="pre">type=user-id</span></code>. Note we pass in the username, the IP address they are currently using, and a timeout value (in seconds).
-.. code-block:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=user-id&amp;cmd=&lt;uid-message&gt;&lt;version&gt;2.0&lt;/version&gt;&lt;type&gt;update&lt;/type&gt;&lt;payload&gt;&lt;login&gt;&lt;entry name=&quot;NewUser&quot; ip=&quot;10.50.100.9&quot; timeout=&quot;120&quot;/&gt;&lt;/login&gt;&lt;/payload&gt;&lt;/uid-message&gt;&amp;key=$key
+<p>The next API call registers a username to an IP address. This uses <code class="docutils literal notranslate"><span class="pre">type=user-id</span></code>. Note we pass in the username, the IP address they are currently using, and a timeout value (in seconds).</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=user-id&amp;cmd=&lt;uid-message&gt;&lt;version&gt;2.0&lt;/version&gt;&lt;type&gt;update&lt;/type&gt;&lt;payload&gt;&lt;login&gt;&lt;entry name=&quot;NewUser&quot; ip=&quot;10.50.100.9&quot; timeout=&quot;120&quot;/&gt;&lt;/login&gt;&lt;/payload&gt;&lt;/uid-message&gt;&amp;key=$key
 </pre></div>
 </div>
 <p>Replaying the API call to show the mapping table should now display the new user</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;user&gt;&lt;ip-user-mapping&gt;&lt;all/&gt;&lt;/ip-user-mapping&gt;&lt;/user&gt;&lt;/show&gt;&amp;key=$key
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -k https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;user&gt;&lt;ip-user-mapping&gt;&lt;all/&gt;&lt;/ip-user-mapping&gt;&lt;/user&gt;&lt;/show&gt;&amp;key=$key
 </pre></div>
 </div>
 </section>

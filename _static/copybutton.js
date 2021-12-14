@@ -102,7 +102,7 @@ const addCopyButtonToCodeCells = () => {
   }
 
   // Add copybuttons to all of our code cells
-  const codeCells = document.querySelectorAll('div.highlight pre')
+  const codeCells = document.querySelectorAll('div.copy-button pre')
   codeCells.forEach((codeCell, index) => {
     const id = codeCellId(index)
     codeCell.setAttribute('id', id)

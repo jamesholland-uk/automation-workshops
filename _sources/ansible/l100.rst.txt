@@ -20,7 +20,8 @@ Ansible pre-flight checks
 First let's check that Ansible is installed on our host.
 
 .. code-block::
-   
+        :class: copy-button
+
         $ ansible-playbook --version 
 
 
@@ -42,7 +43,8 @@ The output should look something like this:
 Then let's check we have the PAN-OS Collection installed
 
 .. code-block::
-   
+        :class: copy-button
+
         $ ansible-doc --list | grep paloaltonetworks.panos
 
 The output should list al the modules in the PAN-OS Collection, and the end of the list should look something like this:
@@ -67,14 +69,16 @@ In this workshop, we're going to be using playbooks from the `repository of exam
 <https://github.com/mrichardson03>`_. We'll use git to download the playbooks...
 
 .. code-block::
-   
+        :class: copy-button
+
         $ git clone https://github.com/jamesholland-uk/automation-workshops.git
 
 
 ...then move into the Ansible directory
 
 .. code-block::
-   
+        :class: copy-button
+
         $ cd ansible
 
 
@@ -84,8 +88,10 @@ Setup the inventory
 Ansible needs to know the details for the hosts against which it should execute playbooks. This ``inventory`` can take many formats and locations, and for this workshop we will use the inventory format from the example playbooks repository.
 
 In the ansible-playbooks directory, the ``inventory`` file contains a list of available hosts for us to run playbooks against:
+
 .. code-block::
-   
+        :class: copy-button
+
         $ cat inventory
 
 .. code-block::
@@ -107,6 +113,7 @@ All our example playbooks begin with a reference to a default target host from o
 We provide the ``firewall``'s IP address in the ``host_vars/firewall.yml`` file:
 
 .. code-block::
+        :class: copy-button
 
         $ cat host_vars/firewall.yml
 
@@ -120,18 +127,21 @@ We provide the ``firewall``'s IP address in the ``host_vars/firewall.yml`` file:
 Change the IP address in this file to match your firewalls's management IP address:
 
 .. code-block::
+        :class: copy-button
 
         $ cat > host_vars/firewall.yml <<EOL
         ---
         ip_address: '{{ your firewall management IP }}'
         EOL
 
+
+Re-check the ``host_vars/firewall.yml`` file and ensure it noe contains your firewall's IP address:
+
 .. code-block::
+        :class: copy-button
 
         $ cat host_vars/firewall.yml
 
-
-Re-check the ``host_vars/firewall.yml`` file and ensure it noe contains your firewall's IP address:
 
 .. code-block::
 
@@ -145,10 +155,12 @@ Prepare the firewall credentials
 Before you can execute any Ansible playbooks, you need to be able to login to the firewall. We will store the admin username and admin password as variables.
 
 .. code-block::
-   
+        :class: copy-button
+
         $ export panos_username={{ your-admin-username }}
 
 .. code-block::
+        :class: copy-button
 
         $ export panos_password={{ your-admin-password }}
 
@@ -159,10 +171,11 @@ Run our first Ansible playbook
 ================================================
 
 Our first Ansible playbook will gather system information from the firewall. Data gathering or read-only tasks are good candidiates for anyone starting out in automation. Execute the `system-info playbook
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/system_info.yml>`_ using the commands below.
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/system_info.yml>`_ using the command below.
 
 .. code-block::
-    
+        :class: copy-button
+
         $ ansible-playbook -i inventory system_info.yml --extra-vars "username=$panos_username password=$panos_password"
 
 Notice that we execute the ``ansible-playbook`` command, pass in the previously mentioned inventory using ``-i inventory``, then specify the name of the playbook we want to run, ``system_info.yml``, and finally pass in the firewall credentials with ``--extra-vars "username=$panos_username password=$panos_password"``.
@@ -174,7 +187,7 @@ First we see default host is `firewall`, from the previously mentioned inventory
 .. code-block::
 
         - hosts: '{{ target | default("firewall") }}'
-        connection: local
+          connection: local
 
 Second we see a section of variables. We get the `ip_address` of the firewall from the previously mentioned inventory, and we get the username and password from the command we typed into the CLI. We don't use the api_key in this instance.
 
@@ -193,18 +206,18 @@ Now we get to our `tasks`, the jobs we want Ansible to do for us. We are just da
 .. code-block::
 
         tasks:
-        - name: Gather facts for device
-        paloaltonetworks.panos.panos_facts:
-                provider: "{{ device }}"
+          - name: Gather facts for device
+          paloaltonetworks.panos.panos_facts:
+            provider: "{{ device }}"
 
-        - name: Display model, PAN-OS version
-        debug:
-                msg:
-                - "Hostname: {{ ansible_facts['net_hostname'] }}"
-                - "Serial: {{ ansible_facts['net_serial'] }}"
-                .
-                .
-                .
+          - name: Display model, PAN-OS version
+          debug:
+            msg:
+              - "Hostname: {{ ansible_facts['net_hostname'] }}"
+              - "Serial: {{ ansible_facts['net_serial'] }}"
+              .
+              .
+              .
 
 The output should look something like this, specifically the highlighted lines showing the information from our firewall:
 
@@ -221,18 +234,18 @@ The output should look something like this, specifically the highlighted lines s
 
         TASK [Display model, PAN-OS version] ******************************************************************************************************
         ok: [firewall] => {
-        "msg": [
-                "Hostname: james-vm-series-a",
-                "Serial: 01234567890",
-                "Model: PA-VM",
-                "Version: 10.1.3",
-                "Uptime: 46 days, 3:03:16",
-                "HA Enabled: True",
-                "HA Type: Active-Passive",
-                "HA Status: active",
-                "Multi-VSYS: off",
-                "1546 out of 256000 sessions in use"
-        ]
+                "msg": [
+                        "Hostname: vm-series-01",
+                        "Serial: 01234567890",
+                        "Model: PA-VM",
+                        "Version: 10.1.3",
+                        "Uptime: 46 days, 3:03:16",
+                        "HA Enabled: True",
+                        "HA Type: Active-Passive",
+                        "HA Status: active",
+                        "Multi-VSYS: off",
+                        "1546 out of 256000 sessions in use"
+                ]
         }
 
         PLAY RECAP ********************************************************************************************************************************
@@ -250,11 +263,27 @@ Our second playbook executes the ``show chassis-ready`` command. This is useful 
 
 
 .. code-block::
-    
+        :class: copy-button
+
         $ ansible-playbook -i inventory check_ready.yml --extra-vars "username=$panos_username password=$panos_password"
 
 
-The output should look something like this, specifically the highlighted line showing the "ok" response to checking if the firewall is ready:
+The playbook has the same opening sections for the hosts, conection, and variables. The tasks section is different, where this time we use a single task ( using`panos_op` to run `show chassis-ready`), then use Ansible's `retries` and `until` to create the loop which waits for the firewall to be ready by virtue of the `yes` response. It will retry 50 times, trying every 30 seconds, until the output from the `show chassis-ready` is `yes`.
+
+.. code-block::
+
+        tasks:
+          - name: Check to see if device is ready
+            paloaltonetworks.panos.panos_op:
+              provider: '{{ device }}'
+              cmd: 'show chassis-ready'
+            changed_when: false
+            register: result
+            until: result is not failed and (result.stdout | from_json).response.result == 'yes'
+            retries: 50
+            delay: 30
+
+The sucessful output should look something like this, specifically the highlighted line showing the "ok" response to checking if the firewall is ready:
 
 .. code-block::
         :emphasize-lines: 7
@@ -286,24 +315,8 @@ If the firewall is booting up, or not reachable, you would receieve failure mess
         FAILED - RETRYING: Check to see if device is ready (49 retries left).
 
 
-
-
-.. code-block::
-
-        tasks:
-        - name: Check to see if device is ready
-        paloaltonetworks.panos.panos_op:
-                provider: '{{ device }}'
-                cmd: 'show chassis-ready'
-        changed_when: false
-        register: result
-        until: result is not failed and (result.stdout | from_json).response.result == 'yes'
-        retries: 50
-        delay: 30
-
-
-
-
+Ansible Playbook 3 - More information
+================================================
 
 
 
@@ -311,8 +324,7 @@ If the firewall is booting up, or not reachable, you would receieve failure mess
 TODO
 ================================================
 
-Show system info
-Show ready
+
 Show route table
 Show rules
 Show rule hit count
