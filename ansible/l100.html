@@ -98,7 +98,7 @@
   <section id="ansible-l100">
 <h1><span class="section-number">1. </span>Ansible L100<a class="headerlink" href="#ansible-l100" title="Permalink to this headline"></a></h1>
 <p>Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.</p>
-<p>Assumptions: A host with the following installed: curl, git, <a class="reference external" href="https://www.python.org/downloads">Python 3</a>, <a class="reference external" href="https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pip">Ansible</a>, <a class="reference external" href="https://github.com/PaloAltoNetworks/pan-os-python">PAN-OS-Python</a>, <a class="reference external" href="https://github.com/PaloAltoNetworks/pan-os-ansible">PAN-OS Ansible Collection</a>, and all prerequisite requirements. Also, access to a PAN-OS next-generation firewall from your host.</p>
+<p>Assumptions: A host with the following installed: curl, git, <a class="reference external" href="https://www.python.org/downloads">Python 3</a>, <a class="reference external" href="https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pip">Ansible</a>, <a class="reference external" href="https://github.com/PaloAltoNetworks/pan-os-python">PAN-OS-Python</a>, <a class="reference external" href="https://github.com/PaloAltoNetworks/pan-os-ansible">PAN-OS Ansible Collection</a>, and all prerequisite requirements for those items. Plus some form of text editor on your host. And, access to a PAN-OS next-generation firewall from your host.</p>
 <dl class="simple">
 <dt>Note:</dt><dd><ul class="simple">
 <li><p>Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.</p></li>
@@ -142,7 +142,7 @@
 </section>
 <section id="download-ansible-playbooks">
 <h2><span class="section-number">1.2. </span>Download Ansible playbooks<a class="headerlink" href="#download-ansible-playbooks" title="Permalink to this headline"></a></h2>
-<p>In this workshop, we’re going to be using playbooks from the <a class="reference external" href="https://github.com/PaloAltoNetworks/ansible-playbooks">repository of examples</a>, created by <a class="reference external" href="https://github.com/mrichardson03">Michael Richardson</a>. We’ll use git to download the playbooks…</p>
+<p>In this workshop, we’re going to be using some existing playbooks. We’ll use git to download the playbooks from a repository…</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/jamesholland-uk/automation-workshops.git
 </pre></div>
 </div>
@@ -184,7 +184,7 @@ ip_address: &#39;{{ your firewall management IP }}&#39;
 EOL
 </pre></div>
 </div>
-<p>Re-check the <code class="docutils literal notranslate"><span class="pre">host_vars/firewall.yml</span></code> file and ensure it noe contains your firewall’s IP address:</p>
+<p>Re-check the <code class="docutils literal notranslate"><span class="pre">host_vars/firewall.yml</span></code> file and ensure it now contains your firewall’s IP address:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat host_vars/firewall.yml
 </pre></div>
 </div>

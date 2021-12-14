@@ -55,7 +55,16 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">PAN-OS Terraform</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Terraform L100</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. Terraform L100</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#terraform-pre-flight-checks">1.1. Terraform pre-flight checks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download-terraform-configs">1.2. Download Terraform configs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup-the-pan-os-variables-for-terraform">1.3. Setup the PAN-OS variables for Terraform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initialising-terraform">1.4. Initialising Terraform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-terraform-plan">1.5. The Terraform Plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#applying-changes-with-terraform">1.6. Applying Changes with Terraform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#applying-more-changes">1.7. Applying More Changes</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="l200.html">2. Terraform L200</a></li>
 <li class="toctree-l1"><a class="reference internal" href="l300.html">3. Terraform L300</a></li>
 </ul>
@@ -86,7 +95,288 @@
              
   <section id="terraform-l100">
 <h1><span class="section-number">1. </span>Terraform L100<a class="headerlink" href="#terraform-l100" title="Permalink to this headline"></a></h1>
-<p>This training lab provides….</p>
+<p>Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.</p>
+<p>Assumptions: A host with the following installed: curl, git, <a class="reference external" href="https://www.terraform.io/downloads.html">Terraform 1.x</a>, and any prerequisite requirements for those items. Plus some form of text editor on your host. And, access to a PAN-OS next-generation firewall from your host.</p>
+<dl class="simple">
+<dt>Note:</dt><dd><ul class="simple">
+<li><p>Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.</p></li>
+<li><p>Commands you could/should execute are denoted with <code class="docutils literal notranslate"><span class="pre">$</span></code> at the start, other text boxes show expected outputs.</p></li>
+</ul>
+</dd>
+</dl>
+<section id="terraform-pre-flight-checks">
+<h2><span class="section-number">1.1. </span>Terraform pre-flight checks<a class="headerlink" href="#terraform-pre-flight-checks" title="Permalink to this headline"></a></h2>
+<p>First let’s check that Terraform is installed on our host.</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ terraform -version
+</pre></div>
+</div>
+<p>The output should look something like this, and may contain a warning if you are not on the very latest version:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Terraform v1.0.10
+
+Your version of Terraform is out of date! The latest version
+is 1.1.0. You can update by downloading from https://www.terraform.io/downloads.html
+</pre></div>
+</div>
+<p>It is fine to ignore the warning, as long as your version is at least 1.0.0 or higher.</p>
+</section>
+<section id="download-terraform-configs">
+<h2><span class="section-number">1.2. </span>Download Terraform configs<a class="headerlink" href="#download-terraform-configs" title="Permalink to this headline"></a></h2>
+<p>In this workshop, we’re going to be using some existing Terraform configs. We’ll use git to download them from a repository…</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/jamesholland-uk/automation-workshops.git
+</pre></div>
+</div>
+<p>…then move into the Terraform directory</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd terraform
+</pre></div>
+</div>
+<p>In the Terraform directory, a number of files will be present:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ls
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main01</span><span class="o">.</span><span class="n">tf</span>           \
+<span class="n">main02</span><span class="o">.</span><span class="n">tf</span>            <span class="o">|-</span> <span class="n">These</span> <span class="n">are</span> <span class="n">the</span> <span class="n">files</span> <span class="n">where</span> <span class="n">we</span> <span class="n">write</span> <span class="n">our</span> <span class="n">Terraform</span> <span class="n">code</span>
+<span class="n">main03</span><span class="o">.</span><span class="n">tf</span>           <span class="o">/</span>
+<span class="n">terraform</span><span class="o">.</span><span class="n">tfvars</span>      <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">will</span> <span class="n">contain</span> <span class="n">values</span> <span class="k">for</span> <span class="n">variables</span>
+<span class="n">commit</span><span class="o">.</span><span class="n">sh</span>             <span class="o">-</span> <span class="n">We</span> <span class="n">will</span> <span class="n">use</span> <span class="n">this</span> <span class="n">script</span> <span class="n">to</span> <span class="n">perform</span> <span class="n">a</span> <span class="n">commit</span> <span class="n">after</span> <span class="n">making</span> <span class="n">changes</span>
+<span class="n">providers</span><span class="o">.</span><span class="n">tf</span>          <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">describes</span> <span class="n">the</span> <span class="n">third</span> <span class="n">party</span> <span class="n">systems</span><span class="p">,</span> <span class="n">such</span> <span class="k">as</span> <span class="n">PAN</span><span class="o">-</span><span class="n">OS</span><span class="p">,</span> <span class="n">which</span> <span class="n">we</span> <span class="n">want</span> <span class="n">to</span> <span class="n">interact</span> <span class="k">with</span>
+<span class="n">variables</span><span class="o">.</span><span class="n">tf</span>          <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">describes</span> <span class="n">the</span> <span class="n">variables</span> <span class="n">we</span> <span class="n">are</span> <span class="n">going</span> <span class="n">to</span> <span class="n">use</span> <span class="ow">in</span> <span class="n">our</span> <span class="n">Terraform</span> <span class="n">code</span>
+</pre></div>
+</div>
+</section>
+<section id="setup-the-pan-os-variables-for-terraform">
+<h2><span class="section-number">1.3. </span>Setup the PAN-OS variables for Terraform<a class="headerlink" href="#setup-the-pan-os-variables-for-terraform" title="Permalink to this headline"></a></h2>
+<p>Terraform needs to know the details for the hosts against which it should execute. There are a variety of methods for this, today we will use a files called <code class="docutils literal notranslate"><span class="pre">terraform.tfvars</span></code>, a commonly used filename for varables used by Terraform. At the moment, the file has empty values for the variables:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat terraform.tfvars
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">panos_hostname</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">panos_username</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="n">panos_password</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+</pre></div>
+</div>
+<p>Let’s popuate the file with the relevant values:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat &gt; terraform.tfvars &lt;&lt;EOL
+panos_hostname = &quot;{{ your firewall management IP }}&quot;
+panos_username = &quot;{{ your-admin-username }}&quot;
+panos_password = &quot;{{ your-admin-password }}&quot;
+EOL
+</pre></div>
+</div>
+<p>Re-check the <code class="docutils literal notranslate"><span class="pre">terraform.tfvars</span></code> file and ensure it now contains your firewall’s details:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat terraform.tfvars
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">panos_hostname</span> <span class="o">=</span> <span class="s2">&quot;{{ your firewall management IP }}&quot;</span>
+<span class="n">panos_username</span> <span class="o">=</span> <span class="s2">&quot;{{ your-admin-username }}&quot;</span>
+<span class="n">panos_password</span> <span class="o">=</span> <span class="s2">&quot;{{ your-admin-password }}&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="initialising-terraform">
+<h2><span class="section-number">1.4. </span>Initialising Terraform<a class="headerlink" href="#initialising-terraform" title="Permalink to this headline"></a></h2>
+<p>Terraform uses a multi-stage process, the first of which is to <code class="docutils literal notranslate"><span class="pre">init</span></code>, short for <a class="reference external" href="https://www.terraform.io/docs/cli/commands/init.html">initialise</a>. Run the following command, which sets up the directory Terraform works within, as well as potentially downloading some required files ready to be used at runtime.</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ terraform init
+</pre></div>
+</div>
+<p>The output should look something like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Initializing the backend...
+
+Initializing provider plugins...
+<span class="hll">- Finding paloaltonetworks/panos versions matching &quot;~&gt; 1.8.3&quot;...
+</span><span class="hll">- Installing paloaltonetworks/panos v1.8.3...
+</span><span class="hll">- Installed paloaltonetworks/panos v1.8.3 (signed by a HashiCorp partner, key ID D5D93F98EFA33E83)
+</span>
+Partner and community providers are signed by their developers.
+If you&#39;d like to know more about provider signing, you can read about it here:
+https://www.terraform.io/docs/plugins/signing.html
+
+Terraform has created a lock file .terraform.lock.hcl to record the provider
+selections it made above. Include this file in your version control repository
+so that Terraform can guarantee to make the same selections by default when
+you run &quot;terraform init&quot; in the future.
+
+<span class="hll">Terraform has been successfully initialized!
+</span>
+You may now begin working with Terraform. Try running &quot;terraform plan&quot; to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+</pre></div>
+</div>
+<p>Some particularly interesting lines in the output are the first block of highlighted text, showing the download of the PAN-OS <code class="docutils literal notranslate"><span class="pre">provider</span></code>. A provider is responsible for the interaction between Terraform and a remote system, in this case a PAN-OS firewalls. Providers are available for many other prducts and cloud services.</p>
+<p>Also of note is the second section of highlighted text, confirming Terraform has been successfully initialised.</p>
+</section>
+<section id="the-terraform-plan">
+<h2><span class="section-number">1.5. </span>The Terraform Plan<a class="headerlink" href="#the-terraform-plan" title="Permalink to this headline"></a></h2>
+<p>Terraform will look for any files in the local directory with the <code class="docutils literal notranslate"><span class="pre">.tf</span></code> extension, and by default attempt to execute with them all. Convention is to name the file with your coded tasks <code class="docutils literal notranslate"><span class="pre">main.tf</span></code>, but it could be called anything. We have several exercises, so we are using <code class="docutils literal notranslate"><span class="pre">main01.tf</span></code>, <code class="docutils literal notranslate"><span class="pre">main02.tf</span></code>, etc</p>
+<p>The <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main01.tf">first Terraform code</a> we will run is in the file <code class="docutils literal notranslate"><span class="pre">main01.tf</span></code>. It has read-only data gathering, using a <code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">source</span></code>, the part of a Terraform provider responsible for gathering data.</p>
+<p>After initialisation, the next step is usually to perform a test run, which you can do by running the <code class="docutils literal notranslate"><span class="pre">plan</span></code> command:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ terraform plan
+</pre></div>
+</div>
+<p>The output should look something like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">An</span> <span class="n">execution</span> <span class="n">plan</span> <span class="n">has</span> <span class="n">been</span> <span class="n">generated</span> <span class="ow">and</span> <span class="ow">is</span> <span class="n">shown</span> <span class="n">below</span><span class="o">.</span>
+<span class="n">Resource</span> <span class="n">actions</span> <span class="n">are</span> <span class="n">indicated</span> <span class="k">with</span> <span class="n">the</span> <span class="n">following</span> <span class="n">symbols</span><span class="p">:</span>
+
+<span class="n">Terraform</span> <span class="n">will</span> <span class="n">perform</span> <span class="n">the</span> <span class="n">following</span> <span class="n">actions</span><span class="p">:</span>
+
+<span class="hll"><span class="n">Plan</span><span class="p">:</span> <span class="mi">0</span> <span class="n">to</span> <span class="n">add</span><span class="p">,</span> <span class="mi">0</span> <span class="n">to</span> <span class="n">change</span><span class="p">,</span> <span class="mi">0</span> <span class="n">to</span> <span class="n">destroy</span><span class="o">.</span>
+</span>
+<span class="n">Changes</span> <span class="n">to</span> <span class="n">Outputs</span><span class="p">:</span>
+<span class="o">+</span> <span class="n">the_info</span> <span class="o">=</span> <span class="p">{</span>
+<span class="hll">    <span class="o">+</span> <span class="nb">id</span>            <span class="o">=</span> <span class="s2">&quot;192.168.150.226&quot;</span>
+</span><span class="hll">    <span class="o">+</span> <span class="n">info</span>          <span class="o">=</span> <span class="p">{</span>
+</span><span class="hll">        <span class="o">+</span> <span class="s2">&quot;app-release-date&quot;</span>                      <span class="o">=</span> <span class="s2">&quot;2021/10/27 05:11:31 BST&quot;</span>
+</span><span class="hll">        <span class="o">+</span> <span class="s2">&quot;app-version&quot;</span>                           <span class="o">=</span> <span class="s2">&quot;8478-7015&quot;</span>
+</span><span class="hll">        <span class="o">+</span> <span class="s2">&quot;av-release-date&quot;</span>                       <span class="o">=</span> <span class="s2">&quot;2021/10/27 12:03:35 BST&quot;</span>
+</span><span class="hll">        <span class="o">+</span> <span class="s2">&quot;av-version&quot;</span>                            <span class="o">=</span> <span class="s2">&quot;3882-4393&quot;</span>
+</span><span class="hll">        <span class="o">.</span>
+</span><span class="hll">        <span class="o">.</span>
+</span><span class="hll">        <span class="o">.</span>
+</span><span class="hll">        <span class="o">+</span> <span class="s2">&quot;wildfire-rt&quot;</span>                           <span class="o">=</span> <span class="s2">&quot;Disabled&quot;</span>
+</span><span class="hll">        <span class="o">+</span> <span class="s2">&quot;wildfire-version&quot;</span>                      <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
+</span><span class="hll">        <span class="p">}</span>
+</span><span class="hll">    <span class="o">+</span> <span class="n">version_major</span> <span class="o">=</span> <span class="mi">10</span>
+</span><span class="hll">    <span class="o">+</span> <span class="n">version_minor</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class="hll">    <span class="o">+</span> <span class="n">version_patch</span> <span class="o">=</span> <span class="mi">7</span>
+</span>    <span class="p">}</span>
+
+<span class="o">------------------------------------------------------------------------</span>
+
+<span class="n">Note</span><span class="p">:</span> <span class="n">You</span> <span class="n">didn</span><span class="s1">&#39;t specify an &quot;-out&quot; parameter to save this plan, so Terraform</span>
+<span class="n">can</span><span class="s1">&#39;t guarantee that exactly these actions will be performed if</span>
+<span class="s2">&quot;terraform apply&quot;</span> <span class="ow">is</span> <span class="n">subsequently</span> <span class="n">run</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Note the first highlghted section, telling us that nothing would be changed from this test run. The second highlighted section gives us the output we asked for in the <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main01.tf">Terraform code</a>. The first block is the equivalent output from the CLI command <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">system</span> <span class="pre">info</span></code>, followed by the PAN-OS version broken down by major, minor and patch version.</p>
+<p>This type of Terraform code is great for data gathering, but we may want to use this gathered data in other places in Terraform too.</p>
+</section>
+<section id="applying-changes-with-terraform">
+<h2><span class="section-number">1.6. </span>Applying Changes with Terraform<a class="headerlink" href="#applying-changes-with-terraform" title="Permalink to this headline"></a></h2>
+<p>As previously mentioned, Terraform wants to use all .tf files in the local directory, so lets remove the first file from scope, and introdude the second file:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ mv main01.tf main01.tf.bak
+$ mv main02.tf.bak main02.tf
+</pre></div>
+</div>
+<p>The second <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main02.tf.bak">Terraform file</a> creates some address objects and an address group. Again, perform the <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">plan</span></code> command to test run the changes:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ terraform plan
+</pre></div>
+</div>
+<p>The output should look something like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">An</span> <span class="n">execution</span> <span class="n">plan</span> <span class="n">has</span> <span class="n">been</span> <span class="n">generated</span> <span class="ow">and</span> <span class="ow">is</span> <span class="n">shown</span> <span class="n">below</span><span class="o">.</span>
+<span class="n">Resource</span> <span class="n">actions</span> <span class="n">are</span> <span class="n">indicated</span> <span class="k">with</span> <span class="n">the</span> <span class="n">following</span> <span class="n">symbols</span><span class="p">:</span>
+<span class="o">+</span> <span class="n">create</span>
+
+<span class="n">Terraform</span> <span class="n">will</span> <span class="n">perform</span> <span class="n">the</span> <span class="n">following</span> <span class="n">actions</span><span class="p">:</span>
+
+<span class="hll"><span class="c1"># panos_address_object.terraform-address-object-1 will be created</span>
+</span><span class="o">+</span> <span class="n">resource</span> <span class="s2">&quot;panos_address_object&quot;</span> <span class="s2">&quot;terraform-address-object-1&quot;</span> <span class="p">{</span>
+    <span class="o">+</span> <span class="n">description</span>  <span class="o">=</span> <span class="s2">&quot;Addres object 1 from Terraform&quot;</span>
+    <span class="o">+</span> <span class="n">device_group</span> <span class="o">=</span> <span class="s2">&quot;shared&quot;</span>
+    <span class="o">+</span> <span class="nb">id</span>           <span class="o">=</span> <span class="p">(</span><span class="n">known</span> <span class="n">after</span> <span class="n">apply</span><span class="p">)</span>
+    <span class="o">+</span> <span class="n">name</span>         <span class="o">=</span> <span class="s2">&quot;terraform-address-object-1&quot;</span>
+    <span class="o">+</span> <span class="nb">type</span>         <span class="o">=</span> <span class="s2">&quot;ip-netmask&quot;</span>
+    <span class="o">+</span> <span class="n">value</span>        <span class="o">=</span> <span class="s2">&quot;192.168.80.1/32&quot;</span>
+    <span class="o">+</span> <span class="n">vsys</span>         <span class="o">=</span> <span class="s2">&quot;vsys1&quot;</span>
+    <span class="p">}</span>
+
+<span class="hll"><span class="c1"># panos_address_object.terraform-address-object-2 will be created</span>
+</span><span class="o">+</span> <span class="n">resource</span> <span class="s2">&quot;panos_address_object&quot;</span> <span class="s2">&quot;terraform-address-object-2&quot;</span> <span class="p">{</span>
+    <span class="o">+</span> <span class="n">description</span>  <span class="o">=</span> <span class="s2">&quot;Addres object 2 from Terraform&quot;</span>
+    <span class="o">+</span> <span class="n">device_group</span> <span class="o">=</span> <span class="s2">&quot;shared&quot;</span>
+    <span class="o">+</span> <span class="nb">id</span>           <span class="o">=</span> <span class="p">(</span><span class="n">known</span> <span class="n">after</span> <span class="n">apply</span><span class="p">)</span>
+    <span class="o">+</span> <span class="n">name</span>         <span class="o">=</span> <span class="s2">&quot;terraform-address-object-2&quot;</span>
+    <span class="o">+</span> <span class="nb">type</span>         <span class="o">=</span> <span class="s2">&quot;ip-netmask&quot;</span>
+    <span class="o">+</span> <span class="n">value</span>        <span class="o">=</span> <span class="s2">&quot;192.168.80.2/32&quot;</span>
+    <span class="o">+</span> <span class="n">vsys</span>         <span class="o">=</span> <span class="s2">&quot;vsys1&quot;</span>
+    <span class="p">}</span>
+
+<span class="hll"><span class="c1"># panos_panorama_address_group.terraform-address-group will be created</span>
+</span><span class="o">+</span> <span class="n">resource</span> <span class="s2">&quot;panos_panorama_address_group&quot;</span> <span class="s2">&quot;terraform-address-group&quot;</span> <span class="p">{</span>
+    <span class="o">+</span> <span class="n">device_group</span>     <span class="o">=</span> <span class="s2">&quot;shared&quot;</span>
+    <span class="o">+</span> <span class="nb">id</span>               <span class="o">=</span> <span class="p">(</span><span class="n">known</span> <span class="n">after</span> <span class="n">apply</span><span class="p">)</span>
+    <span class="o">+</span> <span class="n">name</span>             <span class="o">=</span> <span class="s2">&quot;terraform-address-group&quot;</span>
+    <span class="o">+</span> <span class="n">static_addresses</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="o">+</span> <span class="s2">&quot;terraform-address-object-1&quot;</span><span class="p">,</span>
+        <span class="o">+</span> <span class="s2">&quot;terraform-address-object-2&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="p">}</span>
+
+<span class="hll"><span class="n">Plan</span><span class="p">:</span> <span class="mi">3</span> <span class="n">to</span> <span class="n">add</span><span class="p">,</span> <span class="mi">0</span> <span class="n">to</span> <span class="n">change</span><span class="p">,</span> <span class="mi">0</span> <span class="n">to</span> <span class="n">destroy</span><span class="o">.</span>
+</span>
+<span class="o">------------------------------------------------------------------------</span>
+
+<span class="n">Note</span><span class="p">:</span> <span class="n">You</span> <span class="n">didn</span><span class="s1">&#39;t specify an &quot;-out&quot; parameter to save this plan, so Terraform</span>
+<span class="n">can</span><span class="s1">&#39;t guarantee that exactly these actions will be performed if</span>
+<span class="s2">&quot;terraform apply&quot;</span> <span class="ow">is</span> <span class="n">subsequently</span> <span class="n">run</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Each of the first three highlighted sections show a new object being created for our firewall. The final highlighted section gives a summary, telling us 3 new object will be created, none to be modified, none to be destroyed.</p>
+<p>To make these changes on the firewall, moving from test run to live changes, we use the <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">apply</span></code> command. It is performed like this:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ terraform apply
+</pre></div>
+</div>
+<p>The plan will be re-generated, and you will be asked for confirmation to make the changes, so type <code class="docutils literal notranslate"><span class="pre">yes</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Do you want to perform these actions?
+Terraform will perform the actions described above.
+Only &#39;yes&#39; will be accepted to approve.
+
+<span class="hll">Enter a value: yes
+</span>
+panos_address_object.terraform-address-object-1: Creating...
+panos_address_object.terraform-address-object-2: Creating...
+panos_address_object.terraform-address-object-2: Creation complete after 0s [id=vsys1:terraform-address-object-2]
+panos_address_object.terraform-address-object-1: Creation complete after 0s [id=vsys1:terraform-address-object-1]
+panos_address_group.terraform-address-group: Creating...
+panos_address_group.terraform-address-group: Creation complete after 0s [id=vsys1:terraform-address-group]
+</pre></div>
+</div>
+<p>Our address objects and group are now created in the candidate configuration. This can be confirmed by observing the web GUI for the firewall.</p>
+<p>Terraform’s methodology is to expect that when configuration is created with the <code class="docutils literal notranslate"><span class="pre">plan</span></code> command, each configuration item is made live straight away. PAN-OS works differently, where configuration can be built up across objects, rules, zones, interfaces and more, and the configuration is only valid once all the parts are in place, and this is made live with a <code class="docutils literal notranslate"><span class="pre">commit</span></code> operation. This difference in methodology requires <a class="reference external" href="https://registry.terraform.io/providers/PaloAltoNetworks/panos/latest/docs/guides/commits-overview">commits to be performed via a specific mechanism</a>; there are a variety of approaches, today we will use a simple script:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ commit.sh {{ your firewall management IP }} {{ your-admin-username }} {{ your-admin-password }}
+</pre></div>
+</div>
+<p>The script will initiate a commit, and wait through the active (<code class="docutils literal notranslate"><span class="pre">ACT</span></code>) stage, until it is finished (<code class="docutils literal notranslate"><span class="pre">FIN</span></code>).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">commit</span><span class="o">.</span><span class="n">sh</span> <span class="p">{{</span> <span class="n">your</span> <span class="n">firewall</span> <span class="n">management</span> <span class="n">IP</span> <span class="p">}}</span> <span class="p">{{</span> <span class="n">your</span><span class="o">-</span><span class="n">admin</span><span class="o">-</span><span class="n">username</span> <span class="p">}}</span> <span class="p">{{</span> <span class="n">your</span><span class="o">-</span><span class="n">admin</span><span class="o">-</span><span class="n">password</span> <span class="p">}}</span>
+<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
+<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
+<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
+<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
+<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
+<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
+<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
+<span class="n">Final</span> <span class="n">commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">FIN</span>
+</pre></div>
+</div>
+<p>The changes are now live in the runing configuration.</p>
+</section>
+<section id="applying-more-changes">
+<h2><span class="section-number">1.7. </span>Applying More Changes<a class="headerlink" href="#applying-more-changes" title="Permalink to this headline"></a></h2>
+<p>Let’s make some more changes. We will use the <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main03.tf.bak">third Terraform file</a> for this, so execute the comands below:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ mv main02.tf main02.tf.bak
+$ mv main03.tf.bak main03.tf
+</pre></div>
+</div>
+<p>Again, run <code class="docutils literal notranslate"><span class="pre">terrform</span> <span class="pre">plan</span></code> to see what changes are bing lined up during this test run:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ terraform plan
+</pre></div>
+</div>
+<p>This third Terraform file includes the objects previously created, and adds two security zones, and two security policy rules. It also adds a description to the address group previously created. For this reason, the output should show objects to be created, and one object to be modified:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Plan</span><span class="p">:</span> <span class="mi">3</span> <span class="n">to</span> <span class="n">add</span><span class="p">,</span> <span class="mi">1</span> <span class="n">to</span> <span class="n">change</span><span class="p">,</span> <span class="mi">0</span> <span class="n">to</span> <span class="n">destroy</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Make these changes to the firewall, using <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">apply</span></code> command, but this time we can skip the confirmation prompt like this:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ terraform apply --auto-approve
+</pre></div>
+</div>
+<p>Finally, execute the commit script, and confirm the new zones and rules are live on the firewall’s running configuration:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ commit.sh {{ your firewall management IP }} {{ your-admin-username }} {{ your-admin-password }}
+</pre></div>
+</div>
+</section>
 </section>
 
 

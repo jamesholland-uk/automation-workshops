@@ -7,7 +7,7 @@ Assumptions: A host with the following installed: curl, git, `Python 3
 <https://www.python.org/downloads>`_, `Ansible
 <https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pip>`_, `PAN-OS-Python
 <https://github.com/PaloAltoNetworks/pan-os-python>`_, `PAN-OS Ansible Collection
-<https://github.com/PaloAltoNetworks/pan-os-ansible>`_, and all prerequisite requirements. Also, access to a PAN-OS next-generation firewall from your host.
+<https://github.com/PaloAltoNetworks/pan-os-ansible>`_, and all prerequisite requirements for those items. Plus some form of text editor on your host. And, access to a PAN-OS next-generation firewall from your host.
 
 Note:
     * Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.
@@ -64,9 +64,7 @@ The output should list al the modules in the PAN-OS Collection, and the end of t
 Download Ansible playbooks
 ================================================
 
-In this workshop, we're going to be using playbooks from the `repository of examples
-<https://github.com/PaloAltoNetworks/ansible-playbooks>`_, created by `Michael Richardson
-<https://github.com/mrichardson03>`_. We'll use git to download the playbooks...
+In this workshop, we're going to be using some existing playbooks. We'll use git to download the playbooks from a repository...
 
 .. code-block::
         :class: copy-button
@@ -135,7 +133,7 @@ Change the IP address in this file to match your firewalls's management IP addre
         EOL
 
 
-Re-check the ``host_vars/firewall.yml`` file and ensure it noe contains your firewall's IP address:
+Re-check the ``host_vars/firewall.yml`` file and ensure it now contains your firewall's IP address:
 
 .. code-block::
         :class: copy-button
