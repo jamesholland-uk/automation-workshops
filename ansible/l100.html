@@ -56,8 +56,9 @@
 <li class="toctree-l2"><a class="reference internal" href="#prepare-the-firewall-credentials">1.4. Prepare the firewall credentials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#run-our-first-ansible-playbook">1.5. Run our first Ansible playbook</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-2-are-you-ready">1.6. Ansible Playbook 2 - Are you ready?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-3-more-information">1.7. Ansible Playbook 3 - More information</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#todo">1.8. TODO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-3-more-firewall-information">1.7. Ansible Playbook 3 - More firewall information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-4-config-backup-export">1.8. Ansible Playbook 4 - Config backup/export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#todo">1.9. TODO</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="l200.html">2. Ansible L200</a></li>
@@ -315,23 +316,28 @@ EOL
 </span></pre></div>
 </div>
 </section>
-<section id="ansible-playbook-3-more-information">
-<h2><span class="section-number">1.7. </span>Ansible Playbook 3 - More information<a class="headerlink" href="#ansible-playbook-3-more-information" title="Permalink to this headline"></a></h2>
+<section id="ansible-playbook-3-more-firewall-information">
+<h2><span class="section-number">1.7. </span>Ansible Playbook 3 - More firewall information<a class="headerlink" href="#ansible-playbook-3-more-firewall-information" title="Permalink to this headline"></a></h2>
+<p>The third <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/some_more_info.yml">playbook</a> again gathers <code class="docutils literal notranslate"><span class="pre">facts</span></code> in order to display information about the running configiration and state of the firewall. This could be useful information on its own, but could also be used to feed into other tasks later on. Run the playbook using the following:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory some_more_info.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
+</pre></div>
+</div>
+<p>The playbook should provide information about the security policy rules, the network interfaces, and the route table.</p>
+</section>
+<section id="ansible-playbook-4-config-backup-export">
+<h2><span class="section-number">1.8. </span>Ansible Playbook 4 - Config backup/export<a class="headerlink" href="#ansible-playbook-4-config-backup-export" title="Permalink to this headline"></a></h2>
+<p>The next <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/backup_config.yml">playbook</a> uses the <a href="#id3"><span class="problematic" id="id4">`panos_export module&lt;https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_export.html&gt;`_</span></a> to export the running config to a local file. Run the playbook using the following:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory backup_config.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
+</pre></div>
+</div>
+<p>Once executed, you should be able to see the exported config file on yours host:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat running-config.xml
+</pre></div>
+</div>
 </section>
 <section id="todo">
-<h2><span class="section-number">1.8. </span>TODO<a class="headerlink" href="#todo" title="Permalink to this headline"></a></h2>
-<p>Show route table
-Show rules
-Show rule hit count
-Show applications
-Show vulnerability signature list
-Register a user-to-IP
-Export config
-Get tech-support file</p>
-<p>Upgrade OS</p>
-<p>&lt;&lt; simple bash script to do some changes, the commit and watch until finished &gt;&gt;
-&lt;&lt; anothe bash script to get some info, pass to another call with a variable &gt;&gt;</p>
-<p>Scripts - explain ideas of pre-caned config snippets, idea behind skillets etc, golden eval configs, etc</p>
+<h2><span class="section-number">1.9. </span>TODO<a class="headerlink" href="#todo" title="Permalink to this headline"></a></h2>
+<p>Register a user-to-IP</p>
 </section>
 </section>
 
