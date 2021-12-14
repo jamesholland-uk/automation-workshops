@@ -32,6 +32,7 @@ extensions = [
 ]
 copybutton_prompt_text = "$ "
 copybutton_here_doc_delimiter = "EOL"
+copybutton_selector = "div.copy-button pre"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
