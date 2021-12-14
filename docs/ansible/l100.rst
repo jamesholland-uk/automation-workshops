@@ -373,7 +373,8 @@ Copy a playbook used previously in this session, and execute your chosen command
             provider: '{{ device }}'
             cmd: 'command goes here'
           register: op_command_output
-        - name: Show oputput
+
+        - name: Show output
           debug:
             msg:
               - "{{ op_command_output }}"
