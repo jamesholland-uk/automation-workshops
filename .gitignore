@@ -4,3 +4,9 @@ __pycache__
 temp
 *creds*
 running-config.xml
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*terraform.lock*

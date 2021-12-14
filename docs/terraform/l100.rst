@@ -1,4 +1,390 @@
 Terraform L100
 ----------------------
 
-This training lab provides....
+Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.
+
+Assumptions: A host with the following installed: curl, git, `Terraform 1.x
+<https://www.terraform.io/downloads.html>`_, and any prerequisite requirements for those items. Plus some form of text editor on your host. And, access to a PAN-OS next-generation firewall from your host.
+
+Note:
+    * Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.
+    * Commands you could/should execute are denoted with ``$`` at the start, other text boxes show expected outputs.
+
+
+Terraform pre-flight checks
+================================================
+
+First let's check that Terraform is installed on our host.
+
+.. code-block::
+        :class: copy-button
+
+        $ terraform -version 
+
+
+The output should look something like this, and may contain a warning if you are not on the very latest version:
+
+.. code-block::
+   
+        Terraform v1.0.10
+
+        Your version of Terraform is out of date! The latest version
+        is 1.1.0. You can update by downloading from https://www.terraform.io/downloads.html
+
+
+It is fine to ignore the warning, as long as your version is at least 1.0.0 or higher.
+
+
+Download Terraform configs
+================================================
+
+In this workshop, we're going to be using some existing Terraform configs. We'll use git to download them from a repository...
+
+.. code-block::
+        :class: copy-button
+
+        $ git clone https://github.com/jamesholland-uk/automation-workshops.git
+
+
+...then move into the Terraform directory
+
+.. code-block::
+        :class: copy-button
+
+        $ cd terraform
+
+In the Terraform directory, a number of files will be present:
+
+.. code-block::
+        :class: copy-button
+
+        $ ls
+
+.. code-block::
+
+        main01.tf           \
+        main02.tf            |- These are the files where we write our Terraform code
+        main03.tf           /
+        terraform.tfvars      - This file will contain values for variables
+        commit.sh             - We will use this script to perform a commit after making changes
+        providers.tf          - This file describes the third party systems, such as PAN-OS, which we want to interact with
+        variables.tf          - This file describes the variables we are going to use in our Terraform code
+
+
+Setup the PAN-OS variables for Terraform
+================================================
+
+Terraform needs to know the details for the hosts against which it should execute. There are a variety of methods for this, today we will use a files called ``terraform.tfvars``, a commonly used filename for varables used by Terraform. At the moment, the file has empty values for the variables:
+
+.. code-block::
+        :class: copy-button
+
+        $ cat terraform.tfvars
+
+.. code-block::
+
+        panos_hostname = ""
+        panos_username = ""
+        panos_password = ""
+
+Let's popuate the file with the relevant values:
+
+.. code-block::
+        :class: copy-button
+
+        $ cat > terraform.tfvars <<EOL
+        panos_hostname = "{{ your firewall management IP }}"
+        panos_username = "{{ your-admin-username }}"
+        panos_password = "{{ your-admin-password }}"
+        EOL
+
+
+Re-check the ``terraform.tfvars`` file and ensure it now contains your firewall's details:
+
+.. code-block::
+        :class: copy-button
+
+        $ cat terraform.tfvars
+
+
+.. code-block::
+
+        panos_hostname = "{{ your firewall management IP }}"
+        panos_username = "{{ your-admin-username }}"
+        panos_password = "{{ your-admin-password }}"
+
+Initialising Terraform
+================================================
+
+Terraform uses a multi-stage process, the first of which is to ``init``, short for `initialise
+<https://www.terraform.io/docs/cli/commands/init.html>`_. Run the following command, which sets up the directory Terraform works within, as well as potentially downloading some required files ready to be used at runtime.
+
+.. code-block::
+        :class: copy-button
+
+        $ terraform init
+
+The output should look something like this:
+
+.. code-block::
+        :emphasize-lines: 4,5,6,17
+
+        Initializing the backend...
+
+        Initializing provider plugins...
+        - Finding paloaltonetworks/panos versions matching "~> 1.8.3"...
+        - Installing paloaltonetworks/panos v1.8.3...
+        - Installed paloaltonetworks/panos v1.8.3 (signed by a HashiCorp partner, key ID D5D93F98EFA33E83)
+
+        Partner and community providers are signed by their developers.
+        If you'd like to know more about provider signing, you can read about it here:
+        https://www.terraform.io/docs/plugins/signing.html
+
+        Terraform has created a lock file .terraform.lock.hcl to record the provider
+        selections it made above. Include this file in your version control repository
+        so that Terraform can guarantee to make the same selections by default when
+        you run "terraform init" in the future.
+
+        Terraform has been successfully initialized!
+
+        You may now begin working with Terraform. Try running "terraform plan" to see
+        any changes that are required for your infrastructure. All Terraform commands
+        should now work.
+
+        If you ever set or change modules or backend configuration for Terraform,
+        rerun this command to reinitialize your working directory. If you forget, other
+        commands will detect it and remind you to do so if necessary.
+
+Some particularly interesting lines in the output are the first block of highlighted text, showing the download of the PAN-OS ``provider``. A provider is responsible for the interaction between Terraform and a remote system, in this case a PAN-OS firewalls. Providers are available for many other prducts and cloud services.
+
+Also of note is the second section of highlighted text, confirming Terraform has been successfully initialised.
+
+The Terraform Plan
+================================================
+
+Terraform will look for any files in the local directory with the ``.tf`` extension, and by default attempt to execute with them all. Convention is to name the file with your coded tasks ``main.tf``, but it could be called anything. We have several exercises, so we are using ``main01.tf``, ``main02.tf``, etc
+
+The `first Terraform code
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main01.tf>`_ we will run is in the file ``main01.tf``. It has read-only data gathering, using a ``data source``, the part of a Terraform provider responsible for gathering data.
+
+After initialisation, the next step is usually to perform a test run, which you can do by running the ``plan`` command:
+
+.. code-block::
+        :class: copy-button
+
+        $ terraform plan
+
+The output should look something like this:
+
+.. code-block::
+        :emphasize-lines: 6, 10-24
+
+        An execution plan has been generated and is shown below.
+        Resource actions are indicated with the following symbols:
+
+        Terraform will perform the following actions:
+
+        Plan: 0 to add, 0 to change, 0 to destroy.
+
+        Changes to Outputs:
+        + the_info = {
+            + id            = "192.168.150.226"
+            + info          = {
+                + "app-release-date"                      = "2021/10/27 05:11:31 BST"
+                + "app-version"                           = "8478-7015"
+                + "av-release-date"                       = "2021/10/27 12:03:35 BST"
+                + "av-version"                            = "3882-4393"
+                .
+                .
+                .
+                + "wildfire-rt"                           = "Disabled"
+                + "wildfire-version"                      = "0"
+                }
+            + version_major = 10
+            + version_minor = 0
+            + version_patch = 7
+            }
+
+        ------------------------------------------------------------------------
+
+        Note: You didn't specify an "-out" parameter to save this plan, so Terraform
+        can't guarantee that exactly these actions will be performed if
+        "terraform apply" is subsequently run.
+
+Note the first highlghted section, telling us that nothing would be changed from this test run. The second highlighted section gives us the output we asked for in the `Terraform code
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main01.tf>`_. The first block is the equivalent output from the CLI command ``show system info``, followed by the PAN-OS version broken down by major, minor and patch version.
+
+This type of Terraform code is great for data gathering, but we may want to use this gathered data in other places in Terraform too.
+
+
+Applying Changes with Terraform
+================================================
+
+As previously mentioned, Terraform wants to use all .tf files in the local directory, so lets remove the first file from scope, and introdude the second file:
+
+.. code-block::
+        :class: copy-button
+
+        $ mv main01.tf main01.tf.bak
+        $ mv main02.tf.bak main02.tf 
+
+
+The second `Terraform file
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main02.tf.bak>`_ creates some address objects and an address group. Again, perform the ``terraform plan`` command to test run the changes:
+
+.. code-block::
+        :class: copy-button
+
+        $ terraform plan
+
+The output should look something like this:
+
+.. code-block::
+        :emphasize-lines: 7, 18, 29, 40
+
+        An execution plan has been generated and is shown below.
+        Resource actions are indicated with the following symbols:
+        + create
+
+        Terraform will perform the following actions:
+
+        # panos_address_object.terraform-address-object-1 will be created
+        + resource "panos_address_object" "terraform-address-object-1" {
+            + description  = "Addres object 1 from Terraform"
+            + device_group = "shared"
+            + id           = (known after apply)
+            + name         = "terraform-address-object-1"
+            + type         = "ip-netmask"
+            + value        = "192.168.80.1/32"
+            + vsys         = "vsys1"
+            }
+
+        # panos_address_object.terraform-address-object-2 will be created
+        + resource "panos_address_object" "terraform-address-object-2" {
+            + description  = "Addres object 2 from Terraform"
+            + device_group = "shared"
+            + id           = (known after apply)
+            + name         = "terraform-address-object-2"
+            + type         = "ip-netmask"
+            + value        = "192.168.80.2/32"
+            + vsys         = "vsys1"
+            }
+
+        # panos_panorama_address_group.terraform-address-group will be created
+        + resource "panos_panorama_address_group" "terraform-address-group" {
+            + device_group     = "shared"
+            + id               = (known after apply)
+            + name             = "terraform-address-group"
+            + static_addresses = [
+                + "terraform-address-object-1",
+                + "terraform-address-object-2",
+                ]
+            }
+
+        Plan: 3 to add, 0 to change, 0 to destroy.
+
+        ------------------------------------------------------------------------
+
+        Note: You didn't specify an "-out" parameter to save this plan, so Terraform
+        can't guarantee that exactly these actions will be performed if
+        "terraform apply" is subsequently run.
+
+
+Each of the first three highlighted sections show a new object being created for our firewall. The final highlighted section gives a summary, telling us 3 new object will be created, none to be modified, none to be destroyed.
+
+To make these changes on the firewall, moving from test run to live changes, we use the ``terraform apply`` command. It is performed like this:
+
+.. code-block::
+        :class: copy-button
+
+        $ terraform apply
+
+The plan will be re-generated, and you will be asked for confirmation to make the changes, so type ``yes``:
+
+.. code-block::
+        :emphasize-lines: 5
+
+        Do you want to perform these actions?
+        Terraform will perform the actions described above.
+        Only 'yes' will be accepted to approve.
+
+        Enter a value: yes
+
+        panos_address_object.terraform-address-object-1: Creating...
+        panos_address_object.terraform-address-object-2: Creating...
+        panos_address_object.terraform-address-object-2: Creation complete after 0s [id=vsys1:terraform-address-object-2]
+        panos_address_object.terraform-address-object-1: Creation complete after 0s [id=vsys1:terraform-address-object-1]
+        panos_address_group.terraform-address-group: Creating...
+        panos_address_group.terraform-address-group: Creation complete after 0s [id=vsys1:terraform-address-group]
+
+
+Our address objects and group are now created in the candidate configuration. This can be confirmed by observing the web GUI for the firewall.
+
+Terraform's methodology is to expect that when configuration is created with the ``plan`` command, each configuration item is made live straight away. PAN-OS works differently, where configuration can be built up across objects, rules, zones, interfaces and more, and the configuration is only valid once all the parts are in place, and this is made live with a ``commit`` operation. This difference in methodology requires `commits to be performed via a specific mechanism
+<https://registry.terraform.io/providers/PaloAltoNetworks/panos/latest/docs/guides/commits-overview>`_; there are a variety of approaches, today we will use a simple script:
+
+.. code-block::
+        :class: copy-button
+
+        $ commit.sh {{ your firewall management IP }} {{ your-admin-username }} {{ your-admin-password }}
+
+The script will initiate a commit, and wait through the active (``ACT``) stage, until it is finished (``FIN``).
+
+.. code-block::
+
+        ./commit.sh {{ your firewall management IP }} {{ your-admin-username }} {{ your-admin-password }}
+        Commit status: ACT
+        Commit status: ACT
+        Commit status: ACT
+        Commit status: ACT
+        Commit status: ACT
+        Commit status: ACT
+        Commit status: ACT
+        Final commit status: FIN
+
+
+The changes are now live in the runing configuration.
+
+
+Applying More Changes
+================================================
+
+Let's make some more changes. We will use the `third Terraform file
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main03.tf.bak>`_ for this, so execute the comands below:
+
+.. code-block::
+        :class: copy-button
+
+        $ mv main02.tf main02.tf.bak
+        $ mv main03.tf.bak main03.tf
+
+
+Again, run ``terrform plan`` to see what changes are bing lined up during this test run:
+
+.. code-block::
+        :class: copy-button
+
+        $ terraform plan
+
+
+This third Terraform file includes the objects previously created, and adds two security zones, and two security policy rules. It also adds a description to the address group previously created. For this reason, the output should show objects to be created, and one object to be modified:
+
+.. code-block::
+
+        Plan: 3 to add, 1 to change, 0 to destroy.
+
+
+Make these changes to the firewall, using ``terraform apply`` command, but this time we can skip the confirmation prompt like this:
+
+.. code-block::
+        :class: copy-button
+
+        $ terraform apply --auto-approve
+
+
+Finally, execute the commit script, and confirm the new zones and rules are live on the firewall's running configuration:
+
+.. code-block::
+        :class: copy-button
+
+        $ commit.sh {{ your firewall management IP }} {{ your-admin-username }} {{ your-admin-password }}
