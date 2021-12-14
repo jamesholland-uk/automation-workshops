@@ -343,20 +343,20 @@ EOL
 <div><ul class="simple">
 <li><p>show clock</p></li>
 <li><p>show admins all</p></li>
-<li><p>clear counter all</p></li>
 <li><p>show system disk-space</p></li>
 </ul>
 </div></blockquote>
 <p>Copy a playbook used previously in this session, and execute your chosen command(s). Output from the commands could also be displayed. An example format would be:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Perform</span> <span class="n">an</span> <span class="n">op</span> <span class="n">command</span>
-<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_op</span><span class="p">:</span>
-        <span class="n">provider</span><span class="p">:</span> <span class="s1">&#39;{{ device }}&#39;</span>
-        <span class="n">cmd</span><span class="p">:</span> <span class="s1">&#39;command goes here&#39;</span>
-<span class="n">register</span><span class="p">:</span> <span class="n">op_command_output</span>
-<span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Show</span> <span class="n">oputput</span>
-<span class="n">debug</span><span class="p">:</span>
-        <span class="n">msg</span><span class="p">:</span>
-        <span class="o">-</span> <span class="s2">&quot;{{ op_command_output }}&quot;</span>
+  <span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_op</span><span class="p">:</span>
+    <span class="n">provider</span><span class="p">:</span> <span class="s1">&#39;{{ device }}&#39;</span>
+    <span class="n">cmd</span><span class="p">:</span> <span class="s1">&#39;command goes here&#39;</span>
+  <span class="n">register</span><span class="p">:</span> <span class="n">op_command_output</span>
+
+<span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Show</span> <span class="n">output</span>
+  <span class="n">debug</span><span class="p">:</span>
+    <span class="n">msg</span><span class="p">:</span>
+      <span class="o">-</span> <span class="s2">&quot;{{ op_command_output }}&quot;</span>
 </pre></div>
 </div>
 </section>

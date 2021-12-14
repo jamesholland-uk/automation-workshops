@@ -361,20 +361,20 @@ Choose one (or more) of the following operational commands to run with Ansible.
 
     * show clock
     * show admins all
-    * clear counter all
     * show system disk-space
 
 Copy a playbook used previously in this session, and execute your chosen command(s). Output from the commands could also be displayed. An example format would be:
 
 .. code-block::
         :class: copy-button
-        
+
         - name: Perform an op command
-        paloaltonetworks.panos.panos_op:
-                provider: '{{ device }}'
-                cmd: 'command goes here'
-        register: op_command_output
-        - name: Show oputput
-        debug:
-                msg:
-                - "{{ op_command_output }}"
+          paloaltonetworks.panos.panos_op:
+            provider: '{{ device }}'
+            cmd: 'command goes here'
+          register: op_command_output
+
+        - name: Show output
+          debug:
+            msg:
+              - "{{ op_command_output }}"
