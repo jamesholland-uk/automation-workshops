@@ -18,7 +18,7 @@
 # Usage
 # =====
 #
-#   $ ansible-playbook -i inventory panos_facts.yml
+#   $ ansible-playbook -i inventory system_info.yml
 
 - hosts: '{{ target | default("firewall") }}'
   connection: local
