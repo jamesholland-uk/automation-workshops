@@ -30,23 +30,38 @@ Before you can make any API calls, you need to generate an API key. Your API key
 .. code-block::
         :class: copy-button
 
-        $ curl -k https://$host/api/?type=keygen&user={{your-admin-username}}&password={{your-admin-password}}
+        $ curl -kd "type=keygen&user={{your-admin-username}}&password={{your-admin-password}}" https://$host/api
 
-In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will assign the API key value to a variable to be used in future API calls.
+.. code-block::
+
+        <response status = 'success'><result><key>LUFRPT16V1ZzaHNFYVJEdlZnb3Buc1dJRWtCVFFPYjFXTzI2N1phVzRsMg==</key></result></response>
+
+In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will assign the API key value to a variable to be used in future API calls. Take the characters between the ``key`` tags from the previous output as your API key, in the example above this is the characters from ``LUFRPT16...`` to ``...Mg==``
 
 .. code-block::
         :class: copy-button
 
         $ export key={{your-API-key}}
 
+For example:
+
+.. code-block::
+
+        $ export key=LUFRPT16V1ZzaHNFYVJEdlZnb3Buc1dJRWtCVFFPYjFXTzI2N1phVzRsMg==
+
+
 Make your first real API call
 ====================================
-Your first API call will tell you if the firewall is in a ready and operational state. This operational command is useful to know if the firewall has been recently rebooted, or in the case of software firewalls like VM-Series or CN-Series, recently created.
+Your first API call will tell you if the firewall is in a ready and operational state. This operational command is useful to know if the firewall has been recently rebooted, or in the case of software firewalls like VM-Series or CN-Series, recently created. The answer should be ``yes``, within the XML-formatted response.
 
 .. code-block::
         :class: copy-button
 
-        $ curl -k https://$host/api/?type=op&cmd=<show><chassis-ready></chassis-ready></show>&key=$key
+        $ curl -kd "type=op&cmd=<show><chassis-ready></chassis-ready></show>&key=$key" https://$host/api
+
+.. code-block::
+
+        <response status="success"><result><![CDATA[yes]]></result></response
 
 Get firewall system info
 ====================================
@@ -55,7 +70,7 @@ Next, retrieve information about the firewall system. This too is an operational
 .. code-block::
         :class: copy-button
 
-        $ curl -k https://$host/api/?type=op&cmd=<show><system><info></info></system></show>&key=$key
+        $ curl -kd "type=op&cmd=<show><system><info></info></system></show>&key=$key" https://$host/api
 
 Show the routing table
 ====================================
@@ -64,7 +79,7 @@ Another useful operational command is to display the routing table.
 .. code-block::
         :class: copy-button
 
-        $ curl -k https://$host/api/?type=op&cmd=<show><routing><route></route></routing></show>&key=$key
+        $ curl -kd "type=op&cmd=<show><routing><route></route></routing></show>&key=$key" https://$host/api
 
 Show the rulebase configuration
 ====================================
@@ -73,7 +88,7 @@ Now we look at the firewall configuration. Notice the type of API call this time
 .. code-block::
         :class: copy-button
 
-        $ curl -k https://$host/api/?type=config&action=get&xpath=/config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules&key=$key
+        $ curl -kd "type=config&action=get&xpath=/config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules&key=$key" https://$host/api
 
 Show the rulebase hit counts
 ====================================
@@ -82,7 +97,7 @@ We've seen the rulebase from the configuration, but if we wanted to programmatic
 .. code-block::
         :class: copy-button
 
-        $ curl -k https://$host/api/?type=op&cmd=<show><rule-hit-count><vsys><vsys-name><entry name='vsys1'><rule-base><entry name='security'><rules><all/></rules></entry></rule-base></entry></vsys-name></vsys></rule-hit-count></show>&key=$key
+        $ curl -kd "type=op&cmd=<show><rule-hit-count><vsys><vsys-name><entry name='vsys1'><rule-base><entry name='security'><rules><all/></rules></entry></rule-base></entry></vsys-name></vsys></rule-hit-count></show>&key=$key" https://$host/api
 
 Backup/export configuration
 ====================================
@@ -91,17 +106,7 @@ This is a common API call, given how many people have requirements to automate b
 .. code-block::
         :class: copy-button
 
-        $ curl -k https://$host/api/?type=export&category=configuration&key=$key
-
-Gathering Reports
-====================================
-Another type of API call available is ``type=report``, to automate the gathering of reporting data. THe data is returned in XML format, such that it can be parsed by another system.
-
-.. code-block::
-        :class: copy-button
-
-        $ curl -k https://$host/api/?type=report&reporttype=predefined&reportname=top-applications&key=$key
-
+        $ curl -kd "type=export&category=configuration&key=$key" https://$host/api
 
 User-ID
 ================
@@ -110,21 +115,21 @@ A frequent use case is to register user-to-IP mappings. The first task here, ano
 .. code-block::
         :class: copy-button
 
-        $ curl -k https://$host/api/?type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key=$key
+        $ curl -kd "type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key=$key" https://$host/api
 
 The next API call registers a username to an IP address. This uses ``type=user-id``. Note we pass in the username, the IP address they are currently using, and a timeout value (in seconds).
 
 .. code-block::
         :class: copy-button
 
-        $ curl -k https://$host/api/?type=user-id&cmd=<uid-message><version>2.0</version><type>update</type><payload><login><entry name="NewUser" ip="10.50.100.9" timeout="120"/></login></payload></uid-message>&key=$key
+        $ curl -kd "type=user-id&cmd=<uid-message><version>2.0</version><type>update</type><payload><login><entry name=\"NewUser\" ip=\"10.50.100.9\" timeout=\"120\"/></login></payload></uid-message>&key=$key" https://$host/api
 
 Replaying the API call to show the mapping table should now display the new user
 
 .. code-block::
         :class: copy-button
 
-        $ curl -k https://$host/api/?type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key=$key
+        $ curl -kd "type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key=$key" https://$host/api
 
 
 Find An API Command - CLI Debug
@@ -154,7 +159,14 @@ Note the highlighted lines, first the command for turning on CLI debugging, then
 The XML required to make a call ourselves is between (but not including) the ``<operations></operations>`` tags. This gives us ``<show><chassis-ready/></show>``, which becomes the ``cmd=`` portion of the final API command:
 ``https://$host/api/?type=op&cmd=<show><chassis-ready></chassis-ready></show>&key=$key``
 
-Choose one (or more) of the following operational commands, debug the CLI, then create and execute XML API command equivalents:
+Connect to the firewall using SSH:
+
+.. code-block::
+        :class: copy-button
+
+        $ ssh {{your-admin-username}}@$host
+
+Then choose one (or more) of the following operational commands, debug the CLI, then create and execute XML API command equivalents:
 
     * show system masterkey-properties
     * show arp all
@@ -164,7 +176,7 @@ Choose one (or more) of the following operational commands, debug the CLI, then 
 Find An API Command - API Browser
 ==================================
 
-Another way to find an API call for specific operation is to use the API browser, which can be found at ``https://$host/api``. Once logged in to the web GUI, browse to ``https://$host/api`` and a listing of the types of available XML API request types is displayed. Hyperlinks can be used to browse through the XML API request types until the required reqeust format is found.
+Another way to find an API call for specific operation is to use the API browser, which can be found at ``https://firewall/api``. **Once logged in to the web GUI**, browse to ``https://firewall/api`` and a listing of the types of available XML API request types is displayed. Hyperlinks can be used to browse through the XML API request types until the required reqeust format is found.
 
 Again using the example of our first API call in this workshop, ``show chassis-ready``, click the ``Operational Commands`` link, then the ``show`` link, then the ``chassis-ready`` link. You will be shown the XML API format we observed in the CLI (``<show><chassis-ready/></show>``), as well as the XML API URL structure (``/api/?type=op&cmd=<show><chassis-ready></chassis-ready></show>``). Clicking the hyperlinked XML API URL performs the API command and displays a result.
 
