@@ -61,7 +61,8 @@ Your first API call will tell you if the firewall is in a ready and operational 
 
 .. code-block::
 
-        <response status="success"><result><![CDATA[yes]]></result></response
+        <response status="success"><result><![CDATA[yes
+        ]]></result></response
 
 Get firewall system info
 ====================================
@@ -166,7 +167,7 @@ Connect to the firewall using SSH:
 
         $ ssh {{your-admin-username}}@$host
 
-Then choose one (or more) of the following operational commands, debug the CLI, then create and execute XML API command equivalents:
+Then choose one (or more) of the following operational commands, debug the CLI, then create and execute XML API command equivalents. You may wish to use two CLI windows, your original CLI for performing XML API commands, and a second CLI for SSH to the firewall.
 
     * show system masterkey-properties
     * show arp all

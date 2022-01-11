@@ -141,7 +141,8 @@
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -kd &quot;type=op&amp;cmd=&lt;show&gt;&lt;chassis-ready&gt;&lt;/chassis-ready&gt;&lt;/show&gt;&amp;key=$key&quot; https://$host/api
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;response status=&quot;success&quot;&gt;&lt;result&gt;&lt;![CDATA[yes]]&gt;&lt;/result&gt;&lt;/response
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>&lt;response status=&quot;success&quot;&gt;&lt;result&gt;&lt;![CDATA[yes
+]]&gt;&lt;/result&gt;&lt;/response
 </pre></div>
 </div>
 </section>
@@ -219,7 +220,7 @@ yes
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ssh {{your-admin-username}}@$host
 </pre></div>
 </div>
-<p>Then choose one (or more) of the following operational commands, debug the CLI, then create and execute XML API command equivalents:</p>
+<p>Then choose one (or more) of the following operational commands, debug the CLI, then create and execute XML API command equivalents. You may wish to use two CLI windows, your original CLI for performing XML API commands, and a second CLI for SSH to the firewall.</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>show system masterkey-properties</p></li>
