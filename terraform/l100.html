@@ -327,15 +327,15 @@ panos_address_group.terraform-address-group: Creation complete after 0s [id=vsys
 </pre></div>
 </div>
 <p>The script will initiate a commit, and wait through the active (<code class="docutils literal notranslate"><span class="pre">ACT</span></code>) stage, until it is finished (<code class="docutils literal notranslate"><span class="pre">FIN</span></code>).</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">commit</span><span class="o">.</span><span class="n">sh</span> <span class="p">{{</span> <span class="n">your</span> <span class="n">firewall</span> <span class="n">management</span> <span class="n">IP</span> <span class="p">}}</span> <span class="p">{{</span> <span class="n">your</span><span class="o">-</span><span class="n">admin</span><span class="o">-</span><span class="n">username</span> <span class="p">}}</span> <span class="p">{{</span> <span class="n">your</span><span class="o">-</span><span class="n">admin</span><span class="o">-</span><span class="n">password</span> <span class="p">}}</span>
-<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
-<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
-<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
-<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
-<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
-<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
-<span class="n">Commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">ACT</span>
-<span class="n">Final</span> <span class="n">commit</span> <span class="n">status</span><span class="p">:</span> <span class="n">FIN</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>./commit.sh $TF_VAR_panos_hostname $TF_VAR_panos_username $TF_VAR_panos_password
+Commit status: ACT
+Commit status: ACT
+Commit status: ACT
+Commit status: ACT
+Commit status: ACT
+Commit status: ACT
+Commit status: ACT
+Final commit status: FIN
 </pre></div>
 </div>
 <p>The changes are now live in the runing configuration.</p>
