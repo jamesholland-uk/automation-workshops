@@ -41,7 +41,14 @@ The output should look something like this:
             libyaml = True
 
 
-Then let's check we have the PAN-OS Collection installed
+Now let's install the PAN-OS Collection
+
+.. code-block::
+        :class: copy-button
+
+        $ ansible-galaxy collection install paloaltonetworks.panos
+
+We can check the Collection is present using this command:
 
 .. code-block::
         :class: copy-button
@@ -78,7 +85,7 @@ In this workshop, we're going to be using some existing playbooks. We'll use git
 .. code-block::
         :class: copy-button
 
-        $ cd ansible
+        $ cd automation-workshops/ansible
 
 
 Setup the inventory
@@ -179,16 +186,23 @@ Our first Ansible playbook will gather system information from the firewall. Dat
 
 Notice that we execute the ``ansible-playbook`` command, pass in the previously mentioned inventory using ``-i inventory``, then specify the name of the playbook we want to run, ``system_info.yml``, and finally pass in the firewall credentials with ``--extra-vars "username=$panos_username password=$panos_password"``.
 
+Let's look at the playbook we executed:
+
+.. code-block::
+        :class: copy-button
+        
+        $ cat system_info.yml
+
 Breaking down the component parts of the playbook:
 
-First we see default host is `firewall`, from the previously mentioned inventory. Our connection type is `local` (we don't use Ansible in a traditional method because executing code on PAN-OS would work and would not be secure; instead we execute commands locally which call the PAN-OS XML API).
+After the "comments" which are the lines starting with # characters, first we see the default host is ``firewall``, from the previously mentioned inventory. Our connection type is ``local`` (we don't use Ansible in a traditional method, because executing code on PAN-OS would work and would not be secure; instead we execute commands locally on our host, and those commands call the PAN-OS XML API).
 
 .. code-block::
 
         - hosts: '{{ target | default("firewall") }}'
           connection: local
 
-Second we see a section of variables. We get the `ip_address` of the firewall from the previously mentioned inventory, and we get the username and password from the command we typed into the CLI. We don't use the api_key in this instance.
+Second we see a section of variables. We get the ``ip_address`` of the firewall from the previously mentioned inventory, and we get the username and password from the ``export`` commands we typed into the CLI. We don't use the api_key in this instance.
 
 .. code-block::
 
@@ -200,23 +214,23 @@ Second we see a section of variables. We get the `ip_address` of the firewall fr
             api_key: '{{ api_key | default(omit) }}'
 
 
-Now we get to our `tasks`, the jobs we want Ansible to do for us. We are just data gathering, so our first task is to gather `facts`, which in Ansible unsurprisingly are information about the target system. The second task using the built-in `debug` task to display a series of useful system information.
+Now we get to our ``tasks``, the jobs we want Ansible to do for us. We are just data gathering, so our first task is to gather ``facts``, which in Ansible unsurprisingly are information about the target system. The second task uses the built-in ``debug`` to display a series of useful system information.
 
 .. code-block::
 
         tasks:
           - name: Gather facts for device
-          paloaltonetworks.panos.panos_facts:
-            provider: "{{ device }}"
+            paloaltonetworks.panos.panos_facts:
+              provider: "{{ device }}"
 
           - name: Display model, PAN-OS version
-          debug:
-            msg:
-              - "Hostname: {{ ansible_facts['net_hostname'] }}"
-              - "Serial: {{ ansible_facts['net_serial'] }}"
-              .
-              .
-              .
+            debug:
+              msg:
+                - "Hostname: {{ ansible_facts['net_hostname'] }}"
+                - "Serial: {{ ansible_facts['net_serial'] }}"
+                .
+                .
+                .
 
 The output should look something like this, specifically the highlighted lines showing the information from our firewall:
 

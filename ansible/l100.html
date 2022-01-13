@@ -125,7 +125,11 @@
     <span class="n">libyaml</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 </div>
-<p>Then let’s check we have the PAN-OS Collection installed</p>
+<p>Now let’s install the PAN-OS Collection</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-galaxy collection install paloaltonetworks.panos
+</pre></div>
+</div>
+<p>We can check the Collection is present using this command:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-doc --list | grep paloaltonetworks.panos
 </pre></div>
 </div>
@@ -148,7 +152,7 @@
 </pre></div>
 </div>
 <p>…then move into the Ansible directory</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd ansible
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd automation-workshops/ansible
 </pre></div>
 </div>
 </section>
@@ -212,13 +216,17 @@ EOL
 </pre></div>
 </div>
 <p>Notice that we execute the <code class="docutils literal notranslate"><span class="pre">ansible-playbook</span></code> command, pass in the previously mentioned inventory using <code class="docutils literal notranslate"><span class="pre">-i</span> <span class="pre">inventory</span></code>, then specify the name of the playbook we want to run, <code class="docutils literal notranslate"><span class="pre">system_info.yml</span></code>, and finally pass in the firewall credentials with <code class="docutils literal notranslate"><span class="pre">--extra-vars</span> <span class="pre">&quot;username=$panos_username</span> <span class="pre">password=$panos_password&quot;</span></code>.</p>
+<p>Let’s look at the playbook we executed:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat system_info.yml
+</pre></div>
+</div>
 <p>Breaking down the component parts of the playbook:</p>
-<p>First we see default host is <cite>firewall</cite>, from the previously mentioned inventory. Our connection type is <cite>local</cite> (we don’t use Ansible in a traditional method because executing code on PAN-OS would work and would not be secure; instead we execute commands locally which call the PAN-OS XML API).</p>
+<p>After the “comments” which are the lines starting with # characters, first we see the default host is <code class="docutils literal notranslate"><span class="pre">firewall</span></code>, from the previously mentioned inventory. Our connection type is <code class="docutils literal notranslate"><span class="pre">local</span></code> (we don’t use Ansible in a traditional method, because executing code on PAN-OS would work and would not be secure; instead we execute commands locally on our host, and those commands call the PAN-OS XML API).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">hosts</span><span class="p">:</span> <span class="s1">&#39;{{ target | default(&quot;firewall&quot;) }}&#39;</span>
   <span class="n">connection</span><span class="p">:</span> <span class="n">local</span>
 </pre></div>
 </div>
-<p>Second we see a section of variables. We get the <cite>ip_address</cite> of the firewall from the previously mentioned inventory, and we get the username and password from the command we typed into the CLI. We don’t use the api_key in this instance.</p>
+<p>Second we see a section of variables. We get the <code class="docutils literal notranslate"><span class="pre">ip_address</span></code> of the firewall from the previously mentioned inventory, and we get the username and password from the <code class="docutils literal notranslate"><span class="pre">export</span></code> commands we typed into the CLI. We don’t use the api_key in this instance.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">vars</span><span class="p">:</span>
   <span class="n">device</span><span class="p">:</span>
     <span class="n">ip_address</span><span class="p">:</span> <span class="s1">&#39;{{ ip_address }}&#39;</span>
@@ -227,20 +235,20 @@ EOL
     <span class="n">api_key</span><span class="p">:</span> <span class="s1">&#39;{{ api_key | default(omit) }}&#39;</span>
 </pre></div>
 </div>
-<p>Now we get to our <cite>tasks</cite>, the jobs we want Ansible to do for us. We are just data gathering, so our first task is to gather <cite>facts</cite>, which in Ansible unsurprisingly are information about the target system. The second task using the built-in <cite>debug</cite> task to display a series of useful system information.</p>
+<p>Now we get to our <code class="docutils literal notranslate"><span class="pre">tasks</span></code>, the jobs we want Ansible to do for us. We are just data gathering, so our first task is to gather <code class="docutils literal notranslate"><span class="pre">facts</span></code>, which in Ansible unsurprisingly are information about the target system. The second task uses the built-in <code class="docutils literal notranslate"><span class="pre">debug</span></code> to display a series of useful system information.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tasks</span><span class="p">:</span>
   <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Gather</span> <span class="n">facts</span> <span class="k">for</span> <span class="n">device</span>
-  <span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_facts</span><span class="p">:</span>
-    <span class="n">provider</span><span class="p">:</span> <span class="s2">&quot;{{ device }}&quot;</span>
+    <span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_facts</span><span class="p">:</span>
+      <span class="n">provider</span><span class="p">:</span> <span class="s2">&quot;{{ device }}&quot;</span>
 
   <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Display</span> <span class="n">model</span><span class="p">,</span> <span class="n">PAN</span><span class="o">-</span><span class="n">OS</span> <span class="n">version</span>
-  <span class="n">debug</span><span class="p">:</span>
-    <span class="n">msg</span><span class="p">:</span>
-      <span class="o">-</span> <span class="s2">&quot;Hostname: {{ ansible_facts[&#39;net_hostname&#39;] }}&quot;</span>
-      <span class="o">-</span> <span class="s2">&quot;Serial: {{ ansible_facts[&#39;net_serial&#39;] }}&quot;</span>
-      <span class="o">.</span>
-      <span class="o">.</span>
-      <span class="o">.</span>
+    <span class="n">debug</span><span class="p">:</span>
+      <span class="n">msg</span><span class="p">:</span>
+        <span class="o">-</span> <span class="s2">&quot;Hostname: {{ ansible_facts[&#39;net_hostname&#39;] }}&quot;</span>
+        <span class="o">-</span> <span class="s2">&quot;Serial: {{ ansible_facts[&#39;net_serial&#39;] }}&quot;</span>
+        <span class="o">.</span>
+        <span class="o">.</span>
+        <span class="o">.</span>
 </pre></div>
 </div>
 <p>The output should look something like this, specifically the highlighted lines showing the information from our firewall:</p>

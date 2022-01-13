@@ -213,7 +213,7 @@
 yes
 </pre></div>
 </div>
-<p>Note the highlighted lines, first the command for turning on CLI debugging, then the execution the command of interest (<code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis</span> <span class="pre">ready</span></code>), then the observation of the XML API equivalent for the CLI command.</p>
+<p>Note the highlighted lines, first the command for turning on CLI debugging, then the execution the command of interest (<code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code>), then the observation of the XML API equivalent for the CLI command.</p>
 <p>The XML required to make a call ourselves is between (but not including) the <code class="docutils literal notranslate"><span class="pre">&lt;operations&gt;&lt;/operations&gt;</span></code> tags. This gives us <code class="docutils literal notranslate"><span class="pre">&lt;show&gt;&lt;chassis-ready/&gt;&lt;/show&gt;</span></code>, which becomes the <code class="docutils literal notranslate"><span class="pre">cmd=</span></code> portion of the final API command:
 <code class="docutils literal notranslate"><span class="pre">https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;chassis-ready&gt;&lt;/chassis-ready&gt;&lt;/show&gt;&amp;key=$key</span></code></p>
 <p>Connect to the firewall using SSH:</p>
