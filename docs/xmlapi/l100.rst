@@ -155,7 +155,7 @@ Using the example of our first API call in this workshop, the CLI command equiva
 
         yes
 
-Note the highlighted lines, first the command for turning on CLI debugging, then the execution the command of interest (``show chassis ready``), then the observation of the XML API equivalent for the CLI command.
+Note the highlighted lines, first the command for turning on CLI debugging, then the execution the command of interest (``show chassis-ready``), then the observation of the XML API equivalent for the CLI command.
 
 The XML required to make a call ourselves is between (but not including) the ``<operations></operations>`` tags. This gives us ``<show><chassis-ready/></show>``, which becomes the ``cmd=`` portion of the final API command:
 ``https://$host/api/?type=op&cmd=<show><chassis-ready></chassis-ready></show>&key=$key``
