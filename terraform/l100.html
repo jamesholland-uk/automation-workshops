@@ -134,9 +134,9 @@ is 1.1.0. You can update by downloading from https://www.terraform.io/downloads.
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ls
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main01</span><span class="o">.</span><span class="n">tf</span>           \
-<span class="n">main02</span><span class="o">.</span><span class="n">tf</span>            <span class="o">|-</span> <span class="n">These</span> <span class="n">are</span> <span class="n">the</span> <span class="n">files</span> <span class="n">where</span> <span class="n">we</span> <span class="n">write</span> <span class="n">our</span> <span class="n">Terraform</span> <span class="n">code</span>
-<span class="n">main03</span><span class="o">.</span><span class="n">tf</span>           <span class="o">/</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">01.</span><span class="n">tf</span>               \
+<span class="mf">02.</span><span class="n">tf</span>                <span class="o">|-</span> <span class="n">These</span> <span class="n">are</span> <span class="n">the</span> <span class="n">files</span> <span class="n">where</span> <span class="n">we</span> <span class="n">write</span> <span class="n">our</span> <span class="n">Terraform</span> <span class="n">code</span>
+<span class="mf">03.</span><span class="n">tf</span>               <span class="o">/</span>
 <span class="n">commit</span><span class="o">.</span><span class="n">sh</span>             <span class="o">-</span> <span class="n">We</span> <span class="n">will</span> <span class="n">use</span> <span class="n">this</span> <span class="n">script</span> <span class="n">to</span> <span class="n">perform</span> <span class="n">a</span> <span class="n">commit</span> <span class="n">after</span> <span class="n">making</span> <span class="n">changes</span>
 <span class="n">terraform</span><span class="o">.</span><span class="n">tfvars</span>      <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">will</span> <span class="n">contain</span> <span class="n">values</span> <span class="k">for</span> <span class="n">variables</span>
 <span class="n">providers</span><span class="o">.</span><span class="n">tf</span>          <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">describes</span> <span class="n">the</span> <span class="n">third</span> <span class="n">party</span> <span class="n">systems</span><span class="p">,</span> <span class="n">such</span> <span class="k">as</span> <span class="n">PAN</span><span class="o">-</span><span class="n">OS</span><span class="p">,</span> <span class="n">which</span> <span class="n">we</span> <span class="n">want</span> <span class="n">to</span> <span class="n">use</span>
@@ -146,32 +146,19 @@ is 1.1.0. You can update by downloading from https://www.terraform.io/downloads.
 </section>
 <section id="setup-the-pan-os-variables-for-terraform">
 <h2><span class="section-number">1.3. </span>Setup the PAN-OS variables for Terraform<a class="headerlink" href="#setup-the-pan-os-variables-for-terraform" title="Permalink to this headline"></a></h2>
-<p>Terraform needs to know the details for the hosts against which it should execute. There are a variety of methods for this, today we will use a files called <code class="docutils literal notranslate"><span class="pre">terraform.tfvars</span></code>, a commonly used filename for varables used by Terraform. At the moment, the file has empty values for the variables:</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat terraform.tfvars
+<p>Terraform needs to know the details for the hosts against which it should execute. There are a variety of methods for this, today we will store the host, admin username and admin password as variables:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export TF_VAR_panos_hostname=&quot;{{ your firewall management IP }}&quot;
+$ export TF_VAR_panos_username=&quot;{{ your-admin-username }}&quot;
+$ export TF_VAR_panos_password=&quot;{{ your-admin-password }}&quot;
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">panos_hostname</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-<span class="n">panos_username</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-<span class="n">panos_password</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export TF_VAR_panos_hostname=&quot;10.10.10.10&quot;
+$ export TF_VAR_panos_username=&quot;adminuser&quot;
+$ export TF_VAR_panos_password=&quot;ChangeMe123!&quot;
 </pre></div>
 </div>
-<p>Let’s popuate the file with the relevant values. Either use your preferred text editor to insert the relevant values into <code class="docutils literal notranslate"><span class="pre">terraform.tfvars</span></code>, or use this command:</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat &gt; terraform.tfvars &lt;&lt;EOL
-panos_hostname = &quot;{{ your firewall management IP }}&quot;
-panos_username = &quot;{{ your-admin-username }}&quot;
-panos_password = &quot;{{ your-admin-password }}&quot;
-EOL
-</pre></div>
-</div>
-<p>Re-check the <code class="docutils literal notranslate"><span class="pre">terraform.tfvars</span></code> file and ensure it now contains your firewall’s details, for example:</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat terraform.tfvars
-</pre></div>
-</div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">panos_hostname</span> <span class="o">=</span> <span class="s2">&quot;10.10.10.10.&quot;</span>
-<span class="n">panos_username</span> <span class="o">=</span> <span class="s2">&quot;adminuser&quot;</span>
-<span class="n">panos_password</span> <span class="o">=</span> <span class="s2">&quot;ChangeMe123!&quot;</span>
-</pre></div>
-</div>
+<p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will use these credentials stored in variables for executing Ansible playbooks.</p>
 </section>
 <section id="initialising-terraform">
 <h2><span class="section-number">1.4. </span>Initialising Terraform<a class="headerlink" href="#initialising-terraform" title="Permalink to this headline"></a></h2>
@@ -212,8 +199,8 @@ commands will detect it and remind you to do so if necessary.
 </section>
 <section id="the-terraform-plan">
 <h2><span class="section-number">1.5. </span>The Terraform Plan<a class="headerlink" href="#the-terraform-plan" title="Permalink to this headline"></a></h2>
-<p>Terraform will look for any files in the local directory with the <code class="docutils literal notranslate"><span class="pre">.tf</span></code> extension, and by default attempt to execute with them all. Convention is to name the file with your coded tasks <code class="docutils literal notranslate"><span class="pre">main.tf</span></code>, but it could be called anything. We have several exercises, so we are using <code class="docutils literal notranslate"><span class="pre">main01.tf</span></code>, <code class="docutils literal notranslate"><span class="pre">main02.tf</span></code>, etc</p>
-<p>The <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main01.tf">first Terraform code</a> we will run is in the file <code class="docutils literal notranslate"><span class="pre">main01.tf</span></code>. It has read-only data gathering, using a <code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">source</span></code>, the part of a Terraform provider responsible for gathering data.</p>
+<p>Terraform will look for any files in the local directory with the <code class="docutils literal notranslate"><span class="pre">.tf</span></code> extension, and by default attempt to execute with them all. Convention is to name the file with your coded tasks <code class="docutils literal notranslate"><span class="pre">main.tf</span></code>, but it could be called anything. We have several exercises, so we are using <code class="docutils literal notranslate"><span class="pre">01.tf</span></code>, <code class="docutils literal notranslate"><span class="pre">02.tf</span></code>, etc</p>
+<p>The <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/01.tf">first Terraform code</a> we will run is in the file <code class="docutils literal notranslate"><span class="pre">01.tf</span></code>. It has read-only data gathering, using a <code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">source</span></code>, the part of a Terraform provider responsible for gathering data.</p>
 <p>After initialisation, the next step is usually to perform a test run, which you can do by running the <code class="docutils literal notranslate"><span class="pre">plan</span></code> command:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ terraform plan
 </pre></div>
@@ -252,17 +239,17 @@ commands will detect it and remind you to do so if necessary.
 <span class="s2">&quot;terraform apply&quot;</span> <span class="ow">is</span> <span class="n">subsequently</span> <span class="n">run</span><span class="o">.</span>
 </pre></div>
 </div>
-<p>Note the first highlghted section, telling us that nothing would be changed from this test run. The second highlighted section gives us the output we asked for in the <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main01.tf">Terraform code</a>. The first block is the equivalent output from the CLI command <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">system</span> <span class="pre">info</span></code>, followed by the PAN-OS version broken down by major, minor and patch version.</p>
+<p>Note the first highlghted section, telling us that nothing would be changed from this test run. The second highlighted section gives us the output we asked for in the <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/01.tf">Terraform code</a>. The first block is the equivalent output from the CLI command <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">system</span> <span class="pre">info</span></code>, followed by the PAN-OS version broken down by major, minor and patch version.</p>
 <p>This type of Terraform code is great for data gathering, but we may want to use this gathered data in other places in Terraform too.</p>
 </section>
 <section id="applying-changes-with-terraform">
 <h2><span class="section-number">1.6. </span>Applying Changes with Terraform<a class="headerlink" href="#applying-changes-with-terraform" title="Permalink to this headline"></a></h2>
 <p>As previously mentioned, Terraform wants to use all .tf files in the local directory, so lets remove the first file from scope, and introdude the second file:</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ mv main01.tf main01.tf.bak
-$ mv main02.tf.bak main02.tf
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ mv 01.tf 01.tf.bak
+$ mv 02.tf.bak 02.tf
 </pre></div>
 </div>
-<p>The second <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main02.tf.bak">Terraform file</a> creates some address objects and an address group. Again, perform the <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">plan</span></code> command to test run the changes:</p>
+<p>The second <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/02.tf.bak">Terraform file</a> creates some address objects and an address group. Again, perform the <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">plan</span></code> command to test run the changes:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ terraform plan
 </pre></div>
 </div>
@@ -336,8 +323,8 @@ panos_address_group.terraform-address-group: Creation complete after 0s [id=vsys
 </pre></div>
 </div>
 <p>Our address objects and group are now created in the candidate configuration. This can be confirmed by observing the web GUI for the firewall.</p>
-<p>Terraform’s methodology is to expect that when configuration is created with the <code class="docutils literal notranslate"><span class="pre">plan</span></code> command, each configuration item is made live straight away. PAN-OS works differently, where configuration can be built up across objects, rules, zones, interfaces and more, and the configuration is only valid once all the parts are in place, and this is made live with a <code class="docutils literal notranslate"><span class="pre">commit</span></code> operation. This difference in methodology requires <a class="reference external" href="https://registry.terraform.io/providers/PaloAltoNetworks/panos/latest/docs/guides/commits-overview">commits to be performed via a specific mechanism</a>; there are a variety of approaches, today we will use a simple script:</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ commit.sh {{ your firewall management IP }} {{ your-admin-username }} {{ your-admin-password }}
+<p><strong>IMPORTANT</strong>: Terraform’s methodology is to expect that when configuration changes are executed with the <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">plan</span></code> command, each configuration item is made live straight away. PAN-OS works differently, where configuration can (and some times has to be) be built up across objects, rules, zones, interfaces and more, and the configuration is only valid once all the parts are in place. All the various parts of configuration are then made live with a <code class="docutils literal notranslate"><span class="pre">commit</span></code> operation. This difference in methodology between Terraform and PAN-OS requires <a class="reference external" href="https://registry.terraform.io/providers/PaloAltoNetworks/panos/latest/docs/guides/commits-overview">commits to be performed via a specific mechanism</a>; there are a variety of approaches to performing PAN-OS commits with Terraform, today we will use a simple script:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./commit.sh $TF_VAR_panos_hostname $TF_VAR_panos_username $TF_VAR_panos_password
 </pre></div>
 </div>
 <p>The script will initiate a commit, and wait through the active (<code class="docutils literal notranslate"><span class="pre">ACT</span></code>) stage, until it is finished (<code class="docutils literal notranslate"><span class="pre">FIN</span></code>).</p>
@@ -356,12 +343,12 @@ panos_address_group.terraform-address-group: Creation complete after 0s [id=vsys
 </section>
 <section id="applying-more-changes">
 <h2><span class="section-number">1.7. </span>Applying More Changes<a class="headerlink" href="#applying-more-changes" title="Permalink to this headline"></a></h2>
-<p>Let’s make some more changes. We will use the <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main03.tf.bak">third Terraform file</a> for this, so execute the comands below:</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ mv main02.tf main02.tf.bak
-$ mv main03.tf.bak main03.tf
+<p>Let’s make some more changes. We will use the <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/03.tf.bak">third Terraform file</a> for this, so execute the comands below:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ mv 02.tf 02.tf.bak
+$ mv 03.tf.bak 03.tf
 </pre></div>
 </div>
-<p>Again, run <code class="docutils literal notranslate"><span class="pre">terrform</span> <span class="pre">plan</span></code> to see what changes are bing lined up during this test run:</p>
+<p>Again, run <code class="docutils literal notranslate"><span class="pre">terrform</span> <span class="pre">plan</span></code> to see what changes are being lined up during this test run:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ terraform plan
 </pre></div>
 </div>
@@ -374,7 +361,7 @@ $ mv main03.tf.bak main03.tf
 </pre></div>
 </div>
 <p>Finally, execute the commit script, and confirm the new zones and rules are live on the firewall’s running configuration:</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ commit.sh {{ your firewall management IP }} {{ your-admin-username }} {{ your-admin-password }}
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./commit.sh $TF_VAR_panos_hostname $TF_VAR_panos_username $TF_VAR_panos_password
 </pre></div>
 </div>
 </section>

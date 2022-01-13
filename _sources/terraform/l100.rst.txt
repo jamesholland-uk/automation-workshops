@@ -63,9 +63,9 @@ In the Terraform directory, a number of files will be present:
 
 .. code-block::
 
-        main01.tf           \
-        main02.tf            |- These are the files where we write our Terraform code
-        main03.tf           /
+        01.tf               \
+        02.tf                |- These are the files where we write our Terraform code
+        03.tf               /
         commit.sh             - We will use this script to perform a commit after making changes
         terraform.tfvars      - This file will contain values for variables
         providers.tf          - This file describes the third party systems, such as PAN-OS, which we want to use
@@ -75,44 +75,25 @@ In the Terraform directory, a number of files will be present:
 Setup the PAN-OS variables for Terraform
 ================================================
 
-Terraform needs to know the details for the hosts against which it should execute. There are a variety of methods for this, today we will use a files called ``terraform.tfvars``, a commonly used filename for varables used by Terraform. At the moment, the file has empty values for the variables:
+Terraform needs to know the details for the hosts against which it should execute. There are a variety of methods for this, today we will store the host, admin username and admin password as variables:
 
 .. code-block::
         :class: copy-button
 
-        $ cat terraform.tfvars
+        $ export TF_VAR_panos_hostname="{{ your firewall management IP }}"
+        $ export TF_VAR_panos_username="{{ your-admin-username }}"
+        $ export TF_VAR_panos_password="{{ your-admin-password }}"
+
+For example:
 
 .. code-block::
 
-        panos_hostname = ""
-        panos_username = ""
-        panos_password = ""
-
-Let's popuate the file with the relevant values. Either use your preferred text editor to insert the relevant values into ``terraform.tfvars``, or use this command:
-
-.. code-block::
-        :class: copy-button
-
-        $ cat > terraform.tfvars <<EOL
-        panos_hostname = "{{ your firewall management IP }}"
-        panos_username = "{{ your-admin-username }}"
-        panos_password = "{{ your-admin-password }}"
-        EOL
+        $ export TF_VAR_panos_hostname="10.10.10.10"
+        $ export TF_VAR_panos_username="adminuser"
+        $ export TF_VAR_panos_password="ChangeMe123!"
 
 
-Re-check the ``terraform.tfvars`` file and ensure it now contains your firewall's details, for example:
-
-.. code-block::
-        :class: copy-button
-
-        $ cat terraform.tfvars
-
-
-.. code-block::
-
-        panos_hostname = "10.10.10.10."
-        panos_username = "adminuser"
-        panos_password = "ChangeMe123!"
+In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will use these credentials stored in variables for executing Ansible playbooks.
 
 
 Initialising Terraform
@@ -164,10 +145,10 @@ Also of note is the second section of highlighted text, confirming Terraform has
 The Terraform Plan
 ================================================
 
-Terraform will look for any files in the local directory with the ``.tf`` extension, and by default attempt to execute with them all. Convention is to name the file with your coded tasks ``main.tf``, but it could be called anything. We have several exercises, so we are using ``main01.tf``, ``main02.tf``, etc
+Terraform will look for any files in the local directory with the ``.tf`` extension, and by default attempt to execute with them all. Convention is to name the file with your coded tasks ``main.tf``, but it could be called anything. We have several exercises, so we are using ``01.tf``, ``02.tf``, etc
 
 The `first Terraform code
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main01.tf>`_ we will run is in the file ``main01.tf``. It has read-only data gathering, using a ``data source``, the part of a Terraform provider responsible for gathering data.
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/01.tf>`_ we will run is in the file ``01.tf``. It has read-only data gathering, using a ``data source``, the part of a Terraform provider responsible for gathering data.
 
 After initialisation, the next step is usually to perform a test run, which you can do by running the ``plan`` command:
 
@@ -214,7 +195,7 @@ The output should look something like this:
         "terraform apply" is subsequently run.
 
 Note the first highlghted section, telling us that nothing would be changed from this test run. The second highlighted section gives us the output we asked for in the `Terraform code
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main01.tf>`_. The first block is the equivalent output from the CLI command ``show system info``, followed by the PAN-OS version broken down by major, minor and patch version.
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/01.tf>`_. The first block is the equivalent output from the CLI command ``show system info``, followed by the PAN-OS version broken down by major, minor and patch version.
 
 This type of Terraform code is great for data gathering, but we may want to use this gathered data in other places in Terraform too.
 
@@ -227,12 +208,12 @@ As previously mentioned, Terraform wants to use all .tf files in the local direc
 .. code-block::
         :class: copy-button
 
-        $ mv main01.tf main01.tf.bak
-        $ mv main02.tf.bak main02.tf 
+        $ mv 01.tf 01.tf.bak
+        $ mv 02.tf.bak 02.tf
 
 
 The second `Terraform file
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main02.tf.bak>`_ creates some address objects and an address group. Again, perform the ``terraform plan`` command to test run the changes:
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/02.tf.bak>`_ creates some address objects and an address group. Again, perform the ``terraform plan`` command to test run the changes:
 
 .. code-block::
         :class: copy-button
@@ -322,13 +303,14 @@ The plan will be re-generated, and you will be asked for confirmation to make th
 
 Our address objects and group are now created in the candidate configuration. This can be confirmed by observing the web GUI for the firewall.
 
-Terraform's methodology is to expect that when configuration is created with the ``plan`` command, each configuration item is made live straight away. PAN-OS works differently, where configuration can be built up across objects, rules, zones, interfaces and more, and the configuration is only valid once all the parts are in place, and this is made live with a ``commit`` operation. This difference in methodology requires `commits to be performed via a specific mechanism
-<https://registry.terraform.io/providers/PaloAltoNetworks/panos/latest/docs/guides/commits-overview>`_; there are a variety of approaches, today we will use a simple script:
+**IMPORTANT**: Terraform's methodology is to expect that when configuration changes are executed with the ``terraform plan`` command, each configuration item is made live straight away. PAN-OS works differently, where configuration can (and some times has to be) be built up across objects, rules, zones, interfaces and more, and the configuration is only valid once all the parts are in place. All the various parts of configuration are then made live with a ``commit`` operation. This difference in methodology between Terraform and PAN-OS requires `commits to be performed via a specific mechanism
+<https://registry.terraform.io/providers/PaloAltoNetworks/panos/latest/docs/guides/commits-overview>`_; there are a variety of approaches to performing PAN-OS commits with Terraform, today we will use a simple script:
 
 .. code-block::
         :class: copy-button
 
-        $ commit.sh {{ your firewall management IP }} {{ your-admin-username }} {{ your-admin-password }}
+        $ ./commit.sh $TF_VAR_panos_hostname $TF_VAR_panos_username $TF_VAR_panos_password
+
 
 The script will initiate a commit, and wait through the active (``ACT``) stage, until it is finished (``FIN``).
 
@@ -352,16 +334,16 @@ Applying More Changes
 ================================================
 
 Let's make some more changes. We will use the `third Terraform file
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/main03.tf.bak>`_ for this, so execute the comands below:
+<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/03.tf.bak>`_ for this, so execute the comands below:
 
 .. code-block::
         :class: copy-button
 
-        $ mv main02.tf main02.tf.bak
-        $ mv main03.tf.bak main03.tf
+        $ mv 02.tf 02.tf.bak
+        $ mv 03.tf.bak 03.tf
 
 
-Again, run ``terrform plan`` to see what changes are bing lined up during this test run:
+Again, run ``terrform plan`` to see what changes are being lined up during this test run:
 
 .. code-block::
         :class: copy-button
@@ -389,4 +371,4 @@ Finally, execute the commit script, and confirm the new zones and rules are live
 .. code-block::
         :class: copy-button
 
-        $ commit.sh {{ your firewall management IP }} {{ your-admin-username }} {{ your-admin-password }}
+        $ ./commit.sh $TF_VAR_panos_hostname $TF_VAR_panos_username $TF_VAR_panos_password
