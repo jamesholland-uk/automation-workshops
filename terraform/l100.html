@@ -131,14 +131,13 @@ is 1.1.0. You can update by downloading from https://www.terraform.io/downloads.
 </pre></div>
 </div>
 <p>In the Terraform directory, a number of files will be present:</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ls
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ls -l
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">01.</span><span class="n">tf</span>               \
-<span class="mf">02.</span><span class="n">tf</span>                <span class="o">|-</span> <span class="n">These</span> <span class="n">are</span> <span class="n">the</span> <span class="n">files</span> <span class="n">where</span> <span class="n">we</span> <span class="n">write</span> <span class="n">our</span> <span class="n">Terraform</span> <span class="n">code</span>
-<span class="mf">03.</span><span class="n">tf</span>               <span class="o">/</span>
+<span class="mf">02.</span><span class="n">tf</span><span class="o">.</span><span class="n">bak</span>            <span class="o">|-</span> <span class="n">These</span> <span class="n">are</span> <span class="n">the</span> <span class="n">files</span> <span class="n">where</span> <span class="n">we</span> <span class="n">write</span> <span class="n">our</span> <span class="n">Terraform</span> <span class="n">code</span>
+<span class="mf">03.</span><span class="n">tf</span><span class="o">.</span><span class="n">bak</span>           <span class="o">/</span>
 <span class="n">commit</span><span class="o">.</span><span class="n">sh</span>             <span class="o">-</span> <span class="n">We</span> <span class="n">will</span> <span class="n">use</span> <span class="n">this</span> <span class="n">script</span> <span class="n">to</span> <span class="n">perform</span> <span class="n">a</span> <span class="n">commit</span> <span class="n">after</span> <span class="n">making</span> <span class="n">changes</span>
-<span class="n">terraform</span><span class="o">.</span><span class="n">tfvars</span>      <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">will</span> <span class="n">contain</span> <span class="n">values</span> <span class="k">for</span> <span class="n">variables</span>
 <span class="n">providers</span><span class="o">.</span><span class="n">tf</span>          <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">describes</span> <span class="n">the</span> <span class="n">third</span> <span class="n">party</span> <span class="n">systems</span><span class="p">,</span> <span class="n">such</span> <span class="k">as</span> <span class="n">PAN</span><span class="o">-</span><span class="n">OS</span><span class="p">,</span> <span class="n">which</span> <span class="n">we</span> <span class="n">want</span> <span class="n">to</span> <span class="n">use</span>
 <span class="n">variables</span><span class="o">.</span><span class="n">tf</span>          <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">defines</span> <span class="n">the</span> <span class="n">variables</span> <span class="n">we</span> <span class="n">are</span> <span class="n">going</span> <span class="n">to</span> <span class="n">use</span> <span class="ow">in</span> <span class="n">our</span> <span class="n">Terraform</span> <span class="n">code</span>
 </pre></div>

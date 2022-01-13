@@ -59,15 +59,14 @@ In the Terraform directory, a number of files will be present:
 .. code-block::
         :class: copy-button
 
-        $ ls
+        $ ls -l
 
 .. code-block::
 
         01.tf               \
-        02.tf                |- These are the files where we write our Terraform code
-        03.tf               /
+        02.tf.bak            |- These are the files where we write our Terraform code
+        03.tf.bak           /
         commit.sh             - We will use this script to perform a commit after making changes
-        terraform.tfvars      - This file will contain values for variables
         providers.tf          - This file describes the third party systems, such as PAN-OS, which we want to use
         variables.tf          - This file defines the variables we are going to use in our Terraform code
 
