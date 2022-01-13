@@ -1,0 +1,27 @@
+---
+# Usage
+# =====
+#
+#   $ ansible-playbook -i inventory template.yml
+
+- hosts: '{{ target | default("firewall") }}'
+  connection: local
+
+  vars:
+    device:
+      ip_address: "{{ ip_address }}"
+      username: "{{ username | default(omit) }}"
+      password: "{{ password | default(omit) }}"
+      api_key: "{{ api_key | default(omit) }}"
+
+  tasks:
+    - name: Check to see if device is ready
+      paloaltonetworks.panos.panos_op:
+        provider: '{{ device }}'
+        cmd: 'command goes here'
+      register: op_command_output
+      
+    - name: Show output
+      debug:
+        msg:
+          - "{{ op_command_output }}"
