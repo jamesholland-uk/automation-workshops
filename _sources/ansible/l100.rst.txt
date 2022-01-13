@@ -141,7 +141,7 @@ Change the IP address in this file to match your firewalls's management IP addre
         EOL
 
 
-Re-check the ``host_vars/firewall.yml`` file and ensure it now contains your firewall's IP address:
+Re-check the ``host_vars/firewall.yml`` file and ensure it now contains your firewall's IP address, which for an example IP address of 10.10.10.10 should look like this:
 
 .. code-block::
         :class: copy-button
@@ -152,7 +152,7 @@ Re-check the ``host_vars/firewall.yml`` file and ensure it now contains your fir
 .. code-block::
 
         ---
-        ip_address: '{{ your firewall management IP }}'
+        ip_address: '10.10.10.10'
 
 
 Prepare the firewall credentials
@@ -169,6 +169,13 @@ Before you can execute any Ansible playbooks, you need to be able to login to th
         :class: copy-button
 
         $ export panos_password={{ your-admin-password }}
+
+For example: 
+
+.. code-block::
+
+        $ export panos_username=adminuser
+        $ export panos_password=ChangeMe123!
 
 
 In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will use these credentials stored in variables for executing Ansible playbooks.

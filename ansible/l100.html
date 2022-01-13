@@ -190,12 +190,12 @@ ip_address: &#39;{{ your firewall management IP }}&#39;
 EOL
 </pre></div>
 </div>
-<p>Re-check the <code class="docutils literal notranslate"><span class="pre">host_vars/firewall.yml</span></code> file and ensure it now contains your firewall’s IP address:</p>
+<p>Re-check the <code class="docutils literal notranslate"><span class="pre">host_vars/firewall.yml</span></code> file and ensure it now contains your firewall’s IP address, which for an example IP address of 10.10.10.10 should look like this:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat host_vars/firewall.yml
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---</span>
-<span class="n">ip_address</span><span class="p">:</span> <span class="s1">&#39;{{ your firewall management IP }}&#39;</span>
+<span class="n">ip_address</span><span class="p">:</span> <span class="s1">&#39;10.10.10.10&#39;</span>
 </pre></div>
 </div>
 </section>
@@ -206,6 +206,11 @@ EOL
 </pre></div>
 </div>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_password={{ your-admin-password }}
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_username=adminuser
+$ export panos_password=ChangeMe123!
 </pre></div>
 </div>
 <p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will use these credentials stored in variables for executing Ansible playbooks.</p>
