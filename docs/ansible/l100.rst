@@ -364,6 +364,30 @@ Once executed, you should be able to see the exported config file on yours host:
         $ cat running-config.xml
 
 
+Firewall configuration tasks
+==================================
+
+Our next playbook is focused on configuration tasks, and this playbook configures all the required items for a basic firewall setup.
+
+
+.. code-block::
+
+        .
+        .
+        .
+        tasks:
+          - name: 
+
+        .
+        .
+        .
+
+.. code-block::
+        :class: copy-button
+
+        $ ansible-playbook -i inventory simple_config.yml --extra-vars "username=$panos_username password=$panos_password"
+
+
 Modify a playbook
 ==================================
 

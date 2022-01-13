@@ -2,3 +2,88 @@ Ansible L200
 ----------------------
 
 This content is still being developed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Firewall configuration tasks
+==================================
+
+Our next playbook is focused on configuration tasks, and this playbook configures all the required items for a basic firewall setup.
+
+Towards the start of the playbook in the variables section, a number of values are defined for the required interfaces, zones, objects and more:
+
+.. code-block::
+
+        .
+        .
+        .
+        interfaces:
+          - if_name: 'ethernet1/1'
+            mode: 'layer3'
+            ip: ['192.168.55.20/24']
+            enable_dhcp: false
+          - if_name: 'ethernet1/2'
+            mode: 'layer3'
+            ip: ['192.168.45.20/24']
+            enable_dhcp: false
+        .
+        .
+        .
+        zones:
+          - zone: 'untrust'
+            mode: 'layer3'
+            interfaces: ['ethernet1/1']
+          - zone: 'web'
+            mode: 'layer3'
+            interfaces: ['ethernet1/2']
+        .
+        .
+        .
+        etc
+
+Then, in the tasks section, there is a task for each configuration type (interfaces, zones, objects, etc) which configures the items using all the values in the variables section by using the ``with_items`` statement:
+
+.. code-block::
+
+        .
+        .
+        .
+        tasks:
+          - name: Configure interfaces
+            paloaltonetworks.panos.panos_interface:
+              provider: '{{ device }}'
+              template: '{{ template | default(omit) }}'
+              if_name: '{{ item.if_name }}'
+              mode: '{{ item.mode }}'
+              ip: '{{ item.ip }}'
+              enable_dhcp: '{{ item.enable_dhcp }}'
+              commit: false
+            with_items: '{{ interfaces }}'
+          - name: Configure zones
+            paloaltonetworks.panos.panos_zone:
+              provider: '{{ device }}'
+              template: '{{ template | default(omit) }}'
+              zone: '{{ item.zone }}'
+              mode: '{{ item.mode }}'
+              interface: '{{ item.interfaces }}'
+            with_items: '{{ zones }}'
+        .
+        .
+        .
+
+.. code-block::
+        :class: copy-button
+
+        $ ansible-playbook -i inventory config.yml --extra-vars "username=$panos_username password=$panos_password"
