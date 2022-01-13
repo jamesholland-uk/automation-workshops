@@ -16,6 +16,12 @@
         zone: "dmz"
         mode: "layer3"
 
+    - name: Create Internet zone
+      paloaltonetworks.panos.panos_zone:
+        provider: "{{ device }}"
+        zone: "internet"
+        mode: "layer3"
+
     - name: Place ethernet1/1 in zone dmz
       paloaltonetworks.panos.panos_interface:
         provider: "{{ device }}"
