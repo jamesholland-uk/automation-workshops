@@ -50,7 +50,10 @@
 <p class="caption" role="heading"><span class="caption-text">PAN-OS Ansible</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="l100.html">1. Ansible L100</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Ansible L200</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. Ansible L200</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#firewall-configuration-tasks">2.1. Firewall configuration tasks</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="l300.html">3. Ansible L300</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">PAN-OS Terraform</span></p>
@@ -87,6 +90,70 @@
   <section id="ansible-l200">
 <h1><span class="section-number">2. </span>Ansible L200<a class="headerlink" href="#ansible-l200" title="Permalink to this headline"></a></h1>
 <p>This content is still being developed.</p>
+<section id="firewall-configuration-tasks">
+<h2><span class="section-number">2.1. </span>Firewall configuration tasks<a class="headerlink" href="#firewall-configuration-tasks" title="Permalink to this headline"></a></h2>
+<p>Our next playbook is focused on configuration tasks, and this playbook configures all the required items for a basic firewall setup.</p>
+<p>Towards the start of the playbook in the variables section, a number of values are defined for the required interfaces, zones, objects and more:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="n">interfaces</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">if_name</span><span class="p">:</span> <span class="s1">&#39;ethernet1/1&#39;</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="s1">&#39;layer3&#39;</span>
+    <span class="n">ip</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;192.168.55.20/24&#39;</span><span class="p">]</span>
+    <span class="n">enable_dhcp</span><span class="p">:</span> <span class="n">false</span>
+  <span class="o">-</span> <span class="n">if_name</span><span class="p">:</span> <span class="s1">&#39;ethernet1/2&#39;</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="s1">&#39;layer3&#39;</span>
+    <span class="n">ip</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;192.168.45.20/24&#39;</span><span class="p">]</span>
+    <span class="n">enable_dhcp</span><span class="p">:</span> <span class="n">false</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="n">zones</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">zone</span><span class="p">:</span> <span class="s1">&#39;untrust&#39;</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="s1">&#39;layer3&#39;</span>
+    <span class="n">interfaces</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;ethernet1/1&#39;</span><span class="p">]</span>
+  <span class="o">-</span> <span class="n">zone</span><span class="p">:</span> <span class="s1">&#39;web&#39;</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="s1">&#39;layer3&#39;</span>
+    <span class="n">interfaces</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;ethernet1/2&#39;</span><span class="p">]</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="n">etc</span>
+</pre></div>
+</div>
+<p>Then, in the tasks section, there is a task for each configuration type (interfaces, zones, objects, etc) which configures the items using all the values in the variables section by using the <code class="docutils literal notranslate"><span class="pre">with_items</span></code> statement:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="n">tasks</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Configure</span> <span class="n">interfaces</span>
+    <span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_interface</span><span class="p">:</span>
+      <span class="n">provider</span><span class="p">:</span> <span class="s1">&#39;{{ device }}&#39;</span>
+      <span class="n">template</span><span class="p">:</span> <span class="s1">&#39;{{ template | default(omit) }}&#39;</span>
+      <span class="n">if_name</span><span class="p">:</span> <span class="s1">&#39;{{ item.if_name }}&#39;</span>
+      <span class="n">mode</span><span class="p">:</span> <span class="s1">&#39;{{ item.mode }}&#39;</span>
+      <span class="n">ip</span><span class="p">:</span> <span class="s1">&#39;{{ item.ip }}&#39;</span>
+      <span class="n">enable_dhcp</span><span class="p">:</span> <span class="s1">&#39;{{ item.enable_dhcp }}&#39;</span>
+      <span class="n">commit</span><span class="p">:</span> <span class="n">false</span>
+    <span class="n">with_items</span><span class="p">:</span> <span class="s1">&#39;{{ interfaces }}&#39;</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Configure</span> <span class="n">zones</span>
+    <span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_zone</span><span class="p">:</span>
+      <span class="n">provider</span><span class="p">:</span> <span class="s1">&#39;{{ device }}&#39;</span>
+      <span class="n">template</span><span class="p">:</span> <span class="s1">&#39;{{ template | default(omit) }}&#39;</span>
+      <span class="n">zone</span><span class="p">:</span> <span class="s1">&#39;{{ item.zone }}&#39;</span>
+      <span class="n">mode</span><span class="p">:</span> <span class="s1">&#39;{{ item.mode }}&#39;</span>
+      <span class="n">interface</span><span class="p">:</span> <span class="s1">&#39;{{ item.interfaces }}&#39;</span>
+    <span class="n">with_items</span><span class="p">:</span> <span class="s1">&#39;{{ zones }}&#39;</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+</pre></div>
+</div>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory config.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
+</pre></div>
+</div>
+</section>
 </section>
 
 

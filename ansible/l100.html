@@ -58,7 +58,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-2-are-you-ready">1.6. Ansible Playbook 2 - Are you ready?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-3-more-firewall-information">1.7. Ansible Playbook 3 - More firewall information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-4-config-backup-export">1.8. Ansible Playbook 4 - Config backup/export</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#modify-a-playbook">1.9. Modify a playbook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#firewall-configuration-tasks">1.9. Firewall configuration tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#modify-a-playbook">1.10. Modify a playbook</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="l200.html">2. Ansible L200</a></li>
@@ -344,8 +345,26 @@ EOL
 </pre></div>
 </div>
 </section>
+<section id="firewall-configuration-tasks">
+<h2><span class="section-number">1.9. </span>Firewall configuration tasks<a class="headerlink" href="#firewall-configuration-tasks" title="Permalink to this headline"></a></h2>
+<p>Our next playbook is focused on configuration tasks, and this playbook configures all the required items for a basic firewall setup.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="n">tasks</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span>
+
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+</pre></div>
+</div>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory simple_config.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
+</pre></div>
+</div>
+</section>
 <section id="modify-a-playbook">
-<h2><span class="section-number">1.9. </span>Modify a playbook<a class="headerlink" href="#modify-a-playbook" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.10. </span>Modify a playbook<a class="headerlink" href="#modify-a-playbook" title="Permalink to this headline"></a></h2>
 <p>The <a class="reference external" href="https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_op.html">panos_op module</a> is very useful within playbooks for gathering information and executing operational commands like gatering system information, software upgrades, content downloads, and more. It was used in the second playbook, check_ready.yml, to run the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code> command.</p>
 <p>Choose one (or more) of the following operational commands to run with Ansible.</p>
 <blockquote>
