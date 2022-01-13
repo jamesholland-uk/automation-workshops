@@ -240,7 +240,7 @@
       tags: nat_rules
 
     - name: Commit the candidate configuration
-      paloaltonetworks.panos.panos_commit:
+      paloaltonetworks.panos.panos_commit_firewall:
         provider: '{{ device }}'
         device_group: '{{ device_group | default(omit) }}'
         include_template: '{{ template | default(omit) }}'
