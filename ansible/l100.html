@@ -125,7 +125,7 @@
     <span class="n">libyaml</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 </div>
-<p>Now let’s install the PAN-OS Collection</p>
+<p>Now let’s install the PAN-OS Collection:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-galaxy collection install paloaltonetworks.panos
 </pre></div>
 </div>
@@ -133,7 +133,7 @@
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-doc --list | grep paloaltonetworks.panos
 </pre></div>
 </div>
-<p>The output should list al the modules in the PAN-OS Collection, and the end of the list should look something like this:</p>
+<p>The output should list all the modules in the PAN-OS Collection, the end of the list should look something like this:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_virtual_router</span>                           <span class="n">Confi</span><span class="o">...</span>
 <span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_virtual_router_facts</span>                     <span class="n">Retri</span><span class="o">...</span>
 <span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_virtual_wire</span>                             <span class="n">Confi</span><span class="o">...</span>
@@ -182,7 +182,7 @@
 <span class="n">ip_address</span><span class="p">:</span> <span class="s1">&#39;192.168.55.10&#39;</span>
 </pre></div>
 </div>
-<p>Change the IP address in this file to match your firewalls’s management IP address:</p>
+<p>Change the IP address in this file to match your firewalls’s management IP address, either use your preferred text editor to replace the IP address in <code class="docutils literal notranslate"><span class="pre">host_vars/firewall.yml</span></code>, or use this command:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat &gt; host_vars/firewall.yml &lt;&lt;EOL
 ---
 ip_address: &#39;{{ your firewall management IP }}&#39;
@@ -346,7 +346,7 @@ EOL
 </section>
 <section id="modify-a-playbook">
 <h2><span class="section-number">1.9. </span>Modify a playbook<a class="headerlink" href="#modify-a-playbook" title="Permalink to this headline"></a></h2>
-<p>The <a class="reference external" href="https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_op.html">panos_op module</a> is very useful within playbooks for gathering information and executing operational commands like software upgrades, content downloads, and more. It was used in the second playbook, check_ready.yml, to run the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code> command.</p>
+<p>The <a class="reference external" href="https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_op.html">panos_op module</a> is very useful within playbooks for gathering information and executing operational commands like gatering system information, software upgrades, content downloads, and more. It was used in the second playbook, check_ready.yml, to run the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code> command.</p>
 <p>Choose one (or more) of the following operational commands to run with Ansible.</p>
 <blockquote>
 <div><ul class="simple">
@@ -355,7 +355,7 @@ EOL
 <li><p>show system disk-space</p></li>
 </ul>
 </div></blockquote>
-<p>Copy a playbook used previously in this session, and execute your chosen command(s). Output from the commands could also be displayed. An example format would be:</p>
+<p>Edit the <code class="docutils literal notranslate"><span class="pre">template.yml</span></code> playbook (shown below) playbook with your preferred text editor, then execute your chosen commands. The output from the commands should be displayed.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Perform</span> <span class="n">an</span> <span class="n">op</span> <span class="n">command</span>
   <span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_op</span><span class="p">:</span>
     <span class="n">provider</span><span class="p">:</span> <span class="s1">&#39;{{ device }}&#39;</span>
