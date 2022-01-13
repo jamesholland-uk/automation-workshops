@@ -22,20 +22,29 @@
         zone: "internet"
         mode: "layer3"
 
-    - name: Place ethernet1/1 in zone dmz
+    - name: Place ethernet1/1 in zone internet
       paloaltonetworks.panos.panos_interface:
         provider: "{{ device }}"
         if_name: "ethernet1/1"
+        mode: "layer3"
+        ip: ["20.20.20.20/24"]
+        enable_dhcp: false
+        zone_name: "dmz"
+
+    - name: Place ethernet1/2 in zone dmz
+      paloaltonetworks.panos.panos_interface:
+        provider: "{{ device }}"
+        if_name: "ethernet1/2"
         mode: "layer3"
         ip: ["10.1.1.1/24"]
         enable_dhcp: false
         zone_name: "dmz"
 
-    - name: Create object 'Object-One'
+    - name: Create object 'SSH-server'
       paloaltonetworks.panos.panos_address_object:
         provider: "{{ device }}"
-        name: "Object-One"
-        value: "1.1.1.1"
+        name: "SSH-server"
+        value: "20.20.20.1"
 
     - name: Create service object 'ssh-tcp-22'
       paloaltonetworks.panos.panos_service_object:
@@ -50,7 +59,7 @@
         source_zone: ["internet"]
         source_ip: ["any"]
         destination_zone: ["dmz"]
-        destination_ip: ["Object-One"]
+        destination_ip: ["SSH-server"]
         application: ["ssh"]
         service: ["ssh-tcp-22"]
         action: "allow"
