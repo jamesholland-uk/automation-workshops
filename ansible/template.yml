@@ -15,12 +15,12 @@
       api_key: "{{ api_key | default(omit) }}"
 
   tasks:
-    - name: Check to see if device is ready
+    - name: Op command
       paloaltonetworks.panos.panos_op:
         provider: '{{ device }}'
         cmd: 'command goes here'
       register: op_command_output
-      
+
     - name: Show output
       debug:
         msg:
