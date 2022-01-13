@@ -315,7 +315,7 @@ The script will initiate a commit, and wait through the active (``ACT``) stage, 
 
 .. code-block::
 
-        ./commit.sh {{ your firewall management IP }} {{ your-admin-username }} {{ your-admin-password }}
+        ./commit.sh $TF_VAR_panos_hostname $TF_VAR_panos_username $TF_VAR_panos_password
         Commit status: ACT
         Commit status: ACT
         Commit status: ACT
