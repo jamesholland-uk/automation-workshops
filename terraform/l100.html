@@ -127,7 +127,7 @@ is 1.1.0. You can update by downloading from https://www.terraform.io/downloads.
 </pre></div>
 </div>
 <p>…then move into the Terraform directory</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd terraform
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cd automation-workshops/terraform
 </pre></div>
 </div>
 <p>In the Terraform directory, a number of files will be present:</p>
@@ -137,10 +137,10 @@ is 1.1.0. You can update by downloading from https://www.terraform.io/downloads.
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">main01</span><span class="o">.</span><span class="n">tf</span>           \
 <span class="n">main02</span><span class="o">.</span><span class="n">tf</span>            <span class="o">|-</span> <span class="n">These</span> <span class="n">are</span> <span class="n">the</span> <span class="n">files</span> <span class="n">where</span> <span class="n">we</span> <span class="n">write</span> <span class="n">our</span> <span class="n">Terraform</span> <span class="n">code</span>
 <span class="n">main03</span><span class="o">.</span><span class="n">tf</span>           <span class="o">/</span>
-<span class="n">terraform</span><span class="o">.</span><span class="n">tfvars</span>      <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">will</span> <span class="n">contain</span> <span class="n">values</span> <span class="k">for</span> <span class="n">variables</span>
 <span class="n">commit</span><span class="o">.</span><span class="n">sh</span>             <span class="o">-</span> <span class="n">We</span> <span class="n">will</span> <span class="n">use</span> <span class="n">this</span> <span class="n">script</span> <span class="n">to</span> <span class="n">perform</span> <span class="n">a</span> <span class="n">commit</span> <span class="n">after</span> <span class="n">making</span> <span class="n">changes</span>
-<span class="n">providers</span><span class="o">.</span><span class="n">tf</span>          <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">describes</span> <span class="n">the</span> <span class="n">third</span> <span class="n">party</span> <span class="n">systems</span><span class="p">,</span> <span class="n">such</span> <span class="k">as</span> <span class="n">PAN</span><span class="o">-</span><span class="n">OS</span><span class="p">,</span> <span class="n">which</span> <span class="n">we</span> <span class="n">want</span> <span class="n">to</span> <span class="n">interact</span> <span class="k">with</span>
-<span class="n">variables</span><span class="o">.</span><span class="n">tf</span>          <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">describes</span> <span class="n">the</span> <span class="n">variables</span> <span class="n">we</span> <span class="n">are</span> <span class="n">going</span> <span class="n">to</span> <span class="n">use</span> <span class="ow">in</span> <span class="n">our</span> <span class="n">Terraform</span> <span class="n">code</span>
+<span class="n">terraform</span><span class="o">.</span><span class="n">tfvars</span>      <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">will</span> <span class="n">contain</span> <span class="n">values</span> <span class="k">for</span> <span class="n">variables</span>
+<span class="n">providers</span><span class="o">.</span><span class="n">tf</span>          <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">describes</span> <span class="n">the</span> <span class="n">third</span> <span class="n">party</span> <span class="n">systems</span><span class="p">,</span> <span class="n">such</span> <span class="k">as</span> <span class="n">PAN</span><span class="o">-</span><span class="n">OS</span><span class="p">,</span> <span class="n">which</span> <span class="n">we</span> <span class="n">want</span> <span class="n">to</span> <span class="n">use</span>
+<span class="n">variables</span><span class="o">.</span><span class="n">tf</span>          <span class="o">-</span> <span class="n">This</span> <span class="n">file</span> <span class="n">defines</span> <span class="n">the</span> <span class="n">variables</span> <span class="n">we</span> <span class="n">are</span> <span class="n">going</span> <span class="n">to</span> <span class="n">use</span> <span class="ow">in</span> <span class="n">our</span> <span class="n">Terraform</span> <span class="n">code</span>
 </pre></div>
 </div>
 </section>
@@ -155,7 +155,7 @@ is 1.1.0. You can update by downloading from https://www.terraform.io/downloads.
 <span class="n">panos_password</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 </pre></div>
 </div>
-<p>Let’s popuate the file with the relevant values:</p>
+<p>Let’s popuate the file with the relevant values. Either use your preferred text editor to insert the relevant values into <code class="docutils literal notranslate"><span class="pre">terraform.tfvars</span></code>, or use this command:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat &gt; terraform.tfvars &lt;&lt;EOL
 panos_hostname = &quot;{{ your firewall management IP }}&quot;
 panos_username = &quot;{{ your-admin-username }}&quot;
@@ -163,13 +163,13 @@ panos_password = &quot;{{ your-admin-password }}&quot;
 EOL
 </pre></div>
 </div>
-<p>Re-check the <code class="docutils literal notranslate"><span class="pre">terraform.tfvars</span></code> file and ensure it now contains your firewall’s details:</p>
+<p>Re-check the <code class="docutils literal notranslate"><span class="pre">terraform.tfvars</span></code> file and ensure it now contains your firewall’s details, for example:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat terraform.tfvars
 </pre></div>
 </div>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">panos_hostname</span> <span class="o">=</span> <span class="s2">&quot;{{ your firewall management IP }}&quot;</span>
-<span class="n">panos_username</span> <span class="o">=</span> <span class="s2">&quot;{{ your-admin-username }}&quot;</span>
-<span class="n">panos_password</span> <span class="o">=</span> <span class="s2">&quot;{{ your-admin-password }}&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">panos_hostname</span> <span class="o">=</span> <span class="s2">&quot;10.10.10.10.&quot;</span>
+<span class="n">panos_username</span> <span class="o">=</span> <span class="s2">&quot;adminuser&quot;</span>
+<span class="n">panos_password</span> <span class="o">=</span> <span class="s2">&quot;ChangeMe123!&quot;</span>
 </pre></div>
 </div>
 </section>

@@ -52,7 +52,7 @@ In this workshop, we're going to be using some existing Terraform configs. We'll
 .. code-block::
         :class: copy-button
 
-        $ cd terraform
+        $ cd automation-workshops/terraform
 
 In the Terraform directory, a number of files will be present:
 
@@ -66,10 +66,10 @@ In the Terraform directory, a number of files will be present:
         main01.tf           \
         main02.tf            |- These are the files where we write our Terraform code
         main03.tf           /
-        terraform.tfvars      - This file will contain values for variables
         commit.sh             - We will use this script to perform a commit after making changes
-        providers.tf          - This file describes the third party systems, such as PAN-OS, which we want to interact with
-        variables.tf          - This file describes the variables we are going to use in our Terraform code
+        terraform.tfvars      - This file will contain values for variables
+        providers.tf          - This file describes the third party systems, such as PAN-OS, which we want to use
+        variables.tf          - This file defines the variables we are going to use in our Terraform code
 
 
 Setup the PAN-OS variables for Terraform
@@ -88,7 +88,7 @@ Terraform needs to know the details for the hosts against which it should execut
         panos_username = ""
         panos_password = ""
 
-Let's popuate the file with the relevant values:
+Let's popuate the file with the relevant values. Either use your preferred text editor to insert the relevant values into ``terraform.tfvars``, or use this command:
 
 .. code-block::
         :class: copy-button
@@ -100,7 +100,7 @@ Let's popuate the file with the relevant values:
         EOL
 
 
-Re-check the ``terraform.tfvars`` file and ensure it now contains your firewall's details:
+Re-check the ``terraform.tfvars`` file and ensure it now contains your firewall's details, for example:
 
 .. code-block::
         :class: copy-button
@@ -110,9 +110,10 @@ Re-check the ``terraform.tfvars`` file and ensure it now contains your firewall'
 
 .. code-block::
 
-        panos_hostname = "{{ your firewall management IP }}"
-        panos_username = "{{ your-admin-username }}"
-        panos_password = "{{ your-admin-password }}"
+        panos_hostname = "10.10.10.10."
+        panos_username = "adminuser"
+        panos_password = "ChangeMe123!"
+
 
 Initialising Terraform
 ================================================
