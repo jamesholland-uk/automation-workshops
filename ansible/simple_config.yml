@@ -29,7 +29,7 @@
         mode: "layer3"
         ip: ["20.20.20.20/24"]
         enable_dhcp: false
-        zone_name: "dmz"
+        zone_name: "internet"
 
     - name: Place ethernet1/2 in zone dmz
       paloaltonetworks.panos.panos_interface:
