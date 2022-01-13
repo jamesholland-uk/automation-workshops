@@ -10,7 +10,7 @@ Assumptions: A host with the following installed: curl, git, `Python 3
 <https://github.com/PaloAltoNetworks/pan-os-ansible>`_, and all prerequisite requirements for those items. Plus some form of text editor on your host. And, access to a PAN-OS next-generation firewall from your host.
 
 Note:
-    * Where text is enclosed in {{ double braces }}, replace the text with the relevant value for your environment.
+    * Where text is enclosed in {{ double braces }}, replace the text AND braces with the relevant value for your environment.
     * Commands you could/should execute are denoted with ``$`` at the start, and have copy buttons; other text boxes show expected outputs.
     * You may wish to have a text editor open on your machine, to amend copied commands before psting them into the host's CLI.
 
