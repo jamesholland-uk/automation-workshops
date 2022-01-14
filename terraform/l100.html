@@ -205,23 +205,16 @@ commands will detect it and remind you to do so if necessary.
 </pre></div>
 </div>
 <p>The output should look something like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">An</span> <span class="n">execution</span> <span class="n">plan</span> <span class="n">has</span> <span class="n">been</span> <span class="n">generated</span> <span class="ow">and</span> <span class="ow">is</span> <span class="n">shown</span> <span class="n">below</span><span class="o">.</span>
-<span class="n">Resource</span> <span class="n">actions</span> <span class="n">are</span> <span class="n">indicated</span> <span class="k">with</span> <span class="n">the</span> <span class="n">following</span> <span class="n">symbols</span><span class="p">:</span>
-
-<span class="n">Terraform</span> <span class="n">will</span> <span class="n">perform</span> <span class="n">the</span> <span class="n">following</span> <span class="n">actions</span><span class="p">:</span>
-
-<span class="hll"><span class="n">Plan</span><span class="p">:</span> <span class="mi">0</span> <span class="n">to</span> <span class="n">add</span><span class="p">,</span> <span class="mi">0</span> <span class="n">to</span> <span class="n">change</span><span class="p">,</span> <span class="mi">0</span> <span class="n">to</span> <span class="n">destroy</span><span class="o">.</span>
-</span>
-<span class="n">Changes</span> <span class="n">to</span> <span class="n">Outputs</span><span class="p">:</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Changes</span> <span class="n">to</span> <span class="n">Outputs</span><span class="p">:</span>
 <span class="o">+</span> <span class="n">the_info</span> <span class="o">=</span> <span class="p">{</span>
-<span class="hll">    <span class="o">+</span> <span class="nb">id</span>            <span class="o">=</span> <span class="s2">&quot;192.168.150.226&quot;</span>
-</span><span class="hll">    <span class="o">+</span> <span class="n">info</span>          <span class="o">=</span> <span class="p">{</span>
-</span><span class="hll">        <span class="o">+</span> <span class="s2">&quot;app-release-date&quot;</span>                      <span class="o">=</span> <span class="s2">&quot;2021/10/27 05:11:31 BST&quot;</span>
-</span><span class="hll">        <span class="o">+</span> <span class="s2">&quot;app-version&quot;</span>                           <span class="o">=</span> <span class="s2">&quot;8478-7015&quot;</span>
-</span><span class="hll">        <span class="o">+</span> <span class="s2">&quot;av-release-date&quot;</span>                       <span class="o">=</span> <span class="s2">&quot;2021/10/27 12:03:35 BST&quot;</span>
-</span><span class="hll">        <span class="o">+</span> <span class="s2">&quot;av-version&quot;</span>                            <span class="o">=</span> <span class="s2">&quot;3882-4393&quot;</span>
-</span><span class="hll">        <span class="o">.</span>
-</span><span class="hll">        <span class="o">.</span>
+    <span class="o">+</span> <span class="nb">id</span>            <span class="o">=</span> <span class="s2">&quot;192.168.150.226&quot;</span>
+    <span class="o">+</span> <span class="n">info</span>          <span class="o">=</span> <span class="p">{</span>
+        <span class="o">+</span> <span class="s2">&quot;app-release-date&quot;</span>                      <span class="o">=</span> <span class="s2">&quot;2021/10/27 05:11:31 BST&quot;</span>
+<span class="hll">        <span class="o">+</span> <span class="s2">&quot;app-version&quot;</span>                           <span class="o">=</span> <span class="s2">&quot;8478-7015&quot;</span>
+</span>        <span class="o">+</span> <span class="s2">&quot;av-release-date&quot;</span>                       <span class="o">=</span> <span class="s2">&quot;2021/10/27 12:03:35 BST&quot;</span>
+        <span class="o">+</span> <span class="s2">&quot;av-version&quot;</span>                            <span class="o">=</span> <span class="s2">&quot;3882-4393&quot;</span>
+        <span class="o">.</span>
+<span class="hll">        <span class="o">.</span>
 </span><span class="hll">        <span class="o">.</span>
 </span><span class="hll">        <span class="o">+</span> <span class="s2">&quot;wildfire-rt&quot;</span>                           <span class="o">=</span> <span class="s2">&quot;Disabled&quot;</span>
 </span><span class="hll">        <span class="o">+</span> <span class="s2">&quot;wildfire-version&quot;</span>                      <span class="o">=</span> <span class="s2">&quot;0&quot;</span>
@@ -229,14 +222,14 @@ commands will detect it and remind you to do so if necessary.
 </span><span class="hll">    <span class="o">+</span> <span class="n">version_major</span> <span class="o">=</span> <span class="mi">10</span>
 </span><span class="hll">    <span class="o">+</span> <span class="n">version_minor</span> <span class="o">=</span> <span class="mi">0</span>
 </span><span class="hll">    <span class="o">+</span> <span class="n">version_patch</span> <span class="o">=</span> <span class="mi">7</span>
-</span>    <span class="p">}</span>
-
-<span class="o">------------------------------------------------------------------------</span>
-
-<span class="n">Note</span><span class="p">:</span> <span class="n">You</span> <span class="n">didn</span><span class="s1">&#39;t specify an &quot;-out&quot; parameter to save this plan, so Terraform</span>
-<span class="n">can</span><span class="s1">&#39;t guarantee that exactly these actions will be performed if</span>
-<span class="s2">&quot;terraform apply&quot;</span> <span class="ow">is</span> <span class="n">subsequently</span> <span class="n">run</span><span class="o">.</span>
-</pre></div>
+</span><span class="hll">    <span class="p">}</span>
+</span><span class="hll">
+</span><span class="hll"><span class="o">------------------------------------------------------------------------</span>
+</span><span class="hll">
+</span><span class="hll"><span class="n">Note</span><span class="p">:</span> <span class="n">You</span> <span class="n">didn</span><span class="s1">&#39;t specify an &quot;-out&quot; parameter to save this plan, so Terraform</span>
+</span><span class="hll"><span class="n">can</span><span class="s1">&#39;t guarantee that exactly these actions will be performed if</span>
+</span><span class="hll"><span class="s2">&quot;terraform apply&quot;</span> <span class="ow">is</span> <span class="n">subsequently</span> <span class="n">run</span><span class="o">.</span>
+</span></pre></div>
 </div>
 <p>Note the first highlghted section, telling us that nothing would be changed from this test run. The second highlighted section gives us the output we asked for in the <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/01.tf">Terraform code</a>. The first block is the equivalent output from the CLI command <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">system</span> <span class="pre">info</span></code>, followed by the PAN-OS version broken down by major, minor and patch version.</p>
 <p>This type of Terraform code is great for data gathering, but we may want to use this gathered data in other places in Terraform too.</p>
