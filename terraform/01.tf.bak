@@ -1,5 +1,25 @@
-data "panos_system_info" "ngfw_info" { }
+resource "panos_address_object" "terraform-address-object-1" {
+    name = "terraform-address-object-1"
+    value = "192.168.80.1/32"
+    description = "Address object 1 from Terraform"
+}
 
-output "the_info" {
-    value = data.panos_system_info.ngfw_info
+resource "panos_address_object" "terraform-address-object-2" {
+    name = "terraform-address-object-2"
+    value = "192.168.80.2/32"
+    description = "Address object 2 from Terraform"
+}
+
+resource "panos_address_object" "terraform-address-object-3" {
+    name = "terraform-address-object-3"
+    value = "192.168.80.3/32"
+    description = "Address object 3 from Terraform"
+}
+
+resource "panos_address_group" "terraform-address-group" {
+    name = "terraform-address-group"
+    static_addresses = [
+        panos_address_object.terraform-address-object-1.name,
+        panos_address_object.terraform-address-object-2.name
+    ]
 }
