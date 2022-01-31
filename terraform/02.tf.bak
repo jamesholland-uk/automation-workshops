@@ -1,5 +1,60 @@
-data "panos_system_info" "ngfw_info" { }
+resource "panos_address_object" "terraform-address-object-1" {
+    name = "terraform-address-object-1"
+    value = "192.168.80.1/32"
+    description = "Addres object 1 from Terraform"
+}
 
-output "the_info" {
-    value = data.panos_system_info.ngfw_info
+resource "panos_address_object" "terraform-address-object-2" {
+    name = "terraform-address-object-2"
+    value = "192.168.80.2/32"
+    description = "Addres object 2 from Terraform"
+}
+
+resource "panos_address_group" "terraform-address-group" {
+    name = "terraform-address-group"
+    description = "Group of internal hosts"
+    static_addresses = [
+        panos_address_object.terraform-address-object-1.name,
+        panos_address_object.terraform-address-object-2.name
+    ]
+}
+
+resource "panos_zone" "internet-zone" {
+    name = "internet"
+    mode = "layer3"
+}
+
+resource "panos_zone" "internal-zone" {
+    name = "internal"
+    mode = "layer3"
+}
+
+resource "panos_security_rule_group" "security-rules" {
+    position_keyword = "bottom"
+    rule {
+        name = "allow internal to internet"
+        source_zones = [panos_zone.internal-zone.name]
+        source_addresses = [panos_address_group.terraform-address-group.name]
+        source_users = ["any"]
+        hip_profiles = ["any"]
+        destination_zones = [panos_zone.internet-zone.name]
+        destination_addresses = ["any"]
+        applications = ["web-browsing", "ssl"]
+        services = ["application-default"]
+        categories = ["any"]
+        action = "allow"
+    }
+    rule {
+        name = "deny internet to internal"
+        source_zones = [panos_zone.internet-zone.name]
+        source_addresses = ["any"]
+        source_users = ["any"]
+        hip_profiles = ["any"]
+        destination_zones = [panos_zone.internal-zone.name]
+        destination_addresses = ["any"]
+        applications = ["any"]
+        services = ["application-default"]
+        categories = ["any"]
+        action = "drop"
+    }
 }
