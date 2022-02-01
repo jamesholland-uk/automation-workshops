@@ -58,7 +58,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-2-are-you-ready">1.6. Ansible Playbook 2 - Are you ready?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-3-more-firewall-information">1.7. Ansible Playbook 3 - More firewall information</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-4-config-backup-export">1.8. Ansible Playbook 4 - Config backup/export</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#firewall-configuration-tasks">1.9. Firewall configuration tasks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ansible-playbook-5-firewall-configuration-tasks">1.9. Ansible Playbook 5 - Firewall configuration tasks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#modify-a-playbook">1.10. Modify a playbook</a></li>
 </ul>
 </li>
@@ -98,11 +98,11 @@
              
   <section id="ansible-l100">
 <h1><span class="section-number">1. </span>Ansible L100<a class="headerlink" href="#ansible-l100" title="Permalink to this headline"></a></h1>
-<p>Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.</p>
+<p>Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace any UPPERCASE_VARIABLES with your own values.</p>
 <p>Assumptions: A host with the following installed: curl, git, <a class="reference external" href="https://www.python.org/downloads">Python 3</a>, <a class="reference external" href="https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pip">Ansible</a>, <a class="reference external" href="https://github.com/PaloAltoNetworks/pan-os-python">PAN-OS-Python</a>, <a class="reference external" href="https://github.com/PaloAltoNetworks/pan-os-ansible">PAN-OS Ansible Collection</a>, and all prerequisite requirements for those items. Plus some form of text editor on your host. And, access to a PAN-OS next-generation firewall from your host.</p>
 <dl class="simple">
 <dt>Note:</dt><dd><ul class="simple">
-<li><p>Where text is enclosed in {{ double braces }}, replace the text AND braces with the relevant value for your environment.</p></li>
+<li><p>Lookout for text in uppercase, such as <code class="docutils literal notranslate"><span class="pre">YOUR_FIREWALL_IP</span></code>, and replace the text with the relevant value for your environment.</p></li>
 <li><p>Commands you could/should execute are denoted with <code class="docutils literal notranslate"><span class="pre">$</span></code> at the start, and have copy buttons; other text boxes show expected outputs.</p></li>
 <li><p>You may wish to have a text editor open on your machine, to amend copied commands before psting them into the host’s CLI.</p></li>
 </ul>
@@ -179,7 +179,7 @@
 <p>Change the IP address in this file to match your firewalls’s management IP address, either use your preferred text editor to replace the IP address in <code class="docutils literal notranslate"><span class="pre">host_vars/firewall.yml</span></code>, or use this command:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat &gt; host_vars/firewall.yml &lt;&lt;EOL
 ---
-ip_address: &#39;{{ your firewall management IP }}&#39;
+ip_address: &#39;YOUR_FIREWALL_IP&#39;
 EOL
 </pre></div>
 </div>
@@ -195,10 +195,10 @@ EOL
 <section id="prepare-the-firewall-credentials">
 <h2><span class="section-number">1.4. </span>Prepare the firewall credentials<a class="headerlink" href="#prepare-the-firewall-credentials" title="Permalink to this headline"></a></h2>
 <p>Before you can execute any Ansible playbooks, you need to be able to login to the firewall. We will store the admin username and admin password as variables.</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_username={{ your-admin-username }}
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_username=YOUR_ADMIN_USERNAME
 </pre></div>
 </div>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_password={{ your-admin-password }}
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_password=YOUR_ADMIN_PASSWORD
 </pre></div>
 </div>
 <p>For example:</p>
@@ -210,7 +210,7 @@ $ export panos_password=ChangeMe123!
 </section>
 <section id="run-our-first-ansible-playbook">
 <h2><span class="section-number">1.5. </span>Run our first Ansible playbook<a class="headerlink" href="#run-our-first-ansible-playbook" title="Permalink to this headline"></a></h2>
-<p>Our first Ansible playbook will gather system information from the firewall. Data gathering or read-only tasks are good candidiates for anyone starting out in automation. Execute the <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/system_info.yml">system-info playbook</a> using the command below.</p>
+<p>Our first Ansible playbook will gather system information from the firewall. Data gathering or read-only tasks are good candidiates for anyone starting out in automation. Execute the <code class="docutils literal notranslate"><span class="pre">system-info.yml</span></code> playbook using the command below:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory system_info.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
 </pre></div>
 </div>
@@ -282,7 +282,7 @@ $ export panos_password=ChangeMe123!
 </section>
 <section id="ansible-playbook-2-are-you-ready">
 <h2><span class="section-number">1.6. </span>Ansible Playbook 2 - Are you ready?<a class="headerlink" href="#ansible-playbook-2-are-you-ready" title="Permalink to this headline"></a></h2>
-<p>Our second playbook executes the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code> command. This is useful to ensure the firewall is ready to accept further operations such as configuration changes, software downloads and updgrades, and more. The <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/check_ready.yml">playbook</a> runs the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code> command on a loop until it gets the positive <code class="docutils literal notranslate"><span class="pre">yes</span></code> result that the firewall is ready. Run the playbook using the following:</p>
+<p>Our second playbook executes the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code> command. This is useful to ensure the firewall is ready to accept further operations such as configuration changes, software downloads and updgrades, and more. The <code class="docutils literal notranslate"><span class="pre">check_ready.yml</span></code> playbook runs the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code> command on a loop until it gets the positive <code class="docutils literal notranslate"><span class="pre">yes</span></code> result that the firewall is ready. Run the playbook using the following:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory check_ready.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
 </pre></div>
 </div>
@@ -326,7 +326,7 @@ $ export panos_password=ChangeMe123!
 </section>
 <section id="ansible-playbook-3-more-firewall-information">
 <h2><span class="section-number">1.7. </span>Ansible Playbook 3 - More firewall information<a class="headerlink" href="#ansible-playbook-3-more-firewall-information" title="Permalink to this headline"></a></h2>
-<p>The third <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/some_more_info.yml">example playbook</a> again gathers <code class="docutils literal notranslate"><span class="pre">facts</span></code> in order to display information about the running configiration and state of the firewall. This could be useful information on its own, but could also be used to feed into other tasks later on. Run the playbook using the following:</p>
+<p>The third example playbook, <code class="docutils literal notranslate"><span class="pre">some_more_info.yml</span></code> again gathers <code class="docutils literal notranslate"><span class="pre">facts</span></code> in order to display information about the running configiration and state of the firewall. This could be useful information on its own, but could also be used to feed into other tasks later on. Run the playbook using the following:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory some_more_info.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
 </pre></div>
 </div>
@@ -334,7 +334,7 @@ $ export panos_password=ChangeMe123!
 </section>
 <section id="ansible-playbook-4-config-backup-export">
 <h2><span class="section-number">1.8. </span>Ansible Playbook 4 - Config backup/export<a class="headerlink" href="#ansible-playbook-4-config-backup-export" title="Permalink to this headline"></a></h2>
-<p>The next <a class="reference external" href="https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/backup_config.yml">Ansible playbook</a> uses the <a class="reference external" href="https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_export.html">panos_export module</a> to export the running config to a local file. Run the playbook using the following:</p>
+<p>The next Ansible playbook uses the <a class="reference external" href="https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_export.html">panos_export module</a> to export the running config to a local file. Run the playbook using the following:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory backup_config.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
 </pre></div>
 </div>
@@ -343,23 +343,29 @@ $ export panos_password=ChangeMe123!
 </pre></div>
 </div>
 </section>
-<section id="firewall-configuration-tasks">
-<h2><span class="section-number">1.9. </span>Firewall configuration tasks<a class="headerlink" href="#firewall-configuration-tasks" title="Permalink to this headline"></a></h2>
-<p>Our next playbook is focused on configuration tasks, and this playbook configures all the required items for a basic firewall setup.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">.</span>
-<span class="o">.</span>
-<span class="o">.</span>
-<span class="n">tasks</span><span class="p">:</span>
-  <span class="o">-</span> <span class="n">name</span><span class="p">:</span>
-
+<section id="ansible-playbook-5-firewall-configuration-tasks">
+<h2><span class="section-number">1.9. </span>Ansible Playbook 5 - Firewall configuration tasks<a class="headerlink" href="#ansible-playbook-5-firewall-configuration-tasks" title="Permalink to this headline"></a></h2>
+<p>Our next playbook is focused on configuration tasks, and this playbook configures all the required items for a basic firewall setup, including xones, interfaces, objects and more:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tasks</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">name</span><span class="p">:</span> <span class="n">Create</span> <span class="n">DMZ</span> <span class="n">zone</span>
+    <span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_zone</span><span class="p">:</span>
+      <span class="n">provider</span><span class="p">:</span> <span class="s2">&quot;{{ device }}&quot;</span>
+      <span class="n">zone</span><span class="p">:</span> <span class="s2">&quot;dmz&quot;</span>
+      <span class="n">mode</span><span class="p">:</span> <span class="s2">&quot;layer3&quot;</span>
 <span class="o">.</span>
 <span class="o">.</span>
 <span class="o">.</span>
 </pre></div>
 </div>
+<p>You can see all the configiuration items by viewing the playbook:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat simple_config.yml
+</pre></div>
+</div>
+<p>By logging into the firewall web GUI, you should be able to observe that these configuration items do not already exist.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory simple_config.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
 </pre></div>
 </div>
+<p>By observing the firewall web GUI, you should be able to see the new configuration items.</p>
 </section>
 <section id="modify-a-playbook">
 <h2><span class="section-number">1.10. </span>Modify a playbook<a class="headerlink" href="#modify-a-playbook" title="Permalink to this headline"></a></h2>

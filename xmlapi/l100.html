@@ -99,11 +99,11 @@
              
   <section id="xml-api-l100">
 <h1><span class="section-number">1. </span>XML API L100<a class="headerlink" href="#xml-api-l100" title="Permalink to this headline"></a></h1>
-<p>Hands-on tasks for this workshop will be performing XML API calls against a PAN-OS firewall, from your command-line environment, using the <code class="docutils literal notranslate"><span class="pre">curl</span></code> command. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.</p>
+<p>Hands-on tasks for this workshop will be performing XML API calls against a PAN-OS firewall, from your command-line environment, using the <code class="docutils literal notranslate"><span class="pre">curl</span></code> command. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace any UPPERCASE_VARIABLES with your own values.</p>
 <p>Assumptions: A host with <code class="docutils literal notranslate"><span class="pre">curl</span></code> installed, access to a PAN-OS next-generation firewall from your host.</p>
 <dl class="simple">
 <dt>Note:</dt><dd><ul class="simple">
-<li><p>Where text is enclosed in {{ double braces }}, replace the text AND braces with the relevant value for your environment.</p></li>
+<li><p>Lookout for text in uppercase, such as <code class="docutils literal notranslate"><span class="pre">YOUR_FIREWALL_IP</span></code>, and replace the text with the relevant value for your environment.</p></li>
 <li><p>Commands you could/should execute are denoted with <code class="docutils literal notranslate"><span class="pre">$</span></code> at the start, and have copy buttons; other text boxes show expected outputs.</p></li>
 <li><p>You may wish to have a text editor open on your machine, to amend copied commands before psting them into the host’s CLI.</p></li>
 </ul>
@@ -112,22 +112,22 @@
 <section id="store-our-firewall-s-ip-as-a-variable">
 <h2><span class="section-number">1.1. </span>Store our firewall’s IP as a variable<a class="headerlink" href="#store-our-firewall-s-ip-as-a-variable" title="Permalink to this headline"></a></h2>
 <p>First, to make our lives easier, we will assign the management IP address of the firewall to a variable, so we can easily refer to it in our API calls.</p>
-<p>Today, in this enviornment, we will assign the API key value to a variable called <code class="docutils literal notranslate"><span class="pre">host</span></code>, to be used in future API calls.</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export host={{your-firewall-IP}}
+<p>Today, in this enviornment, we will assign the API key value to a variable called <code class="docutils literal notranslate"><span class="pre">host</span></code>, to be used in future API calls. The export command stores the value of <code class="docutils literal notranslate"><span class="pre">host</span></code> in memory for th duration of the CLI session.</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export host=YOUR_FIREWALL_IP
 </pre></div>
 </div>
 </section>
 <section id="generate-your-api-key">
 <h2><span class="section-number">1.2. </span>Generate your API key<a class="headerlink" href="#generate-your-api-key" title="Permalink to this headline"></a></h2>
 <p>Before you can make any API calls, you need to generate an API key. Your API key will allow you to authenticate and authorise yourself for future API calls.</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -kd &quot;type=keygen&amp;user={{your-admin-username}}&amp;password={{your-admin-password}}&quot; https://$host/api
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -kd &quot;type=keygen&amp;user=YOUR_ADMIN_PASSWORD&amp;password=YOUR_ADMIN_PASSWORD&quot; https://$host/api
 </pre></div>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">response</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;success&#39;</span><span class="o">&gt;&lt;</span><span class="n">result</span><span class="o">&gt;&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">LUFRPT16V1ZzaHNFYVJEdlZnb3Buc1dJRWtCVFFPYjFXTzI2N1phVzRsMg</span><span class="o">==&lt;/</span><span class="n">key</span><span class="o">&gt;&lt;/</span><span class="n">result</span><span class="o">&gt;&lt;/</span><span class="n">response</span><span class="o">&gt;</span>
 </pre></div>
 </div>
 <p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will assign the API key value to a variable to be used in future API calls. Take the characters between the <code class="docutils literal notranslate"><span class="pre">key</span></code> tags from the previous output as your API key, in the example above this is the characters from <code class="docutils literal notranslate"><span class="pre">LUFRPT16...</span></code> to <code class="docutils literal notranslate"><span class="pre">...Mg==</span></code></p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export key={{your-API-key}}
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export key=YOUR_API_KEY
 </pre></div>
 </div>
 <p>For example:</p>
@@ -217,7 +217,7 @@ yes
 <p>The XML required to make a call ourselves is between (but not including) the <code class="docutils literal notranslate"><span class="pre">&lt;operations&gt;&lt;/operations&gt;</span></code> tags. This gives us <code class="docutils literal notranslate"><span class="pre">&lt;show&gt;&lt;chassis-ready/&gt;&lt;/show&gt;</span></code>, which becomes the <code class="docutils literal notranslate"><span class="pre">cmd=</span></code> portion of the final API command:
 <code class="docutils literal notranslate"><span class="pre">https://$host/api/?type=op&amp;cmd=&lt;show&gt;&lt;chassis-ready&gt;&lt;/chassis-ready&gt;&lt;/show&gt;&amp;key=$key</span></code></p>
 <p>Connect to the firewall using SSH:</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ssh {{your-admin-username}}@$host
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ssh YOUR_ADMIN_USERNAME@$host
 </pre></div>
 </div>
 <p>Then choose one (or more) of the following operational commands, debug the CLI, then create and execute XML API command equivalents. You may wish to use two CLI windows, your original CLI for performing XML API commands, and a second CLI for SSH to the firewall.</p>
