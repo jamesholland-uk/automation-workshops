@@ -9,7 +9,7 @@ Assumptions: A host with the following installed: curl, git, `Terraform 1.x
 Note:
     * Lookout for text in uppercase, such as ``YOUR_FIREWALL_IP``, and replace the text with the relevant value for your environment.
     * Commands you could/should execute are denoted with ``$`` at the start, and have copy buttons; other text boxes show expected outputs.
-    * You may wish to have a text editor open on your machine, to amend copied commands before psting them into the host's CLI.
+    * You may wish to have a text editor open on your machine, to amend copied commands before pasting them into the host's CLI.
 
 
 Terraform pre-flight checks
@@ -93,7 +93,7 @@ For example:
         $ export TF_VAR_panos_password="ChangeMe123!"
 
 
-In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will use these credentials stored in variables for executing Ansible playbooks.
+In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this environment, we will use these credentials stored in variables for executing Ansible playbooks.
 
 
 Initialising Terraform
@@ -207,7 +207,7 @@ As expected, the plan (which remember is the difference between the real state a
 Applying Changes with Terraform
 ================================================
 
-As previously mentioned, Terraform wants to use all .tf files in the local directory, so lets remove the first file from scope, and introdude the second file:
+As previously mentioned, Terraform wants to use all .tf files in the local directory, so lets remove the first file from scope, and introduce the second file:
 
 .. code-block::
         :class: copy-button
@@ -350,7 +350,7 @@ Note that in the ``plan`` output, as in the configuration file, the address grou
 Idempotence
 ======================================================
 
-Note that at this point, you should be able to perform ``terraform apply`` multiple times, and because Terraform and the PAN-OS provider perform idempotent operations, no changes will be made. Idempotence calls for operations that can be applied multiple times without changing the result, and in this context, duplicate objects will not be created each time ``terraform apply`` is executed, the ouput should just end with:
+Note that at this point, you should be able to perform ``terraform apply`` multiple times, and because Terraform and the PAN-OS provider perform idempotent operations, no changes will be made. Idempotence calls for operations that can be applied multiple times without changing the result, and in this context, duplicate objects will not be created each time ``terraform apply`` is executed, the output should just end with:
 
 .. code-block::
 
@@ -390,7 +390,7 @@ The changes are now live in the running configuration.
 Applying More Changes
 ================================================
 
-Let's make some more changes. We will use the third Terraform file for this, so execute the comands below:
+Let's make some more changes. We will use the third Terraform file for this, so execute the commands below:
 
 .. code-block::
         :class: copy-button
@@ -472,7 +472,7 @@ The next exercise will show that Terraform can gather PAN-OS state information w
 
         $ diff 02.tf.bak 03.tf
 
-The output from ``diff`` shows we have added some extra lines from the pervious exercise:
+The output from ``diff`` shows we have added some extra lines from the previous exercise:
 
 .. code-block::
         :emphasize-lines: 4,6,7
@@ -523,4 +523,4 @@ The output should look something like this (truncated for brevity):
 
 The first block is the equivalent output from the CLI command ``show system info``, followed by the PAN-OS version broken down by major, minor and patch version.
 
-This can be useful on its own, but the information could also be parsed and used in other areas of our Terraform logic, where we might choose to perform a tasks if the PAN-OS software is equal to or graeter than a certain version number.
+This can be useful on its own, but the information could also be parsed and used in other areas of our Terraform logic, where we might choose to perform a tasks if the PAN-OS software is equal to or greater than a certain version number.

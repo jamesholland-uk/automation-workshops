@@ -12,7 +12,7 @@ Assumptions: A host with the following installed: curl, git, `Python 3
 Note:
     * Lookout for text in uppercase, such as ``YOUR_FIREWALL_IP``, and replace the text with the relevant value for your environment.
     * Commands you could/should execute are denoted with ``$`` at the start, and have copy buttons; other text boxes show expected outputs.
-    * You may wish to have a text editor open on your machine, to amend copied commands before psting them into the host's CLI.
+    * You may wish to have a text editor open on your machine, to amend copied commands before pasting them into the host's CLI.
 
 
 Ansible pre-flight checks
@@ -41,7 +41,7 @@ The output should look something like this:
             libyaml = True
 
 
-The PAN-OS Collection has been preinstalled for you. We can check the Collection is present using this command:
+The PAN-OS Collection has been pre-installed for you. We can check the Collection is present using this command:
 
 .. code-block::
         :class: copy-button
@@ -168,12 +168,12 @@ For example:
         $ export panos_password=ChangeMe123!
 
 
-In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will use these credentials stored in variables for executing Ansible playbooks.
+In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this environment, we will use these credentials stored in variables for executing Ansible playbooks.
 
 Run our first Ansible playbook
 ================================================
 
-Our first Ansible playbook will gather system information from the firewall. Data gathering or read-only tasks are good candidiates for anyone starting out in automation. Execute the ``system-info.yml`` playbook using the command below:
+Our first Ansible playbook will gather system information from the firewall. Data gathering or read-only tasks are good candidates for anyone starting out in automation. Execute the ``system-info.yml`` playbook using the command below:
 
 .. code-block::
         :class: copy-button
@@ -267,7 +267,7 @@ The output should look something like this, specifically the highlighted lines s
 Ansible Playbook 2 - Are you ready?
 ================================================
 
-Our second playbook executes the ``show chassis-ready`` command. This is useful to ensure the firewall is ready to accept further operations such as configuration changes, software downloads and updgrades, and more. The ``check_ready.yml`` playbook runs the ``show chassis-ready`` command on a loop until it gets the positive ``yes`` result that the firewall is ready. Run the playbook using the following:
+Our second playbook executes the ``show chassis-ready`` command. This is useful to ensure the firewall is ready to accept further operations such as configuration changes, software downloads and upgrades, and more. The ``check_ready.yml`` playbook runs the ``show chassis-ready`` command on a loop until it gets the positive ``yes`` result that the firewall is ready. Run the playbook using the following:
 
 
 .. code-block::
@@ -276,7 +276,7 @@ Our second playbook executes the ``show chassis-ready`` command. This is useful 
         $ ansible-playbook -i inventory check_ready.yml --extra-vars "username=$panos_username password=$panos_password"
 
 
-The playbook has the same opening sections for the hosts, conection, and variables. The tasks section is different, where this time we use a single task ( using`panos_op` to run `show chassis-ready`), then use Ansible's `retries` and `until` to create the loop which waits for the firewall to be ready by virtue of the `yes` response. It will retry 50 times, trying every 30 seconds, until the output from the `show chassis-ready` is `yes`.
+The playbook has the same opening sections for the hosts, connection, and variables. The tasks section is different, where this time we use a single task ( using`panos_op` to run `show chassis-ready`), then use Ansible's `retries` and `until` to create the loop which waits for the firewall to be ready by virtue of the `yes` response. It will retry 50 times, trying every 30 seconds, until the output from the `show chassis-ready` is `yes`.
 
 .. code-block::
 
@@ -291,7 +291,7 @@ The playbook has the same opening sections for the hosts, conection, and variabl
             retries: 50
             delay: 30
 
-The sucessful output should look something like this, specifically the highlighted line showing the "ok" response to checking if the firewall is ready:
+The successful output should look something like this, specifically the highlighted line showing the "ok" response to checking if the firewall is ready:
 
 .. code-block::
         :emphasize-lines: 7
@@ -308,7 +308,7 @@ The sucessful output should look something like this, specifically the highlight
         firewall                   : ok=2    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
 
 
-If the firewall is booting up, or not reachable, you would receieve failure messages, and the loop of checking would kick in, like this:
+If the firewall is booting up, or not reachable, you would receive failure messages, and the loop of checking would kick in, like this:
 
 .. code-block::
         :emphasize-lines: 7,8
@@ -326,7 +326,7 @@ If the firewall is booting up, or not reachable, you would receieve failure mess
 Ansible Playbook 3 - More firewall information
 ================================================
 
-The third example playbook, ``some_more_info.yml`` again gathers ``facts`` in order to display information about the running configiration and state of the firewall. This could be useful information on its own, but could also be used to feed into other tasks later on. Run the playbook using the following:
+The third example playbook, ``some_more_info.yml`` again gathers ``facts`` in order to display information about the running configuration and state of the firewall. This could be useful information on its own, but could also be used to feed into other tasks later on. Run the playbook using the following:
 
 .. code-block::
         :class: copy-button
@@ -360,7 +360,7 @@ Once executed, you should be able to see the exported config file on yours host:
 Ansible Playbook 5 - Firewall configuration tasks
 ====================================================================
 
-Our next playbook is focused on configuration tasks, and this playbook configures all the required items for a basic firewall setup, including xones, interfaces, objects and more:
+Our next playbook is focused on configuration tasks, and this playbook configures all the required items for a basic firewall setup, including zones, interfaces, objects and more:
 
 .. code-block::
 
@@ -374,7 +374,7 @@ Our next playbook is focused on configuration tasks, and this playbook configure
         .
         .
 
-You can see all the configiuration items by viewing the playbook:
+You can see all the configuration items by viewing the playbook:
 
 .. code-block::
         :class: copy-button
@@ -395,7 +395,7 @@ Modify a playbook
 ==================================
 
 The `panos_op module
-<https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_op.html>`_ is very useful within playbooks for gathering information and executing operational commands like gatering system information, software upgrades, content downloads, and more. It was used in the second playbook, check_ready.yml, to run the ``show chassis-ready`` command.
+<https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_op.html>`_ is very useful within playbooks for gathering information and executing operational commands like gathering system information, software upgrades, content downloads, and more. It was used in the second playbook, check_ready.yml, to run the ``show chassis-ready`` command.
 
 Choose one (or more) of the following operational commands to run with Ansible.
 
