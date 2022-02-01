@@ -1,6 +1,5 @@
 resource "panos_address_group" "terraform-address-group" {
     name = "terraform-address-group"
-    description = "Group of internal hosts"
     static_addresses = [
         panos_address_object.terraform-address-object-1.name,
         panos_address_object.terraform-address-object-2.name
