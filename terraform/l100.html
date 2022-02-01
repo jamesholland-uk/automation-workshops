@@ -104,7 +104,7 @@
 <dt>Note:</dt><dd><ul class="simple">
 <li><p>Lookout for text in uppercase, such as <code class="docutils literal notranslate"><span class="pre">YOUR_FIREWALL_IP</span></code>, and replace the text with the relevant value for your environment.</p></li>
 <li><p>Commands you could/should execute are denoted with <code class="docutils literal notranslate"><span class="pre">$</span></code> at the start, and have copy buttons; other text boxes show expected outputs.</p></li>
-<li><p>You may wish to have a text editor open on your machine, to amend copied commands before psting them into the host’s CLI.</p></li>
+<li><p>You may wish to have a text editor open on your machine, to amend copied commands before pasting them into the host’s CLI.</p></li>
 </ul>
 </dd>
 </dl>
@@ -161,7 +161,7 @@ $ export TF_VAR_panos_username=&quot;adminuser&quot;
 $ export TF_VAR_panos_password=&quot;ChangeMe123!&quot;
 </pre></div>
 </div>
-<p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will use these credentials stored in variables for executing Ansible playbooks.</p>
+<p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this environment, we will use these credentials stored in variables for executing Ansible playbooks.</p>
 </section>
 <section id="initialising-terraform">
 <h2><span class="section-number">1.4. </span>Initialising Terraform<a class="headerlink" href="#initialising-terraform" title="Permalink to this headline"></a></h2>
@@ -248,7 +248,7 @@ Note: You didn&#39;t use the -out option to save this plan, so Terraform can&#39
 </section>
 <section id="applying-changes-with-terraform">
 <h2><span class="section-number">1.6. </span>Applying Changes with Terraform<a class="headerlink" href="#applying-changes-with-terraform" title="Permalink to this headline"></a></h2>
-<p>As previously mentioned, Terraform wants to use all .tf files in the local directory, so lets remove the first file from scope, and introdude the second file:</p>
+<p>As previously mentioned, Terraform wants to use all .tf files in the local directory, so lets remove the first file from scope, and introduce the second file:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ mv 00.tf 00.tf.bak
 $ mv 01.tf.bak 01.tf
 </pre></div>
@@ -364,7 +364,7 @@ Only &#39;yes&#39; will be accepted to approve.
 </section>
 <section id="idempotence">
 <h2><span class="section-number">1.7. </span>Idempotence<a class="headerlink" href="#idempotence" title="Permalink to this headline"></a></h2>
-<p>Note that at this point, you should be able to perform <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">apply</span></code> multiple times, and because Terraform and the PAN-OS provider perform idempotent operations, no changes will be made. Idempotence calls for operations that can be applied multiple times without changing the result, and in this context, duplicate objects will not be created each time <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">apply</span></code> is executed, the ouput should just end with:</p>
+<p>Note that at this point, you should be able to perform <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">apply</span></code> multiple times, and because Terraform and the PAN-OS provider perform idempotent operations, no changes will be made. Idempotence calls for operations that can be applied multiple times without changing the result, and in this context, duplicate objects will not be created each time <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">apply</span></code> is executed, the output should just end with:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 </pre></div>
 </div>
@@ -391,7 +391,7 @@ Final commit status: FIN
 </section>
 <section id="applying-more-changes">
 <h2><span class="section-number">1.9. </span>Applying More Changes<a class="headerlink" href="#applying-more-changes" title="Permalink to this headline"></a></h2>
-<p>Let’s make some more changes. We will use the third Terraform file for this, so execute the comands below:</p>
+<p>Let’s make some more changes. We will use the third Terraform file for this, so execute the commands below:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ mv 01.tf 01.tf.bak
 $ mv 02.tf.bak 02.tf
 </pre></div>
@@ -443,7 +443,7 @@ $ mv 03.tf.bak 03.tf
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ diff 02.tf.bak 03.tf
 </pre></div>
 </div>
-<p>The output from <code class="docutils literal notranslate"><span class="pre">diff</span></code> shows we have added some extra lines from the pervious exercise:</p>
+<p>The output from <code class="docutils literal notranslate"><span class="pre">diff</span></code> shows we have added some extra lines from the previous exercise:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">---</span>
 <span class="o">&gt;</span> <span class="p">}</span>
 <span class="o">&gt;</span>
@@ -484,7 +484,7 @@ $ mv 03.tf.bak 03.tf
 </pre></div>
 </div>
 <p>The first block is the equivalent output from the CLI command <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">system</span> <span class="pre">info</span></code>, followed by the PAN-OS version broken down by major, minor and patch version.</p>
-<p>This can be useful on its own, but the information could also be parsed and used in other areas of our Terraform logic, where we might choose to perform a tasks if the PAN-OS software is equal to or graeter than a certain version number.</p>
+<p>This can be useful on its own, but the information could also be parsed and used in other areas of our Terraform logic, where we might choose to perform a tasks if the PAN-OS software is equal to or greater than a certain version number.</p>
 </section>
 </section>
 

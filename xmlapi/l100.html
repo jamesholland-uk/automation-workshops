@@ -105,14 +105,14 @@
 <dt>Note:</dt><dd><ul class="simple">
 <li><p>Lookout for text in uppercase, such as <code class="docutils literal notranslate"><span class="pre">YOUR_FIREWALL_IP</span></code>, and replace the text with the relevant value for your environment.</p></li>
 <li><p>Commands you could/should execute are denoted with <code class="docutils literal notranslate"><span class="pre">$</span></code> at the start, and have copy buttons; other text boxes show expected outputs.</p></li>
-<li><p>You may wish to have a text editor open on your machine, to amend copied commands before psting them into the host’s CLI.</p></li>
+<li><p>You may wish to have a text editor open on your machine, to amend copied commands before pasting them into the host’s CLI.</p></li>
 </ul>
 </dd>
 </dl>
 <section id="store-our-firewall-s-ip-as-a-variable">
 <h2><span class="section-number">1.1. </span>Store our firewall’s IP as a variable<a class="headerlink" href="#store-our-firewall-s-ip-as-a-variable" title="Permalink to this headline"></a></h2>
 <p>First, to make our lives easier, we will assign the management IP address of the firewall to a variable, so we can easily refer to it in our API calls.</p>
-<p>Today, in this enviornment, we will assign the API key value to a variable called <code class="docutils literal notranslate"><span class="pre">host</span></code>, to be used in future API calls. The export command stores the value of <code class="docutils literal notranslate"><span class="pre">host</span></code> in memory for th duration of the CLI session.</p>
+<p>Today, in this environment, we will assign the API key value to a variable called <code class="docutils literal notranslate"><span class="pre">host</span></code>, to be used in future API calls. The export command stores the value of <code class="docutils literal notranslate"><span class="pre">host</span></code> in memory for th duration of the CLI session.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export host=YOUR_FIREWALL_IP
 </pre></div>
 </div>
@@ -126,7 +126,7 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">response</span> <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;success&#39;</span><span class="o">&gt;&lt;</span><span class="n">result</span><span class="o">&gt;&lt;</span><span class="n">key</span><span class="o">&gt;</span><span class="n">LUFRPT16V1ZzaHNFYVJEdlZnb3Buc1dJRWtCVFFPYjFXTzI2N1phVzRsMg</span><span class="o">==&lt;/</span><span class="n">key</span><span class="o">&gt;&lt;/</span><span class="n">result</span><span class="o">&gt;&lt;/</span><span class="n">response</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will assign the API key value to a variable to be used in future API calls. Take the characters between the <code class="docutils literal notranslate"><span class="pre">key</span></code> tags from the previous output as your API key, in the example above this is the characters from <code class="docutils literal notranslate"><span class="pre">LUFRPT16...</span></code> to <code class="docutils literal notranslate"><span class="pre">...Mg==</span></code></p>
+<p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this environment, we will assign the API key value to a variable to be used in future API calls. Take the characters between the <code class="docutils literal notranslate"><span class="pre">key</span></code> tags from the previous output as your API key, in the example above this is the characters from <code class="docutils literal notranslate"><span class="pre">LUFRPT16...</span></code> to <code class="docutils literal notranslate"><span class="pre">...Mg==</span></code></p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export key=YOUR_API_KEY
 </pre></div>
 </div>
@@ -232,7 +232,7 @@ yes
 </section>
 <section id="find-an-api-command-api-browser">
 <h2><span class="section-number">1.11. </span>Find An API Command - API Browser<a class="headerlink" href="#find-an-api-command-api-browser" title="Permalink to this headline"></a></h2>
-<p>Another way to find an API call for specific operation is to use the API browser, which can be found at <code class="docutils literal notranslate"><span class="pre">https://firewall/api</span></code>. <strong>Once logged in to the web GUI</strong>, browse to <code class="docutils literal notranslate"><span class="pre">https://firewall/api</span></code> and a listing of the types of available XML API request types is displayed. Hyperlinks can be used to browse through the XML API request types until the required reqeust format is found.</p>
+<p>Another way to find an API call for specific operation is to use the API browser, which can be found at <code class="docutils literal notranslate"><span class="pre">https://firewall/api</span></code>. <strong>Once logged in to the web GUI</strong>, browse to <code class="docutils literal notranslate"><span class="pre">https://firewall/api</span></code> and a listing of the types of available XML API request types is displayed. Hyperlinks can be used to browse through the XML API request types until the required request format is found.</p>
 <p>Again using the example of our first API call in this workshop, <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code>, click the <code class="docutils literal notranslate"><span class="pre">Operational</span> <span class="pre">Commands</span></code> link, then the <code class="docutils literal notranslate"><span class="pre">show</span></code> link, then the <code class="docutils literal notranslate"><span class="pre">chassis-ready</span></code> link. You will be shown the XML API format we observed in the CLI (<code class="docutils literal notranslate"><span class="pre">&lt;show&gt;&lt;chassis-ready/&gt;&lt;/show&gt;</span></code>), as well as the XML API URL structure (<code class="docutils literal notranslate"><span class="pre">/api/?type=op&amp;cmd=&lt;show&gt;&lt;chassis-ready&gt;&lt;/chassis-ready&gt;&lt;/show&gt;</span></code>). Clicking the hyperlinked XML API URL performs the API command and displays a result.</p>
 <p>Choose one (or more) of the following operational commands, find the command in the API browser, then create and execute XML API command equivalents:</p>
 <blockquote>

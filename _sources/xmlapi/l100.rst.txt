@@ -8,14 +8,14 @@ Assumptions: A host with ``curl`` installed, access to a PAN-OS next-generation 
 Note:
     * Lookout for text in uppercase, such as ``YOUR_FIREWALL_IP``, and replace the text with the relevant value for your environment.
     * Commands you could/should execute are denoted with ``$`` at the start, and have copy buttons; other text boxes show expected outputs.
-    * You may wish to have a text editor open on your machine, to amend copied commands before psting them into the host's CLI.
+    * You may wish to have a text editor open on your machine, to amend copied commands before pasting them into the host's CLI.
 
 
 Store our firewall's IP as a variable
 ================================================
 First, to make our lives easier, we will assign the management IP address of the firewall to a variable, so we can easily refer to it in our API calls.
 
-Today, in this enviornment, we will assign the API key value to a variable called ``host``, to be used in future API calls. The export command stores the value of ``host`` in memory for th duration of the CLI session.
+Today, in this environment, we will assign the API key value to a variable called ``host``, to be used in future API calls. The export command stores the value of ``host`` in memory for th duration of the CLI session.
 
 .. code-block::
         :class: copy-button
@@ -36,7 +36,7 @@ Before you can make any API calls, you need to generate an API key. Your API key
 
         <response status = 'success'><result><key>LUFRPT16V1ZzaHNFYVJEdlZnb3Buc1dJRWtCVFFPYjFXTzI2N1phVzRsMg==</key></result></response>
 
-In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this enviornment, we will assign the API key value to a variable to be used in future API calls. Take the characters between the ``key`` tags from the previous output as your API key, in the example above this is the characters from ``LUFRPT16...`` to ``...Mg==``
+In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this environment, we will assign the API key value to a variable to be used in future API calls. Take the characters between the ``key`` tags from the previous output as your API key, in the example above this is the characters from ``LUFRPT16...`` to ``...Mg==``
 
 .. code-block::
         :class: copy-button
@@ -177,7 +177,7 @@ Then choose one (or more) of the following operational commands, debug the CLI, 
 Find An API Command - API Browser
 ==================================
 
-Another way to find an API call for specific operation is to use the API browser, which can be found at ``https://firewall/api``. **Once logged in to the web GUI**, browse to ``https://firewall/api`` and a listing of the types of available XML API request types is displayed. Hyperlinks can be used to browse through the XML API request types until the required reqeust format is found.
+Another way to find an API call for specific operation is to use the API browser, which can be found at ``https://firewall/api``. **Once logged in to the web GUI**, browse to ``https://firewall/api`` and a listing of the types of available XML API request types is displayed. Hyperlinks can be used to browse through the XML API request types until the required request format is found.
 
 Again using the example of our first API call in this workshop, ``show chassis-ready``, click the ``Operational Commands`` link, then the ``show`` link, then the ``chassis-ready`` link. You will be shown the XML API format we observed in the CLI (``<show><chassis-ready/></show>``), as well as the XML API URL structure (``/api/?type=op&cmd=<show><chassis-ready></chassis-ready></show>``). Clicking the hyperlinked XML API URL performs the API command and displays a result.
 
