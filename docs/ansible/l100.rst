@@ -1,7 +1,7 @@
 Ansible L100
 ----------------------
 
-Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.
+Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace any UPPERCASE_VARIABLES with your own values.
 
 Assumptions: A host with the following installed: curl, git, `Python 3
 <https://www.python.org/downloads>`_, `Ansible
@@ -10,7 +10,7 @@ Assumptions: A host with the following installed: curl, git, `Python 3
 <https://github.com/PaloAltoNetworks/pan-os-ansible>`_, and all prerequisite requirements for those items. Plus some form of text editor on your host. And, access to a PAN-OS next-generation firewall from your host.
 
 Note:
-    * Where text is enclosed in {{ double braces }}, replace the text AND braces with the relevant value for your environment.
+    * Lookout for text in uppercase, such as ``YOUR_FIREWALL_IP``, and replace the text with the relevant value for your environment.
     * Commands you could/should execute are denoted with ``$`` at the start, and have copy buttons; other text boxes show expected outputs.
     * You may wish to have a text editor open on your machine, to amend copied commands before psting them into the host's CLI.
 
@@ -127,7 +127,7 @@ Change the IP address in this file to match your firewalls's management IP addre
 
         $ cat > host_vars/firewall.yml <<EOL
         ---
-        ip_address: '{{ your firewall management IP }}'
+        ip_address: 'YOUR_FIREWALL_IP'
         EOL
 
 
@@ -153,12 +153,12 @@ Before you can execute any Ansible playbooks, you need to be able to login to th
 .. code-block::
         :class: copy-button
 
-        $ export panos_username={{ your-admin-username }}
+        $ export panos_username=YOUR_ADMIN_USERNAME
 
 .. code-block::
         :class: copy-button
 
-        $ export panos_password={{ your-admin-password }}
+        $ export panos_password=YOUR_ADMIN_PASSWORD
 
 For example: 
 
@@ -173,8 +173,7 @@ In production environments, credentials should be stored, accessed and used secu
 Run our first Ansible playbook
 ================================================
 
-Our first Ansible playbook will gather system information from the firewall. Data gathering or read-only tasks are good candidiates for anyone starting out in automation. Execute the `system-info playbook
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/system_info.yml>`_ using the command below.
+Our first Ansible playbook will gather system information from the firewall. Data gathering or read-only tasks are good candidiates for anyone starting out in automation. Execute the ``system-info.yml`` playbook using the command below:
 
 .. code-block::
         :class: copy-button
@@ -268,8 +267,7 @@ The output should look something like this, specifically the highlighted lines s
 Ansible Playbook 2 - Are you ready?
 ================================================
 
-Our second playbook executes the ``show chassis-ready`` command. This is useful to ensure the firewall is ready to accept further operations such as configuration changes, software downloads and updgrades, and more. The `playbook
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/check_ready.yml>`_ runs the ``show chassis-ready`` command on a loop until it gets the positive ``yes`` result that the firewall is ready. Run the playbook using the following:
+Our second playbook executes the ``show chassis-ready`` command. This is useful to ensure the firewall is ready to accept further operations such as configuration changes, software downloads and updgrades, and more. The ``check_ready.yml`` playbook runs the ``show chassis-ready`` command on a loop until it gets the positive ``yes`` result that the firewall is ready. Run the playbook using the following:
 
 
 .. code-block::
@@ -328,8 +326,7 @@ If the firewall is booting up, or not reachable, you would receieve failure mess
 Ansible Playbook 3 - More firewall information
 ================================================
 
-The third `example playbook
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/some_more_info.yml>`_ again gathers ``facts`` in order to display information about the running configiration and state of the firewall. This could be useful information on its own, but could also be used to feed into other tasks later on. Run the playbook using the following:
+The third example playbook, ``some_more_info.yml`` again gathers ``facts`` in order to display information about the running configiration and state of the firewall. This could be useful information on its own, but could also be used to feed into other tasks later on. Run the playbook using the following:
 
 .. code-block::
         :class: copy-button
@@ -343,8 +340,7 @@ The playbook should provide information about the security policy rules, the net
 Ansible Playbook 4 - Config backup/export 
 ================================================
 
-The next `Ansible playbook
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/ansible/backup_config.yml>`_ uses the `panos_export module
+The next Ansible playbook uses the `panos_export module
 <https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_export.html>`_ to export the running config to a local file. Run the playbook using the following:
 
 .. code-block::
@@ -361,28 +357,38 @@ Once executed, you should be able to see the exported config file on yours host:
         $ cat running-config.xml
 
 
-Firewall configuration tasks
-==================================
+Ansible Playbook 5 - Firewall configuration tasks
+====================================================================
 
-Our next playbook is focused on configuration tasks, and this playbook configures all the required items for a basic firewall setup.
-
+Our next playbook is focused on configuration tasks, and this playbook configures all the required items for a basic firewall setup, including xones, interfaces, objects and more:
 
 .. code-block::
 
-        .
-        .
-        .
         tasks:
-          - name: 
+          - name: Create DMZ zone
+            paloaltonetworks.panos.panos_zone:
+              provider: "{{ device }}"
+              zone: "dmz"
+              mode: "layer3"
+        .
+        .
+        .
 
-        .
-        .
-        .
+You can see all the configiuration items by viewing the playbook:
+
+.. code-block::
+        :class: copy-button
+
+        $ cat simple_config.yml
+
+By logging into the firewall web GUI, you should be able to observe that these configuration items do not already exist.
 
 .. code-block::
         :class: copy-button
 
         $ ansible-playbook -i inventory simple_config.yml --extra-vars "username=$panos_username password=$panos_password"
+
+By observing the firewall web GUI, you should be able to see the new configuration items.
 
 
 Modify a playbook

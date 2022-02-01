@@ -1,12 +1,12 @@
 XML API L100
 ----------------------
 
-Hands-on tasks for this workshop will be performing XML API calls against a PAN-OS firewall, from your command-line environment, using the ``curl`` command. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.
+Hands-on tasks for this workshop will be performing XML API calls against a PAN-OS firewall, from your command-line environment, using the ``curl`` command. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace any UPPERCASE_VARIABLES with your own values.
 
 Assumptions: A host with ``curl`` installed, access to a PAN-OS next-generation firewall from your host.
 
 Note:
-    * Where text is enclosed in {{ double braces }}, replace the text AND braces with the relevant value for your environment.
+    * Lookout for text in uppercase, such as ``YOUR_FIREWALL_IP``, and replace the text with the relevant value for your environment.
     * Commands you could/should execute are denoted with ``$`` at the start, and have copy buttons; other text boxes show expected outputs.
     * You may wish to have a text editor open on your machine, to amend copied commands before psting them into the host's CLI.
 
@@ -15,12 +15,12 @@ Store our firewall's IP as a variable
 ================================================
 First, to make our lives easier, we will assign the management IP address of the firewall to a variable, so we can easily refer to it in our API calls.
 
-Today, in this enviornment, we will assign the API key value to a variable called ``host``, to be used in future API calls.
+Today, in this enviornment, we will assign the API key value to a variable called ``host``, to be used in future API calls. The export command stores the value of ``host`` in memory for th duration of the CLI session.
 
 .. code-block::
         :class: copy-button
         
-        $ export host={{your-firewall-IP}}
+        $ export host=YOUR_FIREWALL_IP
 
 
 Generate your API key
@@ -30,7 +30,7 @@ Before you can make any API calls, you need to generate an API key. Your API key
 .. code-block::
         :class: copy-button
 
-        $ curl -kd "type=keygen&user={{your-admin-username}}&password={{your-admin-password}}" https://$host/api
+        $ curl -kd "type=keygen&user=YOUR_ADMIN_PASSWORD&password=YOUR_ADMIN_PASSWORD" https://$host/api
 
 .. code-block::
 
@@ -41,7 +41,7 @@ In production environments, credentials should be stored, accessed and used secu
 .. code-block::
         :class: copy-button
 
-        $ export key={{your-API-key}}
+        $ export key=YOUR_API_KEY
 
 For example:
 
@@ -165,7 +165,7 @@ Connect to the firewall using SSH:
 .. code-block::
         :class: copy-button
 
-        $ ssh {{your-admin-username}}@$host
+        $ ssh YOUR_ADMIN_USERNAME@$host
 
 Then choose one (or more) of the following operational commands, debug the CLI, then create and execute XML API command equivalents. You may wish to use two CLI windows, your original CLI for performing XML API commands, and a second CLI for SSH to the firewall.
 

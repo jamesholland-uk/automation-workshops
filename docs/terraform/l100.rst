@@ -1,13 +1,13 @@
 Terraform L100
 ----------------------
 
-Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace the {{ variables in braces }} with your own values.
+Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace any UPPERCASE_VARIABLES with your own values.
 
 Assumptions: A host with the following installed: curl, git, `Terraform 1.x
 <https://www.terraform.io/downloads.html>`_, and any prerequisite requirements for those items. Plus some form of text editor on your host. And, access to a PAN-OS next-generation firewall from your host.
 
 Note:
-    * Where text is enclosed in {{ double braces }}, replace the text AND braces with the relevant value for your environment.
+    * Lookout for text in uppercase, such as ``YOUR_FIREWALL_IP``, and replace the text with the relevant value for your environment.
     * Commands you could/should execute are denoted with ``$`` at the start, and have copy buttons; other text boxes show expected outputs.
     * You may wish to have a text editor open on your machine, to amend copied commands before psting them into the host's CLI.
 
@@ -63,8 +63,9 @@ In the Terraform directory, a number of files will be present:
 
 .. code-block::
 
-        01.tf               \
-        02.tf.bak            |- These are the files where we write our Terraform code
+        00.tf               \
+        01.tf.bak            |- These are the files where we
+        02.tf.bak            |- write our Terraform code
         03.tf.bak           /
         commit.sh             - We will use this script to perform a commit after making changes
         providers.tf          - This file describes the third party systems, such as PAN-OS, which we want to use
@@ -79,9 +80,9 @@ Terraform needs to know the details for the hosts against which it should execut
 .. code-block::
         :class: copy-button
 
-        $ export TF_VAR_panos_hostname="{{ your firewall management IP }}"
-        $ export TF_VAR_panos_username="{{ your-admin-username }}"
-        $ export TF_VAR_panos_password="{{ your-admin-password }}"
+        $ export TF_VAR_panos_hostname="YOUR_FIREWALL_IP"
+        $ export TF_VAR_panos_username="YOUR_ADMIN_USERNAME"
+        $ export TF_VAR_panos_password="YOUR_ADMIN_PASSWORD"
 
 For example:
 
@@ -99,7 +100,7 @@ Initialising Terraform
 ================================================
 
 Terraform uses a multi-stage process, the first of which is to ``init``, short for `initialise
-<https://www.terraform.io/docs/cli/commands/init.html>`_. Run the following command, which sets up the directory Terraform works within, as well as potentially downloading some required files ready to be used at runtime.
+<https://www.terraform.io/docs/cli/commands/init.html>`_. Run the following command, which sets up the directory Terraform works with (.terraform/), as well as downloading various required files ready to be used at runtime.
 
 .. code-block::
         :class: copy-button
@@ -141,15 +142,32 @@ Some particularly interesting lines in the output are the first block of highlig
 
 Also of note is the second section of highlighted text, confirming Terraform has been successfully initialised.
 
+
 The Terraform Plan
 ================================================
 
-Terraform will look for any files in the local directory with the ``.tf`` extension, and by default attempt to execute with them all. Convention is to name the file with your coded tasks ``main.tf``, but it could be called anything. We have several exercises, so we are using ``01.tf``, ``02.tf``, etc
+The second stage when using Terraform is usually ``plan``, which as you may expect, asks Terraform to plan what it will do next. Given the resources you are asking Terraform to work with, which could be anything from cloud infrastructure to PAN-OS firewalls, Terraform will first assess the real state of those resources. Terraform will then compare that real state with your desired state, which is defined by Terraform configuration files (those files in the local directory with .tf extension), and show you the difference between the two. This therefore describes the alterations which Terraform would make the next time it is executed to ``apply`` changes, to change the real state into the desired state.
 
-The `first Terraform code
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/01.tf>`_ we will run is in the file ``01.tf``. It has read-only data gathering, using a ``data source``, the part of a Terraform provider responsible for gathering data.
+Let's look at our current Terraform config file. Ignoring the providers.tf and variables.tf files for now, the remaining .tf file in scope right now is 00.tf, use this command to show that file's contents:
 
-After initialisation, the next step is usually to perform a test run, which you can do by running the ``plan`` command:
+.. code-block::
+        :class: copy-button
+
+        $ cat 00.tf
+
+.. code-block::
+
+        resource "panos_address_object" "terraform-address-object-1" {
+                name = "terraform-address-object-1"
+                value = "192.168.80.1/32"
+                description = "Address object 1 from Terraform"
+        }
+
+Note that convention is to name the file with your configuration ``main.tf``, but it could be called anything. We have several exercises, so we are using ``00.tf``, ``01.tf``, ``02.tf``, etc
+
+The file 00.tf defines a single resource, an address object called ``terraform-address-object-1`` with value ``192.168.80.1/32``. By logging into your firewall's web GUI or CLI, you will see there are no address objects configured at present.
+
+Now, let's run the following command to ask Terraform to show the plan:
 
 .. code-block::
         :class: copy-button
@@ -159,37 +177,31 @@ After initialisation, the next step is usually to perform a test run, which you 
 The output should look something like this:
 
 .. code-block::
-        :emphasize-lines: 6, 10-24
 
-        Changes to Outputs:
-        + the_info = {
-            + id            = "192.168.150.226"
-            + info          = {
-                + "app-release-date"                      = "2021/10/27 05:11:31 BST"
-                + "app-version"                           = "8478-7015"
-                + "av-release-date"                       = "2021/10/27 12:03:35 BST"
-                + "av-version"                            = "3882-4393"
-                .
-                .
-                .
-                + "wildfire-rt"                           = "Disabled"
-                + "wildfire-version"                      = "0"
-                }
-            + version_major = 10
-            + version_minor = 0
-            + version_patch = 7
-            }
+        Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+          + create
 
-        ------------------------------------------------------------------------
+        Terraform will perform the following actions:
 
-        Note: You didn't specify an "-out" parameter to save this plan, so Terraform
-        can't guarantee that exactly these actions will be performed if
-        "terraform apply" is subsequently run.
+        # panos_address_object.terraform-address-object-1 will be created
+        + resource "panos_address_object" "terraform-address-object-1" {
+            + description  = "Address object 1 from Terraform"
+            + device_group = "shared"
+            + id           = (known after apply)
+            + name         = "terraform-address-object-1"
+            + type         = "ip-netmask"
+            + value        = "192.168.80.1/32"
+            + vsys         = "vsys1"
+        }
 
-Note the first highlghted section, telling us that nothing would be changed from this test run. The second highlighted section gives us the output we asked for in the `Terraform code
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/01.tf>`_. The first block is the equivalent output from the CLI command ``show system info``, followed by the PAN-OS version broken down by major, minor and patch version.
+        Plan: 1 to add, 0 to change, 0 to destroy.
 
-This type of Terraform code is great for data gathering, but we may want to use this gathered data in other places in Terraform too.
+        ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+        Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply" now.
+
+
+As expected, the plan (which remember is the difference between the real state and the desired state) will add a single address object.
 
 
 Applying Changes with Terraform
@@ -200,12 +212,49 @@ As previously mentioned, Terraform wants to use all .tf files in the local direc
 .. code-block::
         :class: copy-button
 
-        $ mv 01.tf 01.tf.bak
-        $ mv 02.tf.bak 02.tf
+        $ mv 00.tf 00.tf.bak
+        $ mv 01.tf.bak 01.tf
 
 
-The second `Terraform file
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/02.tf.bak>`_ creates some address objects and an address group. Again, perform the ``terraform plan`` command to test run the changes:
+The second Terraform file creates more address objects and a creates an address group:
+
+.. code-block::
+        :class: copy-button
+
+        $ cat 01.tf
+
+.. code-block::
+
+        resource "panos_address_group" "terraform-address-group" {
+                name = "terraform-address-group"
+                description = "Group of internal hosts"
+                static_addresses = [
+                        panos_address_object.terraform-address-object-1.name,
+                        panos_address_object.terraform-address-object-2.name
+                ]
+        }
+
+        resource "panos_address_object" "terraform-address-object-1" {
+                name = "terraform-address-object-1"
+                value = "192.168.80.1/32"
+                description = "Address object 1 from Terraform"
+        }
+
+        resource "panos_address_object" "terraform-address-object-2" {
+                name = "terraform-address-object-2"
+                value = "192.168.80.2/32"
+                description = "Address object 2 from Terraform"
+        }
+
+        resource "panos_address_object" "terraform-address-object-3" {
+                name = "terraform-address-object-3"
+                value = "192.168.80.3/32"
+                description = "Address object 3 from Terraform"
+        }
+
+
+
+Perform the ``terraform plan`` command to test run the changes:
 
 .. code-block::
         :class: copy-button
@@ -215,59 +264,67 @@ The second `Terraform file
 The output should look something like this:
 
 .. code-block::
-        :emphasize-lines: 7, 18, 29, 40
+        :emphasize-lines: 6, 17, 28, 39, 50
 
-        An execution plan has been generated and is shown below.
-        Resource actions are indicated with the following symbols:
-        + create
+        Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+          + create
 
         Terraform will perform the following actions:
 
+        # panos_address_group.terraform-address-group will be created
+        + resource "panos_address_group" "terraform-address-group" {
+                + id               = (known after apply)
+                + name             = "terraform-address-group"
+                + static_addresses = [
+                        + "terraform-address-object-1",
+                        + "terraform-address-object-2",
+                        ]
+                + vsys             = "vsys1"
+        }
+
         # panos_address_object.terraform-address-object-1 will be created
         + resource "panos_address_object" "terraform-address-object-1" {
-            + description  = "Addres object 1 from Terraform"
-            + device_group = "shared"
-            + id           = (known after apply)
-            + name         = "terraform-address-object-1"
-            + type         = "ip-netmask"
-            + value        = "192.168.80.1/32"
-            + vsys         = "vsys1"
-            }
+                + description  = "Address object 1 from Terraform"
+                + device_group = "shared"
+                + id           = (known after apply)
+                + name         = "terraform-address-object-1"
+                + type         = "ip-netmask"
+                + value        = "192.168.80.1/32"
+                + vsys         = "vsys1"
+        }
 
         # panos_address_object.terraform-address-object-2 will be created
         + resource "panos_address_object" "terraform-address-object-2" {
-            + description  = "Addres object 2 from Terraform"
-            + device_group = "shared"
-            + id           = (known after apply)
-            + name         = "terraform-address-object-2"
-            + type         = "ip-netmask"
-            + value        = "192.168.80.2/32"
-            + vsys         = "vsys1"
-            }
+                + description  = "Address object 2 from Terraform"
+                + device_group = "shared"
+                + id           = (known after apply)
+                + name         = "terraform-address-object-2"
+                + type         = "ip-netmask"
+                + value        = "192.168.80.2/32"
+                + vsys         = "vsys1"
+        }
 
-        # panos_panorama_address_group.terraform-address-group will be created
-        + resource "panos_panorama_address_group" "terraform-address-group" {
-            + device_group     = "shared"
-            + id               = (known after apply)
-            + name             = "terraform-address-group"
-            + static_addresses = [
-                + "terraform-address-object-1",
-                + "terraform-address-object-2",
-                ]
-            }
+        # panos_address_object.terraform-address-object-3 will be created
+        + resource "panos_address_object" "terraform-address-object-3" {
+                + description  = "Address object 3 from Terraform"
+                + device_group = "shared"
+                + id           = (known after apply)
+                + name         = "terraform-address-object-3"
+                + type         = "ip-netmask"
+                + value        = "192.168.80.3/32"
+                + vsys         = "vsys1"
+        }
 
-        Plan: 3 to add, 0 to change, 0 to destroy.
+        Plan: 4 to add, 0 to change, 0 to destroy.
 
-        ------------------------------------------------------------------------
+        ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-        Note: You didn't specify an "-out" parameter to save this plan, so Terraform
-        can't guarantee that exactly these actions will be performed if
-        "terraform apply" is subsequently run.
+        Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply" now.
 
 
-Each of the first three highlighted sections show a new object being created for our firewall. The final highlighted section gives a summary, telling us 3 new object will be created, none to be modified, none to be destroyed.
+Each of the first four highlighted sections show a new object being created for our firewall. The final highlighted section gives a summary, telling us 4 new objects will be created, none to be modified, none to be destroyed. By logging into the firewall web GUI, you should be able to observe that these objects do not already exist.
 
-To make these changes on the firewall, moving from test run to live changes, we use the ``terraform apply`` command. It is performed like this:
+To make these changes on the firewall, we use the ``terraform apply`` command. It is performed like this:
 
 .. code-block::
         :class: copy-button
@@ -285,15 +342,22 @@ The plan will be re-generated, and you will be asked for confirmation to make th
 
         Enter a value: yes
 
-        panos_address_object.terraform-address-object-1: Creating...
-        panos_address_object.terraform-address-object-2: Creating...
-        panos_address_object.terraform-address-object-2: Creation complete after 0s [id=vsys1:terraform-address-object-2]
-        panos_address_object.terraform-address-object-1: Creation complete after 0s [id=vsys1:terraform-address-object-1]
-        panos_address_group.terraform-address-group: Creating...
-        panos_address_group.terraform-address-group: Creation complete after 0s [id=vsys1:terraform-address-group]
-
 
 Our address objects and group are now created in the candidate configuration. This can be confirmed by observing the web GUI for the firewall.
+
+Note that in the ``plan`` output, as in the configuration file, the address group was listed first before the address objects. Terraform executes in the order which observes any dependencies, and hence during the ``apply`` operation, it created the address objects first, then added them to the group (as adding non-existent address objects to an address group would have failed in PAN-OS).
+
+Idempotence
+======================================================
+
+Note that at this point, you should be able to perform ``terraform apply`` multiple times, and because Terraform and the PAN-OS provider perform idempotent operations, no changes will be made. Idempotence calls for operations that can be applied multiple times without changing the result, and in this context, duplicate objects will not be created each time ``terraform apply`` is executed, the ouput should just end with:
+
+.. code-block::
+
+        Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+
+Committing and/or Pushing Changes with Terraform
+======================================================
 
 **IMPORTANT**: Terraform's methodology is to expect that when configuration changes are executed with the ``terraform plan`` command, each configuration item is made live straight away. PAN-OS works differently, where configuration can (and some times has to be) be built up across objects, rules, zones, interfaces and more, and the configuration is only valid once all the parts are in place. All the various parts of configuration are then made live with a ``commit`` operation. This difference in methodology between Terraform and PAN-OS requires `commits to be performed via a specific mechanism
 <https://registry.terraform.io/providers/PaloAltoNetworks/panos/latest/docs/guides/commits-overview>`_; there are a variety of approaches to performing PAN-OS commits with Terraform, today we will use a simple script:
@@ -319,23 +383,31 @@ The script will initiate a commit, and wait through the active (``ACT``) stage, 
         Final commit status: FIN
 
 
-The changes are now live in the runing configuration.
+The changes are now live in the running configuration.
+
 
 
 Applying More Changes
 ================================================
 
-Let's make some more changes. We will use the `third Terraform file
-<https://github.com/jamesholland-uk/automation-workshops/blob/main/terraform/03.tf.bak>`_ for this, so execute the comands below:
+Let's make some more changes. We will use the third Terraform file for this, so execute the comands below:
 
 .. code-block::
         :class: copy-button
 
-        $ mv 02.tf 02.tf.bak
-        $ mv 03.tf.bak 03.tf
+        $ mv 01.tf 01.tf.bak
+        $ mv 02.tf.bak 02.tf
 
+You can view the next config file with this command:
 
-Again, run ``terrform plan`` to see what changes are being lined up during this test run:
+.. code-block::
+        :class: copy-button
+
+        $ cat 02.tf
+
+The changes between the last config file and this file include: the absence of address-object-3, a description being added to the existing address group, and the addition of two zones and two security rules.
+
+Run ``terraform plan`` to see what changes Terraform is lining up:
 
 .. code-block::
         :class: copy-button
@@ -343,12 +415,30 @@ Again, run ``terrform plan`` to see what changes are being lined up during this 
         $ terraform plan
 
 
-This third Terraform file includes the objects previously created, and adds two security zones, and two security policy rules. It also adds a description to the address group previously created. For this reason, the output should show objects to be created, and one object to be modified:
+Because this Terraform file includes only two of the objects previously created, one address object is listed for deletion; that object has been removed from the config file and hence been removed from the desired state in Terraform's eyes. This is important in understanding how Terraform deals with state, and mapping the desired state listed in the config file to the real world state.
+
+The output should be something like this (truncated for brevity):
 
 .. code-block::
+        :emphasize-lines: 4,5,6,9,10,14
 
-        Plan: 3 to add, 1 to change, 0 to destroy.
+        Terraform will perform the following actions:
+        .
+        .
+          # panos_address_group.terraform-address-group will be updated in-place
+          ~ resource "panos_address_group" "terraform-address-group" {
+              + description      = "Group of internal hosts"
+        .
+        .
+          # panos_address_object.terraform-address-object-3 will be destroyed
+          # (because panos_address_object.terraform-address-object-3 is not in configuration)
+        .
+        .
+        .
+        Plan: 3 to add, 1 to change, 1 to destroy.
 
+
+Note the modification of the address group (adding a description), the removal of address-object-3, and the addition of two zones and some security rules.
 
 Make these changes to the firewall, using ``terraform apply`` command, but this time we can skip the confirmation prompt like this:
 
@@ -358,9 +448,79 @@ Make these changes to the firewall, using ``terraform apply`` command, but this 
         $ terraform apply --auto-approve
 
 
-Finally, execute the commit script, and confirm the new zones and rules are live on the firewall's running configuration:
+Finally, execute the commit script, and confirm the new zones and rules are live on the firewall's running configuration bia the web GUI:
 
 .. code-block::
         :class: copy-button
 
         $ ./commit.sh $TF_VAR_panos_hostname $TF_VAR_panos_username $TF_VAR_panos_password
+
+
+Getting Information with Terraform
+================================================
+
+The next exercise will show that Terraform can gather PAN-OS state information when required. This uses a ``data source``, the part of a Terraform provider responsible for gathering data. Switch to this Terraform file, then observe the new lines in this Terraform file, with these commands:
+
+.. code-block::
+        :class: copy-button
+
+        $ mv 02.tf 02.tf.bak
+        $ mv 03.tf.bak 03.tf
+
+.. code-block::
+        :class: copy-button
+
+        $ diff 02.tf.bak 03.tf
+
+The output from ``diff`` shows we have added some extra lines from the pervious exercise:
+
+.. code-block::
+        :emphasize-lines: 4,6,7
+
+        ---
+        > }
+        > 
+        > data "panos_system_info" "ngfw_info" { }
+        > 
+        > output "the_info" {
+        >     value = data.panos_system_info.ngfw_info
+        > }
+
+We are using the `panos_system_info
+<https://registry.terraform.io/providers/PaloAltoNetworks/panos/latest/docs/data-sources/system_info>`_ data source to mimic a ``show system info`` on the CLI. The ``data`` line instructs Terraform to collect the data, and the ``output`` lines instruct Terraform to send the data out at the end of running tasks. Let's gather the data, by again using the ``plan`` command:
+
+.. code-block::
+        :class: copy-button
+
+        $ terraform plan
+
+The output should look something like this (truncated for brevity):
+
+.. code-block::
+
+        Changes to Outputs:
+        + the_info = {
+            + id            = "10.110.255.4"
+            + info          = {
+                "app-version" = "8468-6979"
+                "av-version" = "0"
+                "cloud-mode" = "cloud"
+                "default-gateway" = "10.110.255.1"
+                "device-certificate-status" = "None"
+                "device-dictionary-version" = "1-211"
+                "devicename" = "lab-fw"
+                "family" = "vm"
+                .
+                .
+                .
+                "wildfire-rt" = "Disabled"
+                "wildfire-version" = "0"
+                }
+            + version_major = 10
+            + version_minor = 1
+            + version_patch = 3
+            }
+
+The first block is the equivalent output from the CLI command ``show system info``, followed by the PAN-OS version broken down by major, minor and patch version.
+
+This can be useful on its own, but the information could also be parsed and used in other areas of our Terraform logic, where we might choose to perform a tasks if the PAN-OS software is equal to or graeter than a certain version number.
