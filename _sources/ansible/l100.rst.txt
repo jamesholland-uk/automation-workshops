@@ -46,17 +46,16 @@ The PAN-OS Collection has been pre-installed for you. We can check the Collectio
 .. code-block::
         :class: copy-button
 
-        $ ansible-doc --list | grep paloaltonetworks.panos
+        $ ansible-galaxy collection list
 
-The output should list all the modules in the PAN-OS Collection, the end of the list should look something like this:
+The output should list all the collections installed, including the PAN-OS collection, and the list should look something like this:
 
 .. code-block::
    
-        paloaltonetworks.panos.panos_vlan                                     Confi...
-        paloaltonetworks.panos.panos_vlan_interface                           confi...
-        paloaltonetworks.panos.panos_vm_auth_key                              Creat...
-        paloaltonetworks.panos.panos_zone                                     confi...
-        paloaltonetworks.panos.panos_zone_facts                               Retri...
+        Collection             Version
+        ---------------------- -------
+        community.general      4.0.2  
+        paloaltonetworks.panos 2.9.0  
 
 
 Download Ansible playbooks

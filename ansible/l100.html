@@ -127,15 +127,14 @@
 </pre></div>
 </div>
 <p>The PAN-OS Collection has been pre-installed for you. We can check the Collection is present using this command:</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-doc --list | grep paloaltonetworks.panos
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-galaxy collection list
 </pre></div>
 </div>
-<p>The output should list all the modules in the PAN-OS Collection, the end of the list should look something like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_vlan</span>                                     <span class="n">Confi</span><span class="o">...</span>
-<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_vlan_interface</span>                           <span class="n">confi</span><span class="o">...</span>
-<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_vm_auth_key</span>                              <span class="n">Creat</span><span class="o">...</span>
-<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_zone</span>                                     <span class="n">confi</span><span class="o">...</span>
-<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span><span class="o">.</span><span class="n">panos_zone_facts</span>                               <span class="n">Retri</span><span class="o">...</span>
+<p>The output should list all the collections installed, including the PAN-OS collection, and the list should look something like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Collection</span>             <span class="n">Version</span>
+<span class="o">----------------------</span> <span class="o">-------</span>
+<span class="n">community</span><span class="o">.</span><span class="n">general</span>      <span class="mf">4.0.2</span>
+<span class="n">paloaltonetworks</span><span class="o">.</span><span class="n">panos</span> <span class="mf">2.9.0</span>
 </pre></div>
 </div>
 </section>
