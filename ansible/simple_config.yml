@@ -4,10 +4,10 @@
 
   vars:
     device:
-      ip_address: '{{ ip_address }}'
-      username: '{{ username | default(omit) }}'
-      password: '{{ password | default(omit) }}'
-      api_key: '{{ api_key | default(omit) }}'
+      ip_address: "{{ ip_address }}"
+      username: "{{ username | default(omit) }}"
+      password: "{{ password | default(omit) }}"
+      api_key: "{{ api_key | default(omit) }}"
 
   tasks:
     - name: Create DMZ zone
@@ -22,19 +22,19 @@
         zone: "internet"
         mode: "layer3"
 
-    - name: Place ethernet1/1 in zone internet
+    - name: Place ethernet1/4 in zone internet
       paloaltonetworks.panos.panos_interface:
         provider: "{{ device }}"
-        if_name: "ethernet1/1"
+        if_name: "ethernet1/4"
         mode: "layer3"
         ip: ["20.20.20.20/24"]
         enable_dhcp: false
         zone_name: "internet"
 
-    - name: Place ethernet1/2 in zone dmz
+    - name: Place ethernet1/5 in zone dmz
       paloaltonetworks.panos.panos_interface:
         provider: "{{ device }}"
-        if_name: "ethernet1/2"
+        if_name: "ethernet1/5"
         mode: "layer3"
         ip: ["10.1.1.1/24"]
         enable_dhcp: false
@@ -66,7 +66,7 @@
 
     - name: Commit the candidate configuration
       paloaltonetworks.panos.panos_commit_firewall:
-        provider: '{{ device }}'
+        provider: "{{ device }}"
       register: results
 
     - debug:
