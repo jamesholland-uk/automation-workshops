@@ -16,6 +16,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
@@ -97,7 +98,7 @@
            <div itemprop="articleBody">
              
   <section id="terraform-l100">
-<h1><span class="section-number">1. </span>Terraform L100<a class="headerlink" href="#terraform-l100" title="Permalink to this headline"></a></h1>
+<h1><span class="section-number">1. </span>Terraform L100<a class="headerlink" href="#terraform-l100" title="Permalink to this heading"></a></h1>
 <p>Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace any UPPERCASE_VARIABLES with your own values.</p>
 <p>Assumptions: A host with the following installed: curl, git, <a class="reference external" href="https://www.terraform.io/downloads.html">Terraform 1.x</a>, and any prerequisite requirements for those items. Plus some form of text editor on your host. And, access to a PAN-OS next-generation firewall from your host.</p>
 <dl class="simple">
@@ -109,7 +110,7 @@
 </dd>
 </dl>
 <section id="terraform-pre-flight-checks">
-<h2><span class="section-number">1.1. </span>Terraform pre-flight checks<a class="headerlink" href="#terraform-pre-flight-checks" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.1. </span>Terraform pre-flight checks<a class="headerlink" href="#terraform-pre-flight-checks" title="Permalink to this heading"></a></h2>
 <p>First let’s check that Terraform is installed on our host.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ terraform -version
 </pre></div>
@@ -124,7 +125,7 @@ is 1.1.0. You can update by downloading from https://www.terraform.io/downloads.
 <p>It is fine to ignore the warning, as long as your version is at least 1.0.0 or higher.</p>
 </section>
 <section id="download-terraform-configs">
-<h2><span class="section-number">1.2. </span>Download Terraform configs<a class="headerlink" href="#download-terraform-configs" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.2. </span>Download Terraform configs<a class="headerlink" href="#download-terraform-configs" title="Permalink to this heading"></a></h2>
 <p>In this workshop, we’re going to be using some existing Terraform configs. We’ll use git to download them from a repository…</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone https://github.com/jamesholland-uk/automation-workshops.git
 </pre></div>
@@ -148,7 +149,7 @@ is 1.1.0. You can update by downloading from https://www.terraform.io/downloads.
 </div>
 </section>
 <section id="setup-the-pan-os-variables-for-terraform">
-<h2><span class="section-number">1.3. </span>Setup the PAN-OS variables for Terraform<a class="headerlink" href="#setup-the-pan-os-variables-for-terraform" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.3. </span>Setup the PAN-OS variables for Terraform<a class="headerlink" href="#setup-the-pan-os-variables-for-terraform" title="Permalink to this heading"></a></h2>
 <p>Terraform needs to know the details for the hosts against which it should execute. There are a variety of methods for this, today we will store the host, admin username and admin password as variables:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export TF_VAR_panos_hostname=&quot;YOUR_FIREWALL_IP&quot;
 $ export TF_VAR_panos_username=&quot;YOUR_ADMIN_USERNAME&quot;
@@ -164,7 +165,7 @@ $ export TF_VAR_panos_password=&quot;ChangeMe123!&quot;
 <p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this environment, we will use these credentials stored in variables for executing Ansible playbooks.</p>
 </section>
 <section id="initialising-terraform">
-<h2><span class="section-number">1.4. </span>Initialising Terraform<a class="headerlink" href="#initialising-terraform" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.4. </span>Initialising Terraform<a class="headerlink" href="#initialising-terraform" title="Permalink to this heading"></a></h2>
 <p>Terraform uses a multi-stage process, the first of which is to <code class="docutils literal notranslate"><span class="pre">init</span></code>, short for <a class="reference external" href="https://www.terraform.io/docs/cli/commands/init.html">initialise</a>. Run the following command, which sets up the directory Terraform works with (.terraform/), as well as downloading various required files ready to be used at runtime.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ terraform init
 </pre></div>
@@ -201,7 +202,7 @@ commands will detect it and remind you to do so if necessary.
 <p>Also of note is the second section of highlighted text, confirming Terraform has been successfully initialised.</p>
 </section>
 <section id="the-terraform-plan">
-<h2><span class="section-number">1.5. </span>The Terraform Plan<a class="headerlink" href="#the-terraform-plan" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.5. </span>The Terraform Plan<a class="headerlink" href="#the-terraform-plan" title="Permalink to this heading"></a></h2>
 <p>The second stage when using Terraform is usually <code class="docutils literal notranslate"><span class="pre">plan</span></code>, which as you may expect, asks Terraform to plan what it will do next. Given the resources you are asking Terraform to work with, which could be anything from cloud infrastructure to PAN-OS firewalls, Terraform will first assess the real state of those resources. Terraform will then compare that real state with your desired state, which is defined by Terraform configuration files (those files in the local directory with .tf extension), and show you the difference between the two. This therefore describes the alterations which Terraform would make the next time it is executed to <code class="docutils literal notranslate"><span class="pre">apply</span></code> changes, to change the real state into the desired state.</p>
 <p>Let’s look at our current Terraform config file. Ignoring the providers.tf and variables.tf files for now, the remaining .tf file in scope right now is 00.tf, use this command to show that file’s contents:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat 00.tf
@@ -247,7 +248,7 @@ Note: You didn&#39;t use the -out option to save this plan, so Terraform can&#39
 <p>As expected, the plan (which remember is the difference between the real state and the desired state) will add a single address object.</p>
 </section>
 <section id="applying-changes-with-terraform">
-<h2><span class="section-number">1.6. </span>Applying Changes with Terraform<a class="headerlink" href="#applying-changes-with-terraform" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.6. </span>Applying Changes with Terraform<a class="headerlink" href="#applying-changes-with-terraform" title="Permalink to this heading"></a></h2>
 <p>As previously mentioned, Terraform wants to use all .tf files in the local directory, so lets remove the first file from scope, and introduce the second file:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ mv 00.tf 00.tf.bak
 $ mv 01.tf.bak 01.tf
@@ -363,14 +364,14 @@ Only &#39;yes&#39; will be accepted to approve.
 <p>Note that in the <code class="docutils literal notranslate"><span class="pre">plan</span></code> output, as in the configuration file, the address group was listed first before the address objects. Terraform executes in the order which observes any dependencies, and hence during the <code class="docutils literal notranslate"><span class="pre">apply</span></code> operation, it created the address objects first, then added them to the group (as adding non-existent address objects to an address group would have failed in PAN-OS).</p>
 </section>
 <section id="idempotence">
-<h2><span class="section-number">1.7. </span>Idempotence<a class="headerlink" href="#idempotence" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.7. </span>Idempotence<a class="headerlink" href="#idempotence" title="Permalink to this heading"></a></h2>
 <p>Note that at this point, you should be able to perform <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">apply</span></code> multiple times, and because Terraform and the PAN-OS provider perform idempotent operations, no changes will be made. Idempotence calls for operations that can be applied multiple times without changing the result, and in this context, duplicate objects will not be created each time <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">apply</span></code> is executed, the output should just end with:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
 </pre></div>
 </div>
 </section>
 <section id="committing-and-or-pushing-changes-with-terraform">
-<h2><span class="section-number">1.8. </span>Committing and/or Pushing Changes with Terraform<a class="headerlink" href="#committing-and-or-pushing-changes-with-terraform" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.8. </span>Committing and/or Pushing Changes with Terraform<a class="headerlink" href="#committing-and-or-pushing-changes-with-terraform" title="Permalink to this heading"></a></h2>
 <p><strong>IMPORTANT</strong>: Terraform’s methodology is to expect that when configuration changes are executed with the <code class="docutils literal notranslate"><span class="pre">terraform</span> <span class="pre">plan</span></code> command, each configuration item is made live straight away. PAN-OS works differently, where configuration can (and some times has to be) be built up across objects, rules, zones, interfaces and more, and the configuration is only valid once all the parts are in place. All the various parts of configuration are then made live with a <code class="docutils literal notranslate"><span class="pre">commit</span></code> operation. This difference in methodology between Terraform and PAN-OS requires <a class="reference external" href="https://registry.terraform.io/providers/PaloAltoNetworks/panos/latest/docs/guides/commits-overview">commits to be performed via a specific mechanism</a>; there are a variety of approaches to performing PAN-OS commits with Terraform, today we will use a simple script:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ./commit.sh $TF_VAR_panos_hostname $TF_VAR_panos_username $TF_VAR_panos_password
 </pre></div>
@@ -390,7 +391,7 @@ Final commit status: FIN
 <p>The changes are now live in the running configuration.</p>
 </section>
 <section id="applying-more-changes">
-<h2><span class="section-number">1.9. </span>Applying More Changes<a class="headerlink" href="#applying-more-changes" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.9. </span>Applying More Changes<a class="headerlink" href="#applying-more-changes" title="Permalink to this heading"></a></h2>
 <p>Let’s make some more changes. We will use the third Terraform file for this, so execute the commands below:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ mv 01.tf 01.tf.bak
 $ mv 02.tf.bak 02.tf
@@ -434,7 +435,7 @@ $ mv 02.tf.bak 02.tf
 </div>
 </section>
 <section id="getting-information-with-terraform">
-<h2><span class="section-number">1.10. </span>Getting Information with Terraform<a class="headerlink" href="#getting-information-with-terraform" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.10. </span>Getting Information with Terraform<a class="headerlink" href="#getting-information-with-terraform" title="Permalink to this heading"></a></h2>
 <p>The next exercise will show that Terraform can gather PAN-OS state information when required. This uses a <code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">source</span></code>, the part of a Terraform provider responsible for gathering data. Switch to this Terraform file, then observe the new lines in this Terraform file, with these commands:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ mv 02.tf 02.tf.bak
 $ mv 03.tf.bak 03.tf

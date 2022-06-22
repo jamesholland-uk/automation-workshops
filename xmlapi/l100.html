@@ -16,6 +16,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
@@ -98,7 +99,7 @@
            <div itemprop="articleBody">
              
   <section id="xml-api-l100">
-<h1><span class="section-number">1. </span>XML API L100<a class="headerlink" href="#xml-api-l100" title="Permalink to this headline"></a></h1>
+<h1><span class="section-number">1. </span>XML API L100<a class="headerlink" href="#xml-api-l100" title="Permalink to this heading"></a></h1>
 <p>Hands-on tasks for this workshop will be performing XML API calls against a PAN-OS firewall, from your command-line environment, using the <code class="docutils literal notranslate"><span class="pre">curl</span></code> command. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace any UPPERCASE_VARIABLES with your own values.</p>
 <p>Assumptions: A host with <code class="docutils literal notranslate"><span class="pre">curl</span></code> installed, access to a PAN-OS next-generation firewall from your host.</p>
 <dl class="simple">
@@ -110,7 +111,7 @@
 </dd>
 </dl>
 <section id="store-our-firewall-s-ip-as-a-variable">
-<h2><span class="section-number">1.1. </span>Store our firewall’s IP as a variable<a class="headerlink" href="#store-our-firewall-s-ip-as-a-variable" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.1. </span>Store our firewall’s IP as a variable<a class="headerlink" href="#store-our-firewall-s-ip-as-a-variable" title="Permalink to this heading"></a></h2>
 <p>First, to make our lives easier, we will assign the management IP address of the firewall to a variable, so we can easily refer to it in our API calls.</p>
 <p>Today, in this environment, we will assign the API key value to a variable called <code class="docutils literal notranslate"><span class="pre">host</span></code>, to be used in future API calls. The export command stores the value of <code class="docutils literal notranslate"><span class="pre">host</span></code> in memory for th duration of the CLI session.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export host=YOUR_FIREWALL_IP
@@ -118,7 +119,7 @@
 </div>
 </section>
 <section id="generate-your-api-key">
-<h2><span class="section-number">1.2. </span>Generate your API key<a class="headerlink" href="#generate-your-api-key" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.2. </span>Generate your API key<a class="headerlink" href="#generate-your-api-key" title="Permalink to this heading"></a></h2>
 <p>Before you can make any API calls, you need to generate an API key. Your API key will allow you to authenticate and authorise yourself for future API calls.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -kd &quot;type=keygen&amp;user=YOUR_ADMIN_PASSWORD&amp;password=YOUR_ADMIN_PASSWORD&quot; https://$host/api
 </pre></div>
@@ -136,7 +137,7 @@
 </div>
 </section>
 <section id="make-your-first-real-api-call">
-<h2><span class="section-number">1.3. </span>Make your first real API call<a class="headerlink" href="#make-your-first-real-api-call" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.3. </span>Make your first real API call<a class="headerlink" href="#make-your-first-real-api-call" title="Permalink to this heading"></a></h2>
 <p>Your first API call will tell you if the firewall is in a ready and operational state. This operational command is useful to know if the firewall has been recently rebooted, or in the case of software firewalls like VM-Series or CN-Series, recently created. The answer should be <code class="docutils literal notranslate"><span class="pre">yes</span></code>, within the XML-formatted response.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -kd &quot;type=op&amp;cmd=&lt;show&gt;&lt;chassis-ready&gt;&lt;/chassis-ready&gt;&lt;/show&gt;&amp;key=$key&quot; https://$host/api
 </pre></div>
@@ -147,42 +148,42 @@
 </div>
 </section>
 <section id="get-firewall-system-info">
-<h2><span class="section-number">1.4. </span>Get firewall system info<a class="headerlink" href="#get-firewall-system-info" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.4. </span>Get firewall system info<a class="headerlink" href="#get-firewall-system-info" title="Permalink to this heading"></a></h2>
 <p>Next, retrieve information about the firewall system. This too is an operational command, as shown by <code class="docutils literal notranslate"><span class="pre">type=op</span></code> within the API call. The <code class="docutils literal notranslate"><span class="pre">cmd=</span></code> portion contains the operational command we want to execute.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -kd &quot;type=op&amp;cmd=&lt;show&gt;&lt;system&gt;&lt;info&gt;&lt;/info&gt;&lt;/system&gt;&lt;/show&gt;&amp;key=$key&quot; https://$host/api
 </pre></div>
 </div>
 </section>
 <section id="show-the-routing-table">
-<h2><span class="section-number">1.5. </span>Show the routing table<a class="headerlink" href="#show-the-routing-table" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.5. </span>Show the routing table<a class="headerlink" href="#show-the-routing-table" title="Permalink to this heading"></a></h2>
 <p>Another useful operational command is to display the routing table.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -kd &quot;type=op&amp;cmd=&lt;show&gt;&lt;routing&gt;&lt;route&gt;&lt;/route&gt;&lt;/routing&gt;&lt;/show&gt;&amp;key=$key&quot; https://$host/api
 </pre></div>
 </div>
 </section>
 <section id="show-the-rulebase-configuration">
-<h2><span class="section-number">1.6. </span>Show the rulebase configuration<a class="headerlink" href="#show-the-rulebase-configuration" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.6. </span>Show the rulebase configuration<a class="headerlink" href="#show-the-rulebase-configuration" title="Permalink to this heading"></a></h2>
 <p>Now we look at the firewall configuration. Notice the type of API call this time is <code class="docutils literal notranslate"><span class="pre">type=config</span></code>, and the action is <code class="docutils literal notranslate"><span class="pre">get</span></code>, which as expected tells the API we want to do a read operation on the configuration. The <code class="docutils literal notranslate"><span class="pre">xpath</span></code> is then used to navigate down through the XML configuration file structure to specifically find the rules within the security policy.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -kd &quot;type=config&amp;action=get&amp;xpath=/config/devices/entry[@name=&#39;localhost.localdomain&#39;]/vsys/entry[@name=&#39;vsys1&#39;]/rulebase/security/rules&amp;key=$key&quot; https://$host/api
 </pre></div>
 </div>
 </section>
 <section id="show-the-rulebase-hit-counts">
-<h2><span class="section-number">1.7. </span>Show the rulebase hit counts<a class="headerlink" href="#show-the-rulebase-hit-counts" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.7. </span>Show the rulebase hit counts<a class="headerlink" href="#show-the-rulebase-hit-counts" title="Permalink to this heading"></a></h2>
 <p>We’ve seen the rulebase from the configuration, but if we wanted to programmatically retrieve the hit counts for each rule, that would be an operational command.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -kd &quot;type=op&amp;cmd=&lt;show&gt;&lt;rule-hit-count&gt;&lt;vsys&gt;&lt;vsys-name&gt;&lt;entry name=&#39;vsys1&#39;&gt;&lt;rule-base&gt;&lt;entry name=&#39;security&#39;&gt;&lt;rules&gt;&lt;all/&gt;&lt;/rules&gt;&lt;/entry&gt;&lt;/rule-base&gt;&lt;/entry&gt;&lt;/vsys-name&gt;&lt;/vsys&gt;&lt;/rule-hit-count&gt;&lt;/show&gt;&amp;key=$key&quot; https://$host/api
 </pre></div>
 </div>
 </section>
 <section id="backup-export-configuration">
-<h2><span class="section-number">1.8. </span>Backup/export configuration<a class="headerlink" href="#backup-export-configuration" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.8. </span>Backup/export configuration<a class="headerlink" href="#backup-export-configuration" title="Permalink to this heading"></a></h2>
 <p>This is a common API call, given how many people have requirements to automate backing up configurations. This uses <code class="docutils literal notranslate"><span class="pre">type=export</span></code> to signify we are exporting something, and <code class="docutils literal notranslate"><span class="pre">category=configuration</span></code> describes the exact item we want to export.</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -kd &quot;type=export&amp;category=configuration&amp;key=$key&quot; https://$host/api
 </pre></div>
 </div>
 </section>
 <section id="user-id">
-<h2><span class="section-number">1.9. </span>User-ID<a class="headerlink" href="#user-id" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.9. </span>User-ID<a class="headerlink" href="#user-id" title="Permalink to this heading"></a></h2>
 <p>A frequent use case is to register user-to-IP mappings. The first task here, another operational command, shows the current user-to-IP mapping table</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -kd &quot;type=op&amp;cmd=&lt;show&gt;&lt;user&gt;&lt;ip-user-mapping&gt;&lt;all/&gt;&lt;/ip-user-mapping&gt;&lt;/user&gt;&lt;/show&gt;&amp;key=$key&quot; https://$host/api
 </pre></div>
@@ -197,7 +198,7 @@
 </div>
 </section>
 <section id="find-an-api-command-cli-debug">
-<h2><span class="section-number">1.10. </span>Find An API Command - CLI Debug<a class="headerlink" href="#find-an-api-command-cli-debug" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.10. </span>Find An API Command - CLI Debug<a class="headerlink" href="#find-an-api-command-cli-debug" title="Permalink to this heading"></a></h2>
 <p>One way to find an API call for specific operation is to observe or “debug” the CLI, which itself uses the XML API. Once debugging is enabled, an XML API call will be displayed when a CLI command is executed.</p>
 <p>Using the example of our first API call in this workshop, the CLI command equivalent is “show chassis-ready”. When debugged, this gives the following output:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="hll">admin@firewall&gt; debug cli on
@@ -231,7 +232,7 @@ yes
 </div></blockquote>
 </section>
 <section id="find-an-api-command-api-browser">
-<h2><span class="section-number">1.11. </span>Find An API Command - API Browser<a class="headerlink" href="#find-an-api-command-api-browser" title="Permalink to this headline"></a></h2>
+<h2><span class="section-number">1.11. </span>Find An API Command - API Browser<a class="headerlink" href="#find-an-api-command-api-browser" title="Permalink to this heading"></a></h2>
 <p>Another way to find an API call for specific operation is to use the API browser, which can be found at <code class="docutils literal notranslate"><span class="pre">https://firewall/api</span></code>. <strong>Once logged in to the web GUI</strong>, browse to <code class="docutils literal notranslate"><span class="pre">https://firewall/api</span></code> and a listing of the types of available XML API request types is displayed. Hyperlinks can be used to browse through the XML API request types until the required request format is found.</p>
 <p>Again using the example of our first API call in this workshop, <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code>, click the <code class="docutils literal notranslate"><span class="pre">Operational</span> <span class="pre">Commands</span></code> link, then the <code class="docutils literal notranslate"><span class="pre">show</span></code> link, then the <code class="docutils literal notranslate"><span class="pre">chassis-ready</span></code> link. You will be shown the XML API format we observed in the CLI (<code class="docutils literal notranslate"><span class="pre">&lt;show&gt;&lt;chassis-ready/&gt;&lt;/show&gt;</span></code>), as well as the XML API URL structure (<code class="docutils literal notranslate"><span class="pre">/api/?type=op&amp;cmd=&lt;show&gt;&lt;chassis-ready&gt;&lt;/chassis-ready&gt;&lt;/show&gt;</span></code>). Clicking the hyperlinked XML API URL performs the API command and displays a result.</p>
 <p>Choose one (or more) of the following operational commands, find the command in the API browser, then create and execute XML API command equivalents:</p>
