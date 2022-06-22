@@ -339,6 +339,14 @@ $ export panos_password=ChangeMe123!
 </pre></div>
 </div>
 <p>Once executed, you should be able to see the exported config file on yours host:</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ls -l running-config.xml
+</pre></div>
+</div>
+<p>Confirm the exported file has a recent timestamp:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span> <span class="mi">1</span> <span class="n">labadmin</span> <span class="n">labadmin</span> <span class="mi">96164</span> <span class="n">Jun</span> <span class="mi">22</span> <span class="mi">10</span><span class="p">:</span><span class="mi">00</span> <span class="n">running</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">xml</span>
+</pre></div>
+</div>
+<p>Optionally inspect the config:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat running-config.xml
 </pre></div>
 </div>
@@ -362,6 +370,7 @@ $ export panos_password=ChangeMe123!
 </pre></div>
 </div>
 <p>By logging into the firewall web GUI, you should be able to observe that these configuration items do not already exist.</p>
+<p>Let’s execute the playbook:</p>
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ ansible-playbook -i inventory simple_config.yml --extra-vars &quot;username=$panos_username password=$panos_password&quot;
 </pre></div>
 </div>

@@ -353,6 +353,19 @@ Once executed, you should be able to see the exported config file on yours host:
 .. code-block::
         :class: copy-button
 
+        $ ls -l running-config.xml
+
+Confirm the exported file has a recent timestamp:
+
+.. code-block::
+
+        -rw-rw-r-- 1 labadmin labadmin 96164 Jun 22 10:00 running-config.xml
+
+Optionally inspect the config:
+
+.. code-block::
+        :class: copy-button
+
         $ cat running-config.xml
 
 
@@ -381,6 +394,8 @@ You can see all the configuration items by viewing the playbook:
         $ cat simple_config.yml
 
 By logging into the firewall web GUI, you should be able to observe that these configuration items do not already exist.
+
+Let's execute the playbook:
 
 .. code-block::
         :class: copy-button
