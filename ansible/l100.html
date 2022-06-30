@@ -195,18 +195,18 @@ EOL
 <section id="prepare-the-firewall-credentials">
 <h2><span class="section-number">1.4. </span>Prepare the firewall credentials<a class="headerlink" href="#prepare-the-firewall-credentials" title="Permalink to this heading"></a></h2>
 <p>Before you can execute any Ansible playbooks, you need to be able to login to the firewall. We will store the admin username and admin password as variables.</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_username=YOUR_ADMIN_USERNAME
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_username=&#39;YOUR_ADMIN_USERNAME&#39;
 </pre></div>
 </div>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_password=YOUR_ADMIN_PASSWORD
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_password=&#39;YOUR_ADMIN_PASSWORD&#39;
 </pre></div>
 </div>
 <p>For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_username=adminuser
-$ export panos_password=ChangeMe123!
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ export panos_username=&#39;adminuser&#39;
+$ export panos_password=&#39;ChangeMe#123!&#39;
 </pre></div>
 </div>
-<p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this environment, we will use these credentials stored in variables for executing Ansible playbooks.</p>
+<p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. There are a variety of methods for this, today we will store these credentials as variables in memory for the duration of the CLI session with the <code class="docutils literal notranslate"><span class="pre">export</span></code> command.</p>
 </section>
 <section id="run-our-first-ansible-playbook">
 <h2><span class="section-number">1.5. </span>Run our first Ansible playbook<a class="headerlink" href="#run-our-first-ansible-playbook" title="Permalink to this heading"></a></h2>
@@ -347,7 +347,7 @@ $ export panos_password=ChangeMe123!
 </pre></div>
 </div>
 <p>Optionally inspect the config:</p>
-<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat running-config.xml
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ cat running-config.xml  | xmllint --format -
 </pre></div>
 </div>
 </section>
@@ -378,7 +378,7 @@ $ export panos_password=ChangeMe123!
 </section>
 <section id="modify-a-playbook">
 <h2><span class="section-number">1.10. </span>Modify a playbook<a class="headerlink" href="#modify-a-playbook" title="Permalink to this heading"></a></h2>
-<p>The <a class="reference external" href="https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_op.html">panos_op module</a> is very useful within playbooks for gathering information and executing operational commands like gathering system information, software upgrades, content downloads, and more. It was used in the second playbook, check_ready.yml, to run the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code> command.</p>
+<p>The <a class="reference external" href="https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_op.html">panos_op module</a> is very useful within playbooks for gathering information and executing operational commands like gathering system information, software upgrades, content downloads, and more. It was used in the second playbook, <code class="docutils literal notranslate"><span class="pre">check_ready.yml</span></code>, to run the <code class="docutils literal notranslate"><span class="pre">show</span> <span class="pre">chassis-ready</span></code> command.</p>
 <p>Choose one (or more) of the following operational commands to run with Ansible.</p>
 <blockquote>
 <div><ul class="simple">
