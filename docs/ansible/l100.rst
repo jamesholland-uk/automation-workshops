@@ -152,22 +152,23 @@ Before you can execute any Ansible playbooks, you need to be able to login to th
 .. code-block::
         :class: copy-button
 
-        $ export panos_username=YOUR_ADMIN_USERNAME
+        $ export panos_username='YOUR_ADMIN_USERNAME'
 
 .. code-block::
         :class: copy-button
 
-        $ export panos_password=YOUR_ADMIN_PASSWORD
+        $ export panos_password='YOUR_ADMIN_PASSWORD'
 
 For example: 
 
 .. code-block::
 
-        $ export panos_username=adminuser
-        $ export panos_password=ChangeMe123!
+        $ export panos_username='adminuser'
+        $ export panos_password='ChangeMe#123!'
 
 
-In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this environment, we will use these credentials stored in variables for executing Ansible playbooks.
+In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. There are a variety of methods for this, today we will store these credentials as variables in memory for the duration of the CLI session with the ``export`` command.
+
 
 Run our first Ansible playbook
 ================================================
@@ -366,7 +367,7 @@ Optionally inspect the config:
 .. code-block::
         :class: copy-button
 
-        $ cat running-config.xml
+        $ cat running-config.xml  | xmllint --format -
 
 
 Ansible Playbook 5 - Firewall configuration tasks
@@ -409,7 +410,7 @@ Modify a playbook
 ==================================
 
 The `panos_op module
-<https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_op.html>`_ is very useful within playbooks for gathering information and executing operational commands like gathering system information, software upgrades, content downloads, and more. It was used in the second playbook, check_ready.yml, to run the ``show chassis-ready`` command.
+<https://paloaltonetworks.github.io/pan-os-ansible/modules/panos_op.html>`_ is very useful within playbooks for gathering information and executing operational commands like gathering system information, software upgrades, content downloads, and more. It was used in the second playbook, ``check_ready.yml``, to run the ``show chassis-ready`` command.
 
 Choose one (or more) of the following operational commands to run with Ansible.
 

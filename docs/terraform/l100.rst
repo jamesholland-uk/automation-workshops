@@ -75,7 +75,7 @@ In the Terraform directory, a number of files will be present:
 Setup the PAN-OS variables for Terraform
 ================================================
 
-Terraform needs to know the details for the hosts against which it should execute. There are a variety of methods for this, today we will store the host, admin username and admin password as variables:
+Terraform needs to know the details for the hosts against which it should execute. There are a variety of methods for this, today we will store the host, admin username, and admin password as variables in memory for the duration of the CLI session with the ``export`` command:
 
 .. code-block::
         :class: copy-button
@@ -350,11 +350,14 @@ Note that in the ``plan`` output, as in the configuration file, the address grou
 Idempotence
 ======================================================
 
-Note that at this point, you should be able to perform ``terraform apply`` multiple times, and because Terraform and the PAN-OS provider perform idempotent operations, no changes will be made. Idempotence calls for operations that can be applied multiple times without changing the result, and in this context, duplicate objects will not be created each time ``terraform apply`` is executed, the output should just end with:
+Note that at this point, you should be able to perform ``terraform apply -refresh-only``, and because Terraform and the PAN-OS provider perform idempotent operations, you will see that no changes need to be made. Idempotence calls for operations that can be applied multiple times without changing the result, and in this context, duplicate objects will not be created each time ``terraform apply`` is executed, the output should just end with:
 
 .. code-block::
 
-        Apply complete! Resources: 0 added, 0 changed, 0 destroyed.
+        No changes. Your infrastructure still matches the configuration.
+
+        Terraform has checked that the real remote objects still match the result of your most recent changes, and found no differences.
+
 
 Committing and/or Pushing Changes with Terraform
 ======================================================

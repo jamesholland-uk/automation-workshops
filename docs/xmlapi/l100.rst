@@ -15,12 +15,12 @@ Store our firewall's IP as a variable
 ================================================
 First, to make our lives easier, we will assign the management IP address of the firewall to a variable, so we can easily refer to it in our API calls.
 
-Today, in this environment, we will assign the API key value to a variable called ``host``, to be used in future API calls. The export command stores the value of ``host`` in memory for th duration of the CLI session.
+Today, in this environment, we will assign the API key value to a variable called ``host``, to be used in future API calls. The export command stores the value of ``host`` in memory for the duration of the CLI session.
 
 .. code-block::
         :class: copy-button
         
-        $ export host=YOUR_FIREWALL_IP
+        $ export host='YOUR_FIREWALL_IP'
 
 
 Generate your API key
@@ -41,13 +41,13 @@ In production environments, credentials should be stored, accessed and used secu
 .. code-block::
         :class: copy-button
 
-        $ export key=YOUR_API_KEY
+        $ export key='YOUR_API_KEY'
 
 For example:
 
 .. code-block::
 
-        $ export key=LUFRPT16V1ZzaHNFYVJEdlZnb3Buc1dJRWtCVFFPYjFXTzI2N1phVzRsMg==
+        $ export key='LUFRPT16V1ZzaHNFYVJEdlZnb3Buc1dJRWtCVFFPYjFXTzI2N1phVzRsMg=='
 
 
 Make your first real API call
@@ -61,8 +61,11 @@ Your first API call will tell you if the firewall is in a ready and operational 
 
 .. code-block::
 
-        <response status="success"><result><![CDATA[yes
-        ]]></result></response
+        <?xml version="1.0"?>
+        <response status="success">
+        <result><![CDATA[yes
+        ]]></result>
+        </response>
 
 Get firewall system info
 ====================================
@@ -110,17 +113,12 @@ This is a common API call, given how many people have requirements to automate b
         $ curl -ksd "type=export&category=configuration&key=$key" https://$host/api -w "\n" | xmllint --format -
 
 
-The command above sent the config file to the CLI terminal, we could instead save it to a file, then view the file in a prettier format (courtesy of the xmllint tool):
+The command above sent the config file to the CLI terminal, we could instead save it to a file:
 
 .. code-block::
         :class: copy-button
 
         $ curl -ksd "type=export&category=configuration&key=$key" https://$host/api -w "\n" > exported_config.xml
-
-.. code-block::
-        :class: copy-button
-
-        xmllint --format exported_config.xml
 
 
 User-ID
