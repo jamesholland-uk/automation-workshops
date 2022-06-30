@@ -30,7 +30,7 @@ Before you can make any API calls, you need to generate an API key. Your API key
 .. code-block::
         :class: copy-button
 
-        $ curl -kd 'type=keygen&user=YOUR_ADMIN_PASSWORD&password=YOUR_ADMIN_PASSWORD' https://$host/api -w "\n" | xmllint --format -
+        $ curl -ksd 'type=keygen&user=YOUR_ADMIN_PASSWORD&password=YOUR_ADMIN_PASSWORD' https://$host/api -w "\n" | xmllint --format -
 
 .. code-block::
 
@@ -57,7 +57,7 @@ Your first API call will tell you if the firewall is in a ready and operational 
 .. code-block::
         :class: copy-button
 
-        $ curl -kd "type=op&cmd=<show><chassis-ready></chassis-ready></show>&key=$key" https://$host/api -w "\n" | xmllint --format -
+        $ curl -ksd "type=op&cmd=<show><chassis-ready></chassis-ready></show>&key=$key" https://$host/api -w "\n" | xmllint --format -
 
 .. code-block::
 
@@ -71,7 +71,7 @@ Next, retrieve information about the firewall system. This too is an operational
 .. code-block::
         :class: copy-button
 
-        $ curl -kd "type=op&cmd=<show><system><info></info></system></show>&key=$key" https://$host/api -w "\n" | xmllint --format -
+        $ curl -ksd "type=op&cmd=<show><system><info></info></system></show>&key=$key" https://$host/api -w "\n" | xmllint --format -
 
 Show the routing table
 ====================================
@@ -80,7 +80,7 @@ Another useful operational command is to display the routing table.
 .. code-block::
         :class: copy-button
 
-        $ curl -kd "type=op&cmd=<show><routing><route></route></routing></show>&key=$key" https://$host/api -w "\n" | xmllint --format -
+        $ curl -ksd "type=op&cmd=<show><routing><route></route></routing></show>&key=$key" https://$host/api -w "\n" | xmllint --format -
 
 Show the rulebase configuration
 ====================================
@@ -89,7 +89,7 @@ Now we look at the firewall configuration. Notice the type of API call this time
 .. code-block::
         :class: copy-button
 
-        $ curl -kd "type=config&action=get&xpath=/config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules&key=$key" https://$host/api -w "\n" | xmllint --format -
+        $ curl -ksd "type=config&action=get&xpath=/config/devices/entry[@name='localhost.localdomain']/vsys/entry[@name='vsys1']/rulebase/security/rules&key=$key" https://$host/api -w "\n" | xmllint --format -
 
 Show the rulebase hit counts
 ====================================
@@ -98,7 +98,7 @@ We've seen the rulebase from the configuration, but if we wanted to programmatic
 .. code-block::
         :class: copy-button
 
-        $ curl -kd "type=op&cmd=<show><rule-hit-count><vsys><vsys-name><entry name='vsys1'><rule-base><entry name='security'><rules><all/></rules></entry></rule-base></entry></vsys-name></vsys></rule-hit-count></show>&key=$key" https://$host/api -w "\n"| xmllint --format -
+        $ curl -ksd "type=op&cmd=<show><rule-hit-count><vsys><vsys-name><entry name='vsys1'><rule-base><entry name='security'><rules><all/></rules></entry></rule-base></entry></vsys-name></vsys></rule-hit-count></show>&key=$key" https://$host/api -w "\n"| xmllint --format -
 
 Backup/export configuration
 ====================================
@@ -107,7 +107,7 @@ This is a common API call, given how many people have requirements to automate b
 .. code-block::
         :class: copy-button
 
-        $ curl -kd "type=export&category=configuration&key=$key" https://$host/api -w "\n" | xmllint --format -
+        $ curl -ksd "type=export&category=configuration&key=$key" https://$host/api -w "\n" | xmllint --format -
 
 
 The command above sent the config file to the CLI terminal, we could instead save it to a file, then view the file in a prettier format (courtesy of the xmllint tool):
@@ -130,7 +130,7 @@ A frequent use case is to register user-to-IP mappings. The first task here, ano
 .. code-block::
         :class: copy-button
 
-        $ curl -kd "type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key=$key" https://$host/api -w "\n" | xmllint --format -
+        $ curl -ksd "type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key=$key" https://$host/api -w "\n" | xmllint --format -
 
 .. code-block::
 
@@ -141,14 +141,14 @@ The next API call registers a username to an IP address. This uses ``type=user-i
 .. code-block::
         :class: copy-button
 
-        $ curl -kd "type=user-id&cmd=<uid-message><version>2.0</version><type>update</type><payload><login><entry name=\"NewUser\" ip=\"10.50.100.9\" timeout=\"120\"/></login></payload></uid-message>&key=$key" https://$host/api -w "\n"
+        $ curl -ksd "type=user-id&cmd=<uid-message><version>2.0</version><type>update</type><payload><login><entry name=\"NewUser\" ip=\"10.50.100.9\" timeout=\"120\"/></login></payload></uid-message>&key=$key" https://$host/api -w "\n"
 
 Replaying the API call to show the mapping table should now display the new user
 
 .. code-block::
         :class: copy-button
 
-        $ curl -kd "type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key=$key" https://$host/api -w "\n" | xmllint --format -
+        $ curl -ksd "type=op&cmd=<show><user><ip-user-mapping><all/></ip-user-mapping></user></show>&key=$key" https://$host/api -w "\n" | xmllint --format -
 
 
 Find An API Command - CLI Debug
