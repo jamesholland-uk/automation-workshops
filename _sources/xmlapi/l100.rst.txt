@@ -109,6 +109,20 @@ This is a common API call, given how many people have requirements to automate b
 
         $ curl -kd "type=export&category=configuration&key=$key" https://$host/api -w "\n"
 
+
+The command above sent the config file to the CLI terminal, we could instead save it to a file, then view the file in a prettier format (courtesy of the xmllint tool):
+
+.. code-block::
+        :class: copy-button
+
+        $ curl -ksd "type=export&category=configuration&key=$key" https://$host/api -w "\n" > exported_config.xml
+
+.. code-block::
+        :class: copy-button
+
+        xmllint --format exported_config.xml
+
+
 User-ID
 ================
 A frequent use case is to register user-to-IP mappings. The first task here, another operational command, shows the current user-to-IP mapping table

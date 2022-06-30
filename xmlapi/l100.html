@@ -181,6 +181,13 @@
 <div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -kd &quot;type=export&amp;category=configuration&amp;key=$key&quot; https://$host/api -w &quot;\n&quot;
 </pre></div>
 </div>
+<p>The command above sent the config file to the CLI terminal, we could instead save it to a file, then view the file in a prettier format (courtesy of the xmllint tool):</p>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span>$ curl -ksd &quot;type=export&amp;category=configuration&amp;key=$key&quot; https://$host/api -w &quot;\n&quot; &gt; exported_config.xml
+</pre></div>
+</div>
+<div class="copy-button highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">xmllint</span> <span class="o">--</span><span class="nb">format</span> <span class="n">exported_config</span><span class="o">.</span><span class="n">xml</span>
+</pre></div>
+</div>
 </section>
 <section id="user-id">
 <h2><span class="section-number">1.9. </span>User-ID<a class="headerlink" href="#user-id" title="Permalink to this heading"></a></h2>
