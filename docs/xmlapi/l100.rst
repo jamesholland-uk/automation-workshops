@@ -30,7 +30,7 @@ Before you can make any API calls, you need to generate an API key. Your API key
 .. code-block::
         :class: copy-button
 
-        $ curl -ksd 'type=keygen&user=YOUR_ADMIN_PASSWORD&password=YOUR_ADMIN_PASSWORD' https://$host/api -w "\n" | xmllint --format -
+        $ curl -ksd 'type=keygen&user=YOUR_ADMIN_USERNAME&password=YOUR_ADMIN_PASSWORD' https://$host/api -w "\n" | xmllint --format -
 
 .. code-block::
 
