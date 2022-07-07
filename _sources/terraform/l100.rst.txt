@@ -1,7 +1,7 @@
 Terraform L100
 ----------------------
 
-Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace any UPPERCASE_VARIABLES with your own values.
+Hands-on tasks for this workshop will be using Terraform against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace any UPPERCASE_VARIABLES with your own values.
 
 Assumptions: A host with the following installed: curl, git, `Terraform 1.x
 <https://www.terraform.io/downloads.html>`_, and any prerequisite requirements for those items. Plus some form of text editor on your host. And, access to a PAN-OS next-generation firewall from your host.
@@ -93,7 +93,7 @@ For example:
         $ export TF_VAR_panos_password="ChangeMe123!"
 
 
-In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this environment, we will use these credentials stored in variables for executing Ansible playbooks.
+In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this environment, we will use these credentials stored in variables for executing Terraform.
 
 
 Initialising Terraform

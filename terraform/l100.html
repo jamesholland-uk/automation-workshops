@@ -99,7 +99,7 @@
              
   <section id="terraform-l100">
 <h1><span class="section-number">1. </span>Terraform L100<a class="headerlink" href="#terraform-l100" title="Permalink to this heading"></a></h1>
-<p>Hands-on tasks for this workshop will be using Ansible playbooks against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace any UPPERCASE_VARIABLES with your own values.</p>
+<p>Hands-on tasks for this workshop will be using Terraform against a PAN-OS firewall, from your command-line environment. For each task, you can use the copy button to take the command into the clipboard, but ensure you replace any UPPERCASE_VARIABLES with your own values.</p>
 <p>Assumptions: A host with the following installed: curl, git, <a class="reference external" href="https://www.terraform.io/downloads.html">Terraform 1.x</a>, and any prerequisite requirements for those items. Plus some form of text editor on your host. And, access to a PAN-OS next-generation firewall from your host.</p>
 <dl class="simple">
 <dt>Note:</dt><dd><ul class="simple">
@@ -162,7 +162,7 @@ $ export TF_VAR_panos_username=&quot;adminuser&quot;
 $ export TF_VAR_panos_password=&quot;ChangeMe123!&quot;
 </pre></div>
 </div>
-<p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this environment, we will use these credentials stored in variables for executing Ansible playbooks.</p>
+<p>In production environments, credentials should be stored, accessed and used securely, per the security policy and compliance requirements. Today, in this environment, we will use these credentials stored in variables for executing Terraform.</p>
 </section>
 <section id="initialising-terraform">
 <h2><span class="section-number">1.4. </span>Initialising Terraform<a class="headerlink" href="#initialising-terraform" title="Permalink to this heading"></a></h2>
