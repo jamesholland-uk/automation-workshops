@@ -16,9 +16,9 @@ Note:
 
 
 Ansible pre-flight checks
-================================================
+===============================================
 
-First let's check that Ansible is installed on our host.
+First let's check that Ansible is installed on our host:
 
 .. code-block::
         :class: copy-button
